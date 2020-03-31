@@ -1,6 +1,0 @@
-kraken:
-  security:
-    claims:
-      groups: groups
-      current-grouup: current
-      username: toto
