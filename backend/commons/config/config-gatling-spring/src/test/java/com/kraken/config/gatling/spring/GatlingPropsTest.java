@@ -11,7 +11,7 @@ public class GatlingPropsTest {
   private static final GatlingProps GATLING_PROPERTIES = GatlingProps.builder().build();
 
   @Test
-  public void shouldPassTestUtils() {
+  public void shouldPassToString() {
     TestUtils.shouldPassToString(GATLING_PROPERTIES);
   }
 
