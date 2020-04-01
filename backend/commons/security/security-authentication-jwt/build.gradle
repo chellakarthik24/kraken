@@ -7,5 +7,6 @@ dependencies {
     api group: 'org.springframework.security', name: 'spring-security-oauth2-jose', version: springSecurityVersion
 
     testImplementation project(path: ':commons:security:security-entity', configuration: 'testArtifacts')
+    testImplementation project(path: ':commons:config:config-security-jwt-spring')
     testImplementation project(path: ':commons:tools:tools-application')
 }

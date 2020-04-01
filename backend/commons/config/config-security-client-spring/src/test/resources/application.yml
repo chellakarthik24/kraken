@@ -1,7 +1,6 @@
 kraken:
   security:
-    authentication:
-      claims:
-        groups: groups
-        current-grouup: current
-        username: toto
+    client:
+      url: url
+      id: id
+      secret: secret

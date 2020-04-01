@@ -9,11 +9,11 @@ import static org.junit.Assert.assertNotNull;
 
 public class JwtPropertiesTest {
 
-  public static final JwtProperties SECURITY_PROPERTIES = SpringJwtProperties.builder().build();
+  public static final JwtProperties JWT_PROPERTIES = SpringJwtProperties.builder().build();
 
   @Test
   public void shouldPassToString() {
-    TestUtils.shouldPassToString(SECURITY_PROPERTIES);
+    TestUtils.shouldPassToString(JWT_PROPERTIES);
   }
 
   @Test
@@ -23,6 +23,6 @@ public class JwtPropertiesTest {
 
   @Test
   public void shouldCreate() {
-    assertNotNull(SECURITY_PROPERTIES);
+    assertNotNull(JWT_PROPERTIES);
   }
 }

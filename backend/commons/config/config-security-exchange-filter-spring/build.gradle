@@ -1,5 +1,5 @@
 dependencies {
-    implementation project(':commons:config:config-security-jwt-api')
+    implementation project(':commons:config:config-security-exchange-filter-api')
 
     testImplementation project(path: ':commons:tools:tools-application', configuration: 'testArtifacts')
 }
