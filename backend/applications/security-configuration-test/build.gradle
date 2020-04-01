@@ -1,3 +1,4 @@
 dependencies {
     implementation project(':commons:security:security-authentication-jwt')
+    implementation project(':commons:config:config-security-jwt-spring')
 }
