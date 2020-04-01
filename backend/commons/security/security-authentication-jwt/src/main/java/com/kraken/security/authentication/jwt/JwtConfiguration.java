@@ -1,4 +1,4 @@
-package com.kraken.security;
+package com.kraken.security.authentication.jwt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

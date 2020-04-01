@@ -1,6 +1,7 @@
-package com.kraken.security;
+package com.kraken.security.authentication.jwt;
 
 
+import com.kraken.security.authentication.api.AuthenticatedUserProvider;
 import com.kraken.security.entity.KrakenUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import reactor.core.publisher.Mono;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class JwtAuthenticatedUserProvider implements AuthenticatedUserProvider {
+final class JwtAuthenticatedUserProvider implements AuthenticatedUserProvider {
 
   @NonNull Mono<SecurityContext> securityContextMono;
 
@@ -30,7 +31,7 @@ class JwtAuthenticatedUserProvider implements AuthenticatedUserProvider {
   }
 
   @Override
-  public Mono<String> getAuthorizationHeader() {
+  public Mono<String> getTokenValue() {
     return securityContextMono
         .map(SecurityContext::getAuthentication)
         .map(Authentication::getPrincipal)

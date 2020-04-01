@@ -1,5 +1,6 @@
-package com.kraken.security;
+package com.kraken.security.authentication.jwt;
 
+import com.kraken.security.authentication.jwt.JwtConfiguration;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

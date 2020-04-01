@@ -1,4 +1,4 @@
-package com.kraken.security;
+package com.kraken.security.authentication.jwt;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;

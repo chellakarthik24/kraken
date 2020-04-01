@@ -1,4 +1,4 @@
-package com.kraken.security;
+package com.kraken.security.authentication.jwt;
 
 import com.kraken.config.security.jwt.api.JwtProperties;
 import com.kraken.security.entity.KrakenRole;

@@ -1,6 +1,7 @@
-package com.kraken.security;
+package com.kraken.security.authentication.jwt;
 
 
+import com.kraken.security.authentication.jwt.JwtAuthenticatedUserProvider;
 import com.kraken.security.entity.KrakenUserTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;

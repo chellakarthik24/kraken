@@ -1,4 +1,4 @@
-package com.kraken.security;
+package com.kraken.security.authentication.jwt;
 
 // https://blog.ineat-group.com/2019/01/securiser-vos-apis-spring-webflux-avec-keycloak-et-oauth2/
 

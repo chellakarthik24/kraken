@@ -1,4 +1,4 @@
-package com.kraken.security;
+package com.kraken.security.authentication.jwt;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.config.security.jwt.api.JwtClaimsProperties;
