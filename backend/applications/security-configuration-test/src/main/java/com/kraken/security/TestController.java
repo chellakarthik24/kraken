@@ -1,5 +1,6 @@
 package com.kraken.security;
 
+import com.kraken.security.authentication.api.AuthenticatedUserProvider;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
