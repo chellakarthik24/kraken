@@ -25,7 +25,14 @@ curl -s -X POST \
     -d "requested_token_type=urn:ietf:params:oauth:token-type:refresh_token" \
     -d "audience=kraken-api" \
     -d "scope=openid info offline_access" \
+    http://localhost:9080/auth/realms/kraken/protocol/openid-connect/token | jq -r '.refresh_token' > build/api-refresh-token
+
+curl -s -X POST \
+    -d "client_id=kraken-api" \
+    -d "refresh_token=$(cat build/api-refresh-token)" \
+    -d "grant_type=refresh_token" \
     http://localhost:9080/auth/realms/kraken/protocol/openid-connect/token | jq -r '.access_token' > build/api-token
+
 
 curl --verbose -X GET http://localhost:8080/test/user -H "Authorization: Bearer $(cat build/api-token)"
 ```

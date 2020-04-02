@@ -27,7 +27,7 @@ public class SecurityConfigurationTest {
 
   @Test
   public void shouldReturnUser() {
-    BDDMockito.given(jwtDecoder.decode("token")).willReturn(Mono.just(JwtFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
+    BDDMockito.given(jwtDecoder.decode("token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"))));
 
     webTestClient.get()
@@ -42,7 +42,7 @@ public class SecurityConfigurationTest {
 
   @Test
   public void shouldFailAdmin() {
-    BDDMockito.given(jwtDecoder.decode("token")).willReturn(Mono.just(JwtFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
+    BDDMockito.given(jwtDecoder.decode("token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"))));
 
     webTestClient.get()

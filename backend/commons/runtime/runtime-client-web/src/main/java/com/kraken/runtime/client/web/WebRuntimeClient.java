@@ -28,7 +28,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Slf4j
 @Component
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class WebRuntimeClient implements RuntimeClient {
+final class WebRuntimeClient implements RuntimeClient {
 
   public static final int NUM_RETRIES = 5;
   public static final Duration FIRST_BACKOFF = Duration.ofMillis(100);

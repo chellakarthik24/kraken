@@ -8,9 +8,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-public interface JwtFactory {
+interface JwtTestFactory {
 
-  public static JwtFactory JWT_FACTORY = (final List<String> roles, final List<String> groups, final Optional<String> group) -> {
+   JwtTestFactory JWT_FACTORY = (final List<String> roles, final List<String> groups, final Optional<String> group) -> {
     final var rolesArray = new JSONArray();
     roles.forEach(rolesArray::appendElement);
     final var realmAccess = new JSONObject();

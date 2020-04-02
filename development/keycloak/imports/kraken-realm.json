@@ -537,7 +537,7 @@
     "clientId" : "kraken-api",
     "surrogateAuthRequired" : false,
     "enabled" : true,
-    "alwaysDisplayInConsole" : true,
+    "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4",
     "redirectUris" : [ ],
@@ -549,7 +549,7 @@
     "implicitFlowEnabled" : false,
     "directAccessGrantsEnabled" : false,
     "serviceAccountsEnabled" : false,
-    "publicClient" : false,
+    "publicClient" : true,
     "frontchannelLogout" : false,
     "protocol" : "openid-connect",
     "attributes" : {

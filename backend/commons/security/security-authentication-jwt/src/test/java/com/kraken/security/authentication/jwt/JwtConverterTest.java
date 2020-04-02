@@ -42,7 +42,7 @@ public class JwtConverterTest {
 
   @Test
   public void shouldConvertNoGroup() {
-    final var jwt = JwtFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
+    final var jwt = JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.empty());
     final var result = converter.convert(jwt);
     assertThat(result).isNotNull();
@@ -60,7 +60,7 @@ public class JwtConverterTest {
 
   @Test
   public void shouldConvertWithGroup() {
-    final var jwt = JwtFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
+    final var jwt = JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"));
 
     final var result = converter.convert(jwt);
@@ -79,7 +79,7 @@ public class JwtConverterTest {
 
   @Test(expected = AuthenticationServiceException.class)
   public void shouldNotConvertGroupMismatch() {
-    final var jwt = JwtFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
+    final var jwt = JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.of("other group"));
 
     final var result = converter.convert(jwt);
