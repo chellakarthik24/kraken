@@ -1,4 +1,5 @@
 kraken:
-  security:
-    access-token: access-token
-    refresh-token: refreshToken
+  container:
+    security:
+      access-token: accessToken
+      refresh-token: refreshToken
