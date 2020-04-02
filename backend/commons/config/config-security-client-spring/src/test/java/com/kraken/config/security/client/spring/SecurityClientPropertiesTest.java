@@ -13,7 +13,6 @@ public class SecurityClientPropertiesTest {
       .url("url")
       .realm("realm")
       .apiId("apiId")
-      .apiSecret("apiSecret")
       .webId("webId")
       .build();
 

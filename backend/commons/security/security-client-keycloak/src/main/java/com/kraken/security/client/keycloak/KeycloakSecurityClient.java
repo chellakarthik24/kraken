@@ -54,7 +54,6 @@ final class KeycloakSecurityClient implements SecurityClient {
         .post()
         .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
         .body(BodyInserters.fromFormData("client_id", properties.getApiId())
-            .with("client_secret", properties.getApiSecret())
             .with("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
             .with("subject_token", token.getAccessToken())
             .with("requested_token_type", "urn:ietf:params:oauth:token-type:refresh_token")

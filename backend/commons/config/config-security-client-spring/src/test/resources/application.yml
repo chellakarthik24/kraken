@@ -5,4 +5,3 @@ kraken:
       realm: kraken
       webId: kraken-web
       apiId: kraken-api
-      apiSecret: secret

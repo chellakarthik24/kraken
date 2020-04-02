@@ -16,7 +16,6 @@ final class SpringSecurityClientProperties implements SecurityClientProperties {
   @NonNull String url;
   @NonNull String webId;
   @NonNull String apiId;
-  @NonNull String apiSecret;
   @NonNull String realm;
 
 }
