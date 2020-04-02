@@ -18,8 +18,10 @@ public class SecurityClientPropertiesSpringTest {
 
   @Test
   public void shouldCreateProperties() {
-    assertThat(properties.getUrl()).isEqualTo("url");
-    assertThat(properties.getId()).isEqualTo("id");
-    assertThat(properties.getSecret()).isEqualTo("secret");
+    assertThat(properties.getUrl()).isEqualTo("http://localhost:9080");
+    assertThat(properties.getApiId()).isEqualTo("kraken-api");
+    assertThat(properties.getApiSecret()).isEqualTo("secret");
+    assertThat(properties.getWebId()).isEqualTo("kraken-web");
+    assertThat(properties.getRealm()).isEqualTo("kraken");
   }
 }

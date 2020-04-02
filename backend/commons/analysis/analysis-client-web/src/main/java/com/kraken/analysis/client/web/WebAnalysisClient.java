@@ -1,5 +1,6 @@
-package com.kraken.analysis.client;
+package com.kraken.analysis.client.web;
 
+import com.kraken.analysis.client.api.AnalysisClient;
 import com.kraken.analysis.entity.DebugEntry;
 import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
@@ -17,10 +18,10 @@ import static lombok.AccessLevel.PRIVATE;
 @Slf4j
 @Component
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-final class AnalysisWebClient implements AnalysisClient {
+final class WebAnalysisClient implements AnalysisClient {
   WebClient webClient;
 
-  AnalysisWebClient(final AnalysisClientProperties properties) {
+  WebAnalysisClient(final AnalysisClientProperties properties) {
     this.webClient = WebClient
       .builder()
       .baseUrl(properties.getUrl())

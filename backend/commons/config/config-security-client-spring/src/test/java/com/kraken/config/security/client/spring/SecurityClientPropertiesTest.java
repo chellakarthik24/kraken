@@ -11,8 +11,10 @@ public class SecurityClientPropertiesTest {
 
   public static final SecurityClientProperties SECURITY_CLIENT_PROPERTIES = SpringSecurityClientProperties.builder()
       .url("url")
-      .id("kraken-api")
-      .secret("chut")
+      .realm("realm")
+      .apiId("apiId")
+      .apiSecret("apiSecret")
+      .webId("webId")
       .build();
 
   @Test

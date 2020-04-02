@@ -1,4 +1,4 @@
-package com.kraken.influxdb.client;
+package com.kraken.influxdb.client.api;
 
 import reactor.core.publisher.Mono;
 

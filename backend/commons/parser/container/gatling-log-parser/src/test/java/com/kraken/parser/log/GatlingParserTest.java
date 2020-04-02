@@ -8,7 +8,7 @@ import com.kraken.debug.entry.writer.DebugEntryWriter;
 import com.kraken.gatling.log.parser.LogParser;
 import com.kraken.config.gatling.api.GatlingLog;
 import com.kraken.config.gatling.api.GatlingProperties;
-import com.kraken.runtime.client.RuntimeClient;
+import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.command.Command;
 import com.kraken.runtime.command.CommandService;
 import com.kraken.runtime.container.predicate.TaskPredicate;

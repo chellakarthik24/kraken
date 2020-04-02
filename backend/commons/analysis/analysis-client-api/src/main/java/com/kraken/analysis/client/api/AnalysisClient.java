@@ -1,4 +1,4 @@
-package com.kraken.analysis.client;
+package com.kraken.analysis.client.api;
 
 import com.kraken.analysis.entity.DebugEntry;
 import com.kraken.analysis.entity.Result;

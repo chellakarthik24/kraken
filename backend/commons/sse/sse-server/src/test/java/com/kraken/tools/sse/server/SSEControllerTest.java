@@ -2,10 +2,10 @@ package com.kraken.tools.sse.server;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
-import com.kraken.runtime.client.RuntimeClient;
+import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.TaskTest;
-import com.kraken.storage.client.StorageClient;
+import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.entity.StorageWatcherEventTest;
 import com.kraken.test.utils.TestUtils;
 import com.kraken.tools.sse.SSEService;

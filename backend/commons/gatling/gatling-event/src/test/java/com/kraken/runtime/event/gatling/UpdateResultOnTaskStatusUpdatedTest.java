@@ -1,6 +1,6 @@
 package com.kraken.runtime.event.gatling;
 
-import com.kraken.analysis.client.AnalysisClient;
+import com.kraken.analysis.client.api.AnalysisClient;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.event.TaskStatusUpdatedEvent;

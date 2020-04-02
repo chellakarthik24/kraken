@@ -1,26 +1,24 @@
-package com.kraken.runtime.client;
+package com.kraken.grafana.client.web;
 
 import com.kraken.Application;
-import com.kraken.config.runtime.client.api.RuntimeClientProperties;
+import com.kraken.grafana.client.api.GrafanaClient;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class RuntimeClientConfigurationTest {
+public class WebGrafanaClientSpringTest {
+
   @Autowired
-  RuntimeClient client;
-  @MockBean
-  RuntimeClientProperties properties;
+  GrafanaClient grafanaClient;
 
   @Test
   public void shouldCreateWebClients() {
-    assertThat(client).isNotNull();
+    Assertions.assertThat(grafanaClient).isNotNull();
   }
+
 }

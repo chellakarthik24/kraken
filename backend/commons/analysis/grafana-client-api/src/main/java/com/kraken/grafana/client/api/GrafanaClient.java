@@ -1,4 +1,4 @@
-package com.kraken.grafana.client;
+package com.kraken.grafana.client.api;
 
 import reactor.core.publisher.Mono;
 

@@ -1,9 +1,11 @@
-package com.kraken.grafana.client;
+package com.kraken.grafana.client.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.kraken.config.grafana.api.GrafanaProperties;
+import com.kraken.grafana.client.api.GrafanaClient;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,23 +17,31 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Component
-class GrafanaWebClient implements GrafanaClient{
+class WebGrafanaClient implements GrafanaClient {
 
   WebClient webClient;
   ObjectMapper mapper;
   SimpleDateFormat format;
 
-  GrafanaWebClient(@Qualifier("webClientGrafana") final WebClient webClient, final ObjectMapper mapper) {
-    this.webClient = Objects.requireNonNull(webClient);
+  WebGrafanaClient(final GrafanaProperties grafanaProperties, final ObjectMapper mapper) {
+    final var credentials = grafanaProperties.getUser() + ":" + grafanaProperties.getPassword();
+    final var encoded = Base64.getEncoder().encodeToString(credentials.getBytes(UTF_8));
+    this.webClient =  WebClient
+        .builder()
+        .baseUrl(grafanaProperties.getUrl())
+        .defaultHeader("Authorization", "Basic " + encoded)
+        .build();
     this.mapper = Objects.requireNonNull(mapper);
     //  2019-03-22T10:01:00.000Z
     this.format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");

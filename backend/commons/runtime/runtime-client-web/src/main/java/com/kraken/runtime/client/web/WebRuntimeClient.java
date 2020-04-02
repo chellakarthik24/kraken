@@ -1,7 +1,8 @@
-package com.kraken.runtime.client;
+package com.kraken.runtime.client.web;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.config.runtime.client.api.RuntimeClientProperties;
+import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.log.Log;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.FlatContainer;
@@ -27,14 +28,14 @@ import static lombok.AccessLevel.PRIVATE;
 @Slf4j
 @Component
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class RuntimeWebClient implements RuntimeClient {
+class WebRuntimeClient implements RuntimeClient {
 
   public static final int NUM_RETRIES = 5;
   public static final Duration FIRST_BACKOFF = Duration.ofMillis(100);
   WebClient webClient;
   AtomicReference<ContainerStatus> lastStatus;
 
-  RuntimeWebClient(final RuntimeClientProperties properties) {
+  WebRuntimeClient(final RuntimeClientProperties properties) {
     this.webClient = WebClient
       .builder()
       .baseUrl(properties.getUrl())

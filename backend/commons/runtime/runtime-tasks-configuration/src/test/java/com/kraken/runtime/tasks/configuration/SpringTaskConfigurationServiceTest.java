@@ -5,7 +5,7 @@ import com.kraken.config.runtime.server.api.RuntimeServerProperties;
 import com.kraken.runtime.tasks.configuration.entity.TaskConfigurationTest;
 import com.kraken.runtime.tasks.configuration.entity.TasksConfiguration;
 import com.kraken.runtime.tasks.configuration.entity.TasksConfigurationTest;
-import com.kraken.storage.client.StorageClient;
+import com.kraken.storage.client.api.StorageClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

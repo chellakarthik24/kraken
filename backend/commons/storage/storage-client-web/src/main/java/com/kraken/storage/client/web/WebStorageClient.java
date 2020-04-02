@@ -1,7 +1,8 @@
-package com.kraken.storage.client;
+package com.kraken.storage.client.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kraken.config.storage.api.StorageProperties;
+import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageWatcherEvent;
 import lombok.NonNull;
@@ -40,7 +41,7 @@ import static reactor.core.publisher.Mono.error;
 @Slf4j
 @Component
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class StorageWebClient implements StorageClient {
+class WebStorageClient implements StorageClient {
 
   public static final int NUM_RETRIES = 5;
   public static final Duration FIRST_BACKOFF = Duration.ofMillis(500);
@@ -52,7 +53,7 @@ class StorageWebClient implements StorageClient {
   @NonNull
   ObjectMapper yamlMapper;
 
-  StorageWebClient(
+  WebStorageClient(
     final StorageProperties properties,
     final ObjectMapper mapper,
     @Qualifier("yamlObjectMapper") final ObjectMapper yamlMapper) {

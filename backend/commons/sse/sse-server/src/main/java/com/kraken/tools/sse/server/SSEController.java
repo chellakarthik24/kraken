@@ -1,8 +1,8 @@
 package com.kraken.tools.sse.server;
 
 import com.google.common.collect.ImmutableMap;
-import com.kraken.runtime.client.RuntimeClient;
-import com.kraken.storage.client.StorageClient;
+import com.kraken.runtime.client.api.RuntimeClient;
+import com.kraken.storage.client.api.StorageClient;
 import com.kraken.tools.sse.SSEService;
 import com.kraken.tools.sse.SSEWrapper;
 import lombok.AccessLevel;
@@ -14,7 +14,6 @@ import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 

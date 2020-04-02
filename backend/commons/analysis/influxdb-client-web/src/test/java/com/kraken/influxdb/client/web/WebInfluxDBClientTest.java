@@ -1,7 +1,9 @@
-package com.kraken.influxdb.client;
+package com.kraken.influxdb.client.web;
 
 import com.google.common.base.Charsets;
 import com.kraken.config.influxdb.api.InfluxDBProperties;
+import com.kraken.influxdb.client.api.InfluxDBClient;
+import com.kraken.influxdb.client.web.WebInfluxDBClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -21,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class InfluxDBClientTest {
+public class WebInfluxDBClientTest {
 
   private MockWebServer server;
   private InfluxDBClient client;
@@ -36,7 +38,7 @@ public class InfluxDBClientTest {
     when(properties.getDatabase()).thenReturn("influxdbDatabase");
     when(properties.getUser()).thenReturn("root");
     when(properties.getPassword()).thenReturn("admin");
-    client = new InfluxDBWebClient(properties);
+    client = new WebInfluxDBClient(properties);
   }
 
   @After

@@ -24,7 +24,7 @@ curl -s -X POST \
     -d "subject_token=$(cat build/token)" \
     -d "requested_token_type=urn:ietf:params:oauth:token-type:refresh_token" \
     -d "audience=kraken-api" \
-    -d "scrope=openid info offline_access" \
+    -d "scope=openid info offline_access" \
     http://localhost:9080/auth/realms/kraken/protocol/openid-connect/token | jq -r '.access_token' > build/api-token
 
 curl --verbose -X GET http://localhost:8080/test/user -H "Authorization: Bearer $(cat build/api-token)"

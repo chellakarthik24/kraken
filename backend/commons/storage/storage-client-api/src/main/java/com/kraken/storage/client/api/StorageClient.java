@@ -1,4 +1,4 @@
-package com.kraken.storage.client;
+package com.kraken.storage.client.api;
 
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageWatcherEvent;

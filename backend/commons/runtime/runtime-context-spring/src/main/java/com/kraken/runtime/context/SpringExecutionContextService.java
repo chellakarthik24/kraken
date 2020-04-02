@@ -13,7 +13,7 @@ import com.kraken.runtime.entity.environment.ExecutionEnvironmentEntry;
 import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.runtime.tasks.configuration.TaskConfigurationService;
 import com.kraken.runtime.tasks.configuration.entity.TaskConfiguration;
-import com.kraken.storage.client.StorageClient;
+import com.kraken.storage.client.api.StorageClient;
 import com.kraken.template.api.TemplateService;
 import com.kraken.tools.unique.id.IdGenerator;
 import lombok.AccessLevel;

@@ -1,6 +1,7 @@
-package com.kraken.storage.client;
+package com.kraken.storage.client.web;
 
 import com.kraken.analysis.entity.Result;
+import com.kraken.storage.client.api.StorageClient;
 import com.kraken.test.utils.ResourceUtils;
 import com.kraken.test.utils.TestConfiguration;
 import org.junit.Ignore;
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(
     classes = {TestConfiguration.class},
     initializers = {ConfigFileApplicationContextInitializer.class})
-public class StorageClientIntegrationTest {
+public class WebStorageClientIntegrationTest {
 
   @Autowired
   private StorageClient client;

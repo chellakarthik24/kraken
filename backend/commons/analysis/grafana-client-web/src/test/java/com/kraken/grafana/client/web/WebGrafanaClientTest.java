@@ -1,7 +1,9 @@
-package com.kraken.grafana.client;
+package com.kraken.grafana.client.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import com.kraken.config.grafana.api.GrafanaProperties;
+import com.kraken.grafana.client.api.GrafanaClient;
 import com.kraken.test.utils.ResourceUtils;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -9,6 +11,9 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,23 +21,31 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-public class GrafanaClientTest {
+
+@RunWith(MockitoJUnitRunner.class)
+public class WebGrafanaClientTest {
 
   private ObjectMapper mapper;
-  private MockWebServer grafanaMockWebServer;
+  private MockWebServer server;
   private GrafanaClient client;
+
+  @Mock
+  GrafanaProperties properties;
 
   @Before
   public void before() {
     mapper = new ObjectMapper();
-    grafanaMockWebServer = new MockWebServer();
-    client = new GrafanaWebClient(WebClient.create(grafanaMockWebServer.url("/").toString()), mapper);
+    server = new MockWebServer();
+    final String url = server.url("/").toString();
+    when(properties.getUrl()).thenReturn(url);
+    client = new WebGrafanaClient(properties, mapper);
   }
 
   @After
   public void tearDown() throws IOException {
-    grafanaMockWebServer.shutdown();
+    server.shutdown();
   }
 
   @Test
@@ -40,7 +53,7 @@ public class GrafanaClientTest {
     final var id = "id";
     final var dashboard = "{\"refresh\":\"1s\"}";
 
-    grafanaMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +63,7 @@ public class GrafanaClientTest {
     final var response = client.getDashboard(id).block();
     assertThat(response).isEqualTo(dashboard);
 
-    final RecordedRequest commandRequest = grafanaMockWebServer.takeRequest();
+    final RecordedRequest commandRequest = server.takeRequest();
     assertThat(commandRequest.getPath()).isEqualTo("/api/dashboards/uid/id");
   }
 
@@ -59,7 +72,7 @@ public class GrafanaClientTest {
     final var dashboard = "{\"refresh\":false}";
     final var setDashboardResponse = "response";
 
-    grafanaMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +82,7 @@ public class GrafanaClientTest {
     final var response = client.setDashboard(dashboard).block();
     assertThat(response).isEqualTo(setDashboardResponse);
 
-    final RecordedRequest commandRequest = grafanaMockWebServer.takeRequest();
+    final RecordedRequest commandRequest = server.takeRequest();
     assertThat(commandRequest.getPath()).isEqualTo("/api/dashboards/db");
     final var node = mapper.readTree(commandRequest.getBody().readString(Charsets.UTF_8));
     assertThat(mapper.writeValueAsString(node.get("dashboard"))).isEqualTo(dashboard);
@@ -82,7 +95,7 @@ public class GrafanaClientTest {
     final var dashboard = "{\"refresh\":false}";
     final var setDashboardResponse = "response";
 
-    grafanaMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -92,7 +105,7 @@ public class GrafanaClientTest {
     final var response = client.importDashboard(dashboard).block();
     assertThat(response).isEqualTo(setDashboardResponse);
 
-    final RecordedRequest commandRequest = grafanaMockWebServer.takeRequest();
+    final RecordedRequest commandRequest = server.takeRequest();
     assertThat(commandRequest.getPath()).isEqualTo("/api/dashboards/import");
     final var node = mapper.readTree(commandRequest.getBody().readString(Charsets.UTF_8));
     assertThat(mapper.writeValueAsString(node.get("dashboard"))).isEqualTo(dashboard);
@@ -106,7 +119,7 @@ public class GrafanaClientTest {
     final var id = "id";
     final var deleteDashboardResponse = "deleteDashboardResponse";
 
-    grafanaMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -116,7 +129,7 @@ public class GrafanaClientTest {
     final var response = client.deleteDashboard(id).block();
     assertThat(response).isEqualTo(deleteDashboardResponse);
 
-    final RecordedRequest commandRequest = grafanaMockWebServer.takeRequest();
+    final RecordedRequest commandRequest = server.takeRequest();
     assertThat(commandRequest.getPath()).isEqualTo("/api/dashboards/uid/id");
   }
 

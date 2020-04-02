@@ -4,7 +4,7 @@ import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.config.runtime.server.api.RuntimeServerProperties;
 import com.kraken.runtime.tasks.configuration.entity.TaskConfiguration;
 import com.kraken.runtime.tasks.configuration.entity.TasksConfiguration;
-import com.kraken.storage.client.StorageClient;
+import com.kraken.storage.client.api.StorageClient;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;

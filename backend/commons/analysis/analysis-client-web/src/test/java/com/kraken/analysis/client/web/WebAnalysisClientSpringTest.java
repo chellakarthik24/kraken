@@ -1,6 +1,7 @@
-package com.kraken.analysis.client;
+package com.kraken.analysis.client.web;
 
 import com.kraken.Application;
+import com.kraken.analysis.client.api.AnalysisClient;
 import com.kraken.config.analysis.client.api.AnalysisClientProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class AnalysisClientConfigTest {
+public class WebAnalysisClientSpringTest {
   @Autowired
   AnalysisClient client;
   @MockBean

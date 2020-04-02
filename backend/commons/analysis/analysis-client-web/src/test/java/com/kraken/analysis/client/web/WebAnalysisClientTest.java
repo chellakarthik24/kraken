@@ -1,8 +1,9 @@
-package com.kraken.analysis.client;
+package com.kraken.analysis.client.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import com.kraken.analysis.client.api.AnalysisClient;
 import com.kraken.analysis.entity.DebugEntryTest;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AnalysisClientTest {
+public class WebAnalysisClientTest {
 
   private ObjectMapper mapper;
   private MockWebServer server;
@@ -43,7 +44,7 @@ public class AnalysisClientTest {
     final String url = server.url("/").toString();
     when(properties.getUrl()).thenReturn(url);
 
-    client = new AnalysisWebClient(properties);
+    client = new WebAnalysisClient(properties);
   }
 
   @After

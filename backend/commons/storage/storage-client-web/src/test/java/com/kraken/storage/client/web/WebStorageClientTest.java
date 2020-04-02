@@ -1,4 +1,4 @@
-package com.kraken.storage.client;
+package com.kraken.storage.client.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +7,8 @@ import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
 import com.kraken.config.storage.api.StorageProperties;
+import com.kraken.storage.client.api.StorageClient;
+import com.kraken.storage.client.web.WebStorageClient;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageWatcherEventTest;
 import com.kraken.tools.configuration.jackson.JacksonConfiguration;
@@ -44,7 +46,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes =  JacksonConfiguration.class)
-public class StorageWebClientTest {
+public class WebStorageClientTest {
 
   private MockWebServer server;
   private StorageClient client;
@@ -64,7 +66,7 @@ public class StorageWebClientTest {
     server = new MockWebServer();
     final String baseUrl = server.url("/").toString();
     when(properties.getUrl()).thenReturn(baseUrl);
-    client = new StorageWebClient(properties, jsonMapper, yamlMapper);
+    client = new WebStorageClient(properties, jsonMapper, yamlMapper);
   }
 
   @After

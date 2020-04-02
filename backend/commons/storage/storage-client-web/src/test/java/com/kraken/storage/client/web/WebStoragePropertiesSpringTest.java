@@ -1,6 +1,8 @@
-package com.kraken.storage.client;
+package com.kraken.storage.client.web;
 
 import com.kraken.config.storage.api.StorageProperties;
+import com.kraken.storage.client.api.StorageClient;
+import com.kraken.storage.client.web.WebStorageClient;
 import com.kraken.tools.configuration.jackson.JacksonConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {JacksonConfiguration.class, StorageWebClient.class})
-public class StoragePropertiesConfigurationTest {
+@SpringBootTest(classes = {JacksonConfiguration.class, WebStorageClient.class})
+public class WebStoragePropertiesSpringTest {
   @Autowired
   StorageClient client;
   @MockBean

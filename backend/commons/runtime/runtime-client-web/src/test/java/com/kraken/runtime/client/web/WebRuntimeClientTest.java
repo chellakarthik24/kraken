@@ -1,9 +1,10 @@
-package com.kraken.runtime.client;
+package com.kraken.runtime.client.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.kraken.config.runtime.client.api.RuntimeClientProperties;
+import com.kraken.runtime.client.web.WebRuntimeClient;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
 import okhttp3.mockwebserver.MockResponse;
@@ -23,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RuntimeWebClientTest {
+public class WebRuntimeClientTest {
 
   private ObjectMapper mapper;
   private MockWebServer runtimeMockWebServer;
-  private RuntimeWebClient client;
+  private WebRuntimeClient client;
 
   @Mock
   RuntimeClientProperties properties;
@@ -38,7 +39,7 @@ public class RuntimeWebClientTest {
     mapper = new ObjectMapper();
     final String url = runtimeMockWebServer.url("/").toString();
     when(properties.getUrl()).thenReturn(url);
-    client = new RuntimeWebClient(properties);
+    client = new WebRuntimeClient(properties);
   }
 
   @After

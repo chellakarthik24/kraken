@@ -10,7 +10,7 @@ public class KeycloakSecurityClient implements SecurityClient {
   }
 
   public Mono<String> refreshToken() {
-    // TODO refresh the given token  
+    // TODO refresh the given token
     return null;
   }
 }
