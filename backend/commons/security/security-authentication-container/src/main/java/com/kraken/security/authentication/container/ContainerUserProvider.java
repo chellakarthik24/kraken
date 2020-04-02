@@ -7,7 +7,6 @@ import com.kraken.security.decoder.api.TokenDecoder;
 import com.kraken.security.entity.KrakenToken;
 import com.kraken.security.entity.KrakenUser;
 import lombok.AccessLevel;
-import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,8 +16,9 @@ import reactor.util.function.Tuples;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static java.util.Objects.requireNonNull;
 
 @Slf4j
 @Component
@@ -33,9 +33,9 @@ public class ContainerUserProvider implements UserProvider {
   public ContainerUserProvider(final SecurityContainerProperties properties,
                                final TokenDecoder decoder,
                                final SecurityClient client) {
-    this.properties = Objects.requireNonNull(properties);
-    this.decoder = Objects.requireNonNull(decoder);
-    this.client = Objects.requireNonNull(client);
+    this.properties = requireNonNull(properties);
+    this.decoder = requireNonNull(decoder);
+    this.client = requireNonNull(client);
     this.token = new AtomicReference<>(KrakenToken.builder()
         .accessToken(properties.getAccessToken())
         .refreshToken(properties.getRefreshToken())

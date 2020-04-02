@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.kraken.config.runtime.client.api.RuntimeClientProperties;
-import com.kraken.runtime.client.web.WebRuntimeClient;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
 import okhttp3.mockwebserver.MockResponse;
@@ -21,35 +20,35 @@ import org.springframework.http.MediaType;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WebRuntimeClientTest {
 
   private ObjectMapper mapper;
-  private MockWebServer runtimeMockWebServer;
+  private MockWebServer server;
   private WebRuntimeClient client;
 
   @Mock
   RuntimeClientProperties properties;
 
   @Before
-  public void before() {
-    runtimeMockWebServer = new MockWebServer();
+  public void setUp() {
+    server = new MockWebServer();
     mapper = new ObjectMapper();
-    final String url = runtimeMockWebServer.url("/").toString();
-    when(properties.getUrl()).thenReturn(url);
+    final String url = server.url("/").toString();
+    given(properties.getUrl()).willReturn(url);
     client = new WebRuntimeClient(properties);
   }
 
   @After
   public void tearDown() throws IOException {
-    runtimeMockWebServer.shutdown();
+    server.shutdown();
   }
 
   @Test
   public void shouldSetStatus() throws InterruptedException {
-    runtimeMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -59,17 +58,17 @@ public class WebRuntimeClientTest {
     final var set2 = client.setStatus(FlatContainerTest.CONTAINER, ContainerStatus.RUNNING);
 
     set1.block();
-    final var request = runtimeMockWebServer.takeRequest();
+    final var request = server.takeRequest();
     assertThat(request.getPath()).isEqualTo("/container/status/DONE?taskId=taskId&containerId=id&containerName=name");
 
     set2.block();
-    assertThat(runtimeMockWebServer.getRequestCount()).isEqualTo(1);
+    assertThat(server.getRequestCount()).isEqualTo(1);
     assertThat(client.getLastStatus()).isEqualTo(ContainerStatus.DONE);
   }
 
   @Test
   public void shouldSetFailedStatus() throws InterruptedException {
-    runtimeMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -77,11 +76,11 @@ public class WebRuntimeClientTest {
 
     client.setFailedStatus(FlatContainerTest.CONTAINER).block();
 
-    final var request = runtimeMockWebServer.takeRequest();
+    final var request = server.takeRequest();
     assertThat(request.getPath()).isEqualTo("/container/status/FAILED?taskId=taskId&containerId=id&containerName=name");
 
     client.setStatus(FlatContainerTest.CONTAINER, ContainerStatus.DONE);
-    assertThat(runtimeMockWebServer.getRequestCount()).isEqualTo(1);
+    assertThat(server.getRequestCount()).isEqualTo(1);
     assertThat(client.getLastStatus()).isEqualTo(ContainerStatus.FAILED);
   }
 
@@ -130,7 +129,7 @@ public class WebRuntimeClientTest {
         "data:" + mapper.writeValueAsString(ready) + "\n" +
         "\n";
 
-    runtimeMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -139,7 +138,7 @@ public class WebRuntimeClientTest {
     final var response = client.waitForStatus(flatContainer, expectedStatus).block();
     assertThat(response).isEqualTo(task);
 
-    final var request = runtimeMockWebServer.takeRequest();
+    final var request = server.takeRequest();
     assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.TEXT_EVENT_STREAM_VALUE);
     assertThat(request.getPath()).isEqualTo("/task/watch/app");
   }
@@ -149,14 +148,14 @@ public class WebRuntimeClientTest {
     final var flatContainer = FlatContainerTest.CONTAINER;
 
     // Tasks stream
-    runtimeMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(500)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_EVENT_STREAM_VALUE)
             .setBody(""));
 
     // Set status
-    runtimeMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -171,7 +170,7 @@ public class WebRuntimeClientTest {
   public void shouldFind() throws InterruptedException, JsonProcessingException {
     final var container = FlatContainerTest.CONTAINER;
 
-    runtimeMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -180,7 +179,7 @@ public class WebRuntimeClientTest {
 
     final var result = client.find("taskId", "containerName").block();
 
-    final var request = runtimeMockWebServer.takeRequest();
+    final var request = server.takeRequest();
     assertThat(request.getMethod()).isEqualTo("GET");
     assertThat(request.getPath()).isEqualTo("/container/find?taskId=taskId&containerName=containerName");
     assertThat(result).isEqualTo(container);
@@ -203,7 +202,7 @@ public class WebRuntimeClientTest {
         "data:" + mapper.writeValueAsString(LogTest.LOG) + "\n" +
         "\n";
 
-    runtimeMockWebServer.enqueue(
+    server.enqueue(
         new MockResponse()
             .setResponseCode(200)
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -213,7 +212,7 @@ public class WebRuntimeClientTest {
     assertThat(response).isNotNull();
     assertThat(response.size()).isEqualTo(4);
 
-    final var request = runtimeMockWebServer.takeRequest();
+    final var request = server.takeRequest();
     assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.TEXT_EVENT_STREAM_VALUE);
     assertThat(request.getPath()).isEqualTo("/logs/watch/app");
   }

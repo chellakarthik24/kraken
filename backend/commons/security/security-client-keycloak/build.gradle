@@ -4,4 +4,7 @@ dependencies {
     testImplementation project(path: ':commons:security:security-entity', configuration: 'testArtifacts')
     testImplementation project(':commons:config:config-security-client-spring')
     testImplementation project(':commons:tools:tools-application')
+
+    testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: okhttpVersion
+    testImplementation group: 'com.squareup.okhttp3', name: 'okhttp', version: okhttpVersion
 }
