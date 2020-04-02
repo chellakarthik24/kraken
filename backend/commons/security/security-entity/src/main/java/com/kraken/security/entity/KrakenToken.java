@@ -3,15 +3,11 @@ package com.kraken.security.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.Optional;
-
 import static com.google.common.base.Strings.nullToEmpty;
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
 
 
 @Value

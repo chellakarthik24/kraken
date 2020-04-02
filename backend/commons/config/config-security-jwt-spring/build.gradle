@@ -1,5 +1,0 @@
-dependencies {
-    implementation project(':commons:config:config-security-jwt-api')
-
-    testImplementation project(path: ':commons:tools:tools-application', configuration: 'testArtifacts')
-}

@@ -11,8 +11,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
@@ -27,7 +27,7 @@ final class KeycloakSecurityClient implements SecurityClient {
   SecurityClientProperties properties;
 
   KeycloakSecurityClient(final SecurityClientProperties properties) {
-    this.properties = Objects.requireNonNull(properties);
+    this.properties = requireNonNull(properties);
     this.webClient = WebClient
         .builder()
         .baseUrl(properties.getUrl())
@@ -49,28 +49,27 @@ final class KeycloakSecurityClient implements SecurityClient {
   }
 
   @Override
-  public Mono<KrakenToken> exchangeToken(final KrakenToken token) {
+  public Mono<KrakenToken> exchangeToken(final String accessToken) {
     return webClient
         .post()
         .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
         .body(BodyInserters.fromFormData("client_id", properties.getApiId())
             .with("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
-            .with("subject_token", token.getAccessToken())
+            .with("subject_token", accessToken)
             .with("requested_token_type", "urn:ietf:params:oauth:token-type:refresh_token")
-            .with("audience", properties.getApiId())
-            .with("scope", "openid info offline_access"))
+            .with("audience", properties.getApiId()))
         .retrieve()
         .bodyToMono(KrakenToken.class)
         .retryBackoff(NUM_RETRIES, FIRST_BACKOFF);
   }
 
   @Override
-  public Mono<KrakenToken> refreshToken(final KrakenToken token) {
+  public Mono<KrakenToken> refreshToken(final String refreshToken) {
     return webClient
         .post()
         .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
         .body(BodyInserters.fromFormData("grant_type", "refresh_token")
-            .with("refresh_token", token.getRefreshToken())
+            .with("refresh_token", refreshToken)
             .with("client_id", properties.getApiId()))
         .retrieve()
         .bodyToMono(KrakenToken.class)

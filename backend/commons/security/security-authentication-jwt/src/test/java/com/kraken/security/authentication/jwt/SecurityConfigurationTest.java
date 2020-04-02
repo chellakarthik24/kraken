@@ -2,6 +2,8 @@ package com.kraken.security.authentication.jwt;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
+import com.kraken.security.decoder.api.TokenDecoder;
+import com.kraken.security.entity.KrakenUserTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
@@ -13,7 +15,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.Optional;
+
+import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class},
@@ -25,9 +30,13 @@ public class SecurityConfigurationTest {
   @MockBean
   ReactiveJwtDecoder jwtDecoder;
 
+  @MockBean
+  TokenDecoder tokenDecoder;
+
   @Test
-  public void shouldReturnUser() {
-    BDDMockito.given(jwtDecoder.decode("token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
+  public void shouldReturnUser() throws IOException {
+    given(tokenDecoder.decode("token")).willReturn(KrakenUserTest.KRAKEN_USER);
+    given(jwtDecoder.decode("token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"))));
 
     webTestClient.get()
@@ -42,7 +51,7 @@ public class SecurityConfigurationTest {
 
   @Test
   public void shouldFailAdmin() {
-    BDDMockito.given(jwtDecoder.decode("token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
+    given(jwtDecoder.decode("token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"))));
 
     webTestClient.get()

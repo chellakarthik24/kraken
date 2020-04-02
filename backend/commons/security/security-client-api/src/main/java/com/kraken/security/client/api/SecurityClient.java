@@ -7,7 +7,8 @@ public interface SecurityClient {
 
   Mono<KrakenToken> userLogin(String username, String password);
 
-  Mono<KrakenToken> exchangeToken(KrakenToken token);
+  Mono<KrakenToken> exchangeToken(String accessToken);
 
-  Mono<KrakenToken> refreshToken(KrakenToken token);
+  Mono<KrakenToken> refreshToken(String refreshToken);
+
 }

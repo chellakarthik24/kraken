@@ -1,25 +1,32 @@
 package com.kraken.security.entity;
 
 import com.google.common.collect.ImmutableList;
+import com.kraken.test.utils.TestUtils;
 import org.junit.Test;
 
-import static com.kraken.security.entity.KrakenRole.USER;
-import static com.kraken.test.utils.TestUtils.shouldPassAll;
+import java.time.Instant;
 
 public class KrakenUserTest {
 
   public static final KrakenUser KRAKEN_USER = KrakenUser.builder()
-      .userId("user-id")
+      .issuedAt(Instant.EPOCH)
+      .expirationTime(Instant.EPOCH.plusMillis(1))
+      .userId("userId")
+      .sessionId("sessionId")
       .username("username")
-      .roles(ImmutableList.of(USER))
+      .roles(ImmutableList.of(KrakenRole.USER))
       .groups(ImmutableList.of("/default-kraken"))
       .currentGroup("/default-kraken")
       .build();
 
+  @Test
+  public void shouldPassEquals() {
+    TestUtils.shouldPassEquals(KRAKEN_USER.getClass());
+  }
 
   @Test
-  public void shouldPassTestUtils() {
-    shouldPassAll(KRAKEN_USER);
+  public void shouldPassToString() {
+    TestUtils.shouldPassToString(KRAKEN_USER);
   }
 
 }

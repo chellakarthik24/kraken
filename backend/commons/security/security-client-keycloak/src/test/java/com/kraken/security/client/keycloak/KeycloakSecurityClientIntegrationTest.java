@@ -28,11 +28,14 @@ public class KeycloakSecurityClientIntegrationTest {
     final var loginToken = client.userLogin("kraken-user", "kraken").block();
     Assertions.assertThat(loginToken).isNotNull();
     System.out.println(loginToken);
-    final var apiToken = client.exchangeToken(loginToken).block();
+    final var apiToken = client.exchangeToken(loginToken.getAccessToken()).block();
     Assertions.assertThat(apiToken).isNotNull();
     System.out.println(apiToken);
-    final var refreshedToken = client.refreshToken(apiToken).block();
+    final var refreshedToken = client.refreshToken(apiToken.getRefreshToken()).block();
     Assertions.assertThat(refreshedToken).isNotNull();
     System.out.println(refreshedToken);
+    final var refreshedToken2 = client.refreshToken(apiToken.getRefreshToken()).block();
+    Assertions.assertThat(refreshedToken2).isNotNull();
+    System.out.println(refreshedToken2);
   }
 }
