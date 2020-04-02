@@ -1,6 +1,6 @@
 package com.kraken.security;
 
-import com.kraken.security.authentication.api.AuthenticatedUserProvider;
+import com.kraken.security.authentication.api.UserProvider;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +20,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 class TestController {
 
-  @NonNull AuthenticatedUserProvider userProvider;
+  @NonNull UserProvider userProvider;
 
   @GetMapping("/admin")
   public Mono<String> admin() {

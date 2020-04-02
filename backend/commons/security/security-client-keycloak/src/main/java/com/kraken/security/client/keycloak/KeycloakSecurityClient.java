@@ -54,6 +54,7 @@ final class KeycloakSecurityClient implements SecurityClient {
         .post()
         .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
         .body(BodyInserters.fromFormData("client_id", properties.getApiId())
+            .with("client_secret", properties.getApiSecret())
             .with("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
             .with("subject_token", accessToken)
             .with("requested_token_type", "urn:ietf:params:oauth:token-type:refresh_token")
@@ -70,7 +71,8 @@ final class KeycloakSecurityClient implements SecurityClient {
         .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
         .body(BodyInserters.fromFormData("grant_type", "refresh_token")
             .with("refresh_token", refreshToken)
-            .with("client_id", properties.getApiId()))
+            .with("client_id", properties.getApiId())
+            .with("client_secret", properties.getApiSecret()))
         .retrieve()
         .bodyToMono(KrakenToken.class)
         .retryBackoff(NUM_RETRIES, FIRST_BACKOFF);

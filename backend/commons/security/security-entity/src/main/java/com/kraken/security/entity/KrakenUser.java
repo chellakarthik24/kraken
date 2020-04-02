@@ -29,14 +29,12 @@ public class KrakenUser {
   String currentGroup;
   Instant expirationTime;
   Instant issuedAt;
-  String sessionId;
 
   @JsonCreator
   KrakenUser(
       @JsonProperty("exp") final Long expirationTime,
       @JsonProperty("iat") final Long issuedAt,
       @JsonProperty("sub") final String userId,
-      @JsonProperty("session_state") final String sessionId,
       @JsonProperty("preferred_username") final String username,
       @JsonProperty("realm_access") final Map<String, List<String>> realmAccess,
       @JsonProperty("user_groups") final List<String> groups,
@@ -54,7 +52,6 @@ public class KrakenUser {
     this.currentGroup = nullToEmpty(currentGroup);
     this.expirationTime = Instant.ofEpochMilli(requireNonNull(expirationTime));
     this.issuedAt = Instant.ofEpochMilli(requireNonNull(issuedAt));
-    this.sessionId = nullToEmpty(sessionId);
   }
 
   @Builder
@@ -65,8 +62,7 @@ public class KrakenUser {
       List<String> groups,
       String currentGroup,
       Instant expirationTime,
-      Instant issuedAt,
-      String sessionId
+      Instant issuedAt
   ) {
     super();
     this.username = requireNonNull(username);
@@ -76,6 +72,5 @@ public class KrakenUser {
     this.currentGroup = requireNonNull(currentGroup);
     this.expirationTime = requireNonNull(expirationTime);
     this.issuedAt = requireNonNull(issuedAt);
-    this.sessionId = requireNonNull(sessionId);
   }
 }

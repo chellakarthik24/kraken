@@ -8,5 +8,7 @@ public interface SecurityClientProperties extends UrlProperty {
 
   String getApiId();
 
+  String getApiSecret();
+
   String getRealm();
 }

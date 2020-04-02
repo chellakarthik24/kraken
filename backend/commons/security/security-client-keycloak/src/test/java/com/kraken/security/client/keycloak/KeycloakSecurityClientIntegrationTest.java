@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-//@Ignore("Start keycloak before running")
+@Ignore("Start keycloak before running")
 public class KeycloakSecurityClientIntegrationTest {
 
   @Autowired

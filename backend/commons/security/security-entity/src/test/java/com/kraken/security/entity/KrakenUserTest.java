@@ -12,7 +12,6 @@ public class KrakenUserTest {
       .issuedAt(Instant.EPOCH)
       .expirationTime(Instant.EPOCH.plusMillis(1))
       .userId("userId")
-      .sessionId("sessionId")
       .username("username")
       .roles(ImmutableList.of(KrakenRole.USER))
       .groups(ImmutableList.of("/default-kraken"))

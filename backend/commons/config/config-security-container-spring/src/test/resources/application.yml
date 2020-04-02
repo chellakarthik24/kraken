@@ -1,0 +1,4 @@
+kraken:
+  security:
+    access-token: access-token
+    refresh-token: refreshToken
