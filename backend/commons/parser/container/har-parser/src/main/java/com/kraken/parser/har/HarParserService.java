@@ -9,6 +9,7 @@ import com.kraken.har.parser.HarParser;
 import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.command.Command;
 import com.kraken.runtime.command.CommandService;
+import com.kraken.runtime.container.executor.ContainerExecutor;
 import com.kraken.runtime.container.properties.ContainerProperties;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.storage.client.api.StorageClient;
@@ -25,6 +26,10 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Optional;
 
+import static java.nio.file.Paths.get;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -32,49 +37,37 @@ import java.util.Optional;
 class HarParserService {
 
   @NonNull HarParser parser;
-  @NonNull RuntimeClient runtime;
   @NonNull StorageClient storage;
   @NonNull CommandService commands;
   @NonNull DebugEntryWriter writer;
-  @NonNull ContainerProperties container;
   @NonNull HarParserProperties harParser;
   @NonNull ApplicationProperties application;
+  @NonNull ContainerExecutor executor;
 
   @PostConstruct
   public void init() {
-    final var findMe = runtime.find(container.getTaskId(), container.getName());
-    final var me = findMe.block();
-    final var setStatusFailed = runtime.setFailedStatus(me);
-    final var setStatusPreparing = runtime.setStatus(me, ContainerStatus.PREPARING);
     final var localFolderPath = Paths.get(harParser.getLocal());
-    final var downloadHAR = storage.downloadFile(localFolderPath, harParser.getRemote());
-    final var setStatusReady = runtime.setStatus(me, ContainerStatus.READY);
-    final var waitForStatusReady = runtime.waitForStatus(me, ContainerStatus.READY);
-    final var setStatusRunning = runtime.setStatus(me, ContainerStatus.RUNNING);
-    final var listFiles = commands.execute(Command.builder()
-        .path(application.getData())
-        .command(ImmutableList.of("ls", "-lR"))
-        .environment(ImmutableMap.of())
-        .build());
-    final var parse = writer.write(parser.parse(localFolderPath));
-    final var setStatusDone = runtime.setStatus(me, ContainerStatus.DONE);
-
-    setStatusPreparing.block();
-    downloadHAR.block();
-    Optional.ofNullable(listFiles
-        .doOnError(t -> log.error("Failed list files", t))
-        .collectList()
-        .onErrorResume(throwable -> setStatusFailed.map(aVoid -> ImmutableList.of()))
-        .block()).orElse(Collections.emptyList()).forEach(log::info);
-    setStatusReady.block();
-    waitForStatusReady.block();
-    setStatusRunning.block();
-    log.info("Parsing START " + localFolderPath);
-    parse.map(DebugEntry::getRequestName)
-        .doOnError(t -> log.error("Failed to parse debug entry", t))
-        .doOnNext(log::info).collectList().block();
-    log.info("Parsing END");
-    setStatusDone.block();
+    executor.execute(of(me -> {
+      // Download HAR
+      storage.downloadFile(localFolderPath, harParser.getRemote()).block();
+      // List files
+      final var listFiles = commands.execute(Command.builder()
+          .path(application.getData())
+          .command(ImmutableList.of("ls", "-lR"))
+          .environment(ImmutableMap.of())
+          .build());
+      Optional.ofNullable(listFiles
+          .collectList()
+          .block()).orElse(Collections.emptyList()).forEach(log::info);
+    }), me -> {
+      log.info("Parsing START " + localFolderPath);
+      // Parser HAR
+      final var parse = writer.write(parser.parse(localFolderPath));
+      parse.map(DebugEntry::getRequestName)
+          .doOnError(t -> log.error("Failed to parse debug entry", t))
+          .doOnNext(log::info).collectList().block();
+      log.info("Parsing END");
+    }, empty());
   }
 
 }

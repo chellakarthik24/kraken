@@ -25,6 +25,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
@@ -64,6 +65,7 @@ public class SpringContainerExecutorTest {
     containerExecutor.execute(empty(), execute, empty());
     verify(client).setStatus(me, ContainerStatus.READY);
     verify(client).waitForStatus(me, ContainerStatus.READY);
+    verify(client).setStatus(me, ContainerStatus.RUNNING);
     verify(execute).accept(me);
     verify(client).setStatus(me, ContainerStatus.DONE);
   }
@@ -75,10 +77,22 @@ public class SpringContainerExecutorTest {
     verify(setUp).accept(me);
     verify(client).setStatus(me, ContainerStatus.READY);
     verify(client).waitForStatus(me, ContainerStatus.READY);
+    verify(client).setStatus(me, ContainerStatus.RUNNING);
     verify(execute).accept(me);
     verify(client).setStatus(me, ContainerStatus.STOPPING);
     verify(client).waitForStatus(me, ContainerStatus.STOPPING);
     verify(tearDown).accept(me);
     verify(client).setStatus(me, ContainerStatus.DONE);
+  }
+
+  @Test
+  public void shouldExecuteFail() {
+    doThrow(new RuntimeException("fail")).when(execute).accept(me);
+    containerExecutor.execute(empty(), execute, empty());
+    verify(client).setStatus(me, ContainerStatus.READY);
+    verify(client).waitForStatus(me, ContainerStatus.READY);
+    verify(client).setStatus(me, ContainerStatus.RUNNING);
+    verify(execute).accept(me);
+    verify(client).setStatus(me, ContainerStatus.FAILED);
   }
 }

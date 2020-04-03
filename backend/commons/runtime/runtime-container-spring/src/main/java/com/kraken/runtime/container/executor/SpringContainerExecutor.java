@@ -39,6 +39,7 @@ final class SpringContainerExecutor implements ContainerExecutor {
       });
       client.setStatus(me, ContainerStatus.READY).block();
       client.waitForStatus(me, ContainerStatus.READY).block();
+      client.setStatus(me, ContainerStatus.RUNNING).block();
       execute.accept(me);
       tearDown.ifPresent(consumer -> {
         client.setStatus(me, ContainerStatus.STOPPING).block();
