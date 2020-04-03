@@ -3,34 +3,20 @@ package com.kraken.analysis.server.rest;
 import com.kraken.analysis.entity.DebugEntryTest;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
-import com.kraken.analysis.server.rest.AnalysisController;
 import com.kraken.analysis.server.service.AnalysisService;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageNodeTest;
+import com.kraken.tests.security.AuthControllerTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 
 import static com.kraken.storage.entity.StorageNodeType.FILE;
-import static com.kraken.test.utils.TestUtils.shouldPassNPE;
+import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {AnalysisController.class})
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@EnableAutoConfiguration
-public class AnalysisControllerTest {
-  @Autowired
-  WebTestClient webTestClient;
+public class AnalysisControllerTest extends AuthControllerTest {
   @MockBean
   AnalysisService service;
 
@@ -49,11 +35,23 @@ public class AnalysisControllerTest {
     webTestClient.post()
         .uri(uriBuilder -> uriBuilder.path("/result")
             .build())
+        .header("Authorization", "Bearer user-token")
         .body(BodyInserters.fromValue(result))
         .exchange()
         .expectStatus().isOk()
         .expectBody(StorageNode.class)
         .isEqualTo(node);
+  }
+
+  @Test
+  public void shouldCreateForbidden() {
+    final var result = ResultTest.RESULT;
+    webTestClient.post()
+        .uri(uriBuilder -> uriBuilder.path("/result")
+            .build())
+        .body(BodyInserters.fromValue(result))
+        .exchange()
+        .expectStatus().is4xxClientError();
   }
 
   @Test
@@ -66,10 +64,22 @@ public class AnalysisControllerTest {
         .uri(uriBuilder -> uriBuilder.path("/result")
             .queryParam("resultId", resultId)
             .build())
+        .header("Authorization", "Bearer user-token")
         .exchange()
         .expectStatus().isOk()
         .expectBody(String.class)
         .isEqualTo(resultId);
+  }
+
+  @Test
+  public void shouldDeleteForbidden() {
+    final var resultId = "resultId";
+    webTestClient.delete()
+        .uri(uriBuilder -> uriBuilder.path("/result")
+            .queryParam("resultId", resultId)
+            .build())
+        .exchange()
+        .expectStatus().is4xxClientError();
   }
 
   @Test
@@ -91,10 +101,22 @@ public class AnalysisControllerTest {
         .uri(uriBuilder -> uriBuilder.path("/result/status/COMPLETED")
             .queryParam("resultId", resultId)
             .build())
+        .header("Authorization", "Bearer user-token")
         .exchange()
         .expectStatus().isOk()
         .expectBody(StorageNode.class)
         .isEqualTo(resultNode);
+  }
+
+  @Test
+  public void shouldSetStatusForbidden() {
+    final var resultId = "resultId";
+    webTestClient.post()
+        .uri(uriBuilder -> uriBuilder.path("/result/status/COMPLETED")
+            .queryParam("resultId", resultId)
+            .build())
+        .exchange()
+        .expectStatus().is4xxClientError();
   }
 
   @Test
@@ -107,10 +129,21 @@ public class AnalysisControllerTest {
     webTestClient.post()
         .uri(uriBuilder -> uriBuilder.path("/result/debug")
             .build())
+        .header("Authorization", "Bearer user-token")
         .body(BodyInserters.fromValue(debug))
         .exchange()
         .expectStatus().isOk();
   }
 
+  @Test
+  public void shouldAddDebugForbidden() {
+    final var debug = DebugEntryTest.DEBUG_ENTRY;
+    webTestClient.post()
+        .uri(uriBuilder -> uriBuilder.path("/result/debug")
+            .build())
+        .body(BodyInserters.fromValue(debug))
+        .exchange()
+        .expectStatus().is4xxClientError();
+  }
 }
 

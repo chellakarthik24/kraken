@@ -1,8 +1,7 @@
 package com.kraken.template.string;
 
 import com.google.common.collect.ImmutableMap;
-import com.kraken.test.utils.ResourceUtils;
-import org.assertj.core.api.Assertions;
+import com.kraken.tests.utils.ResourceUtils;
 import org.junit.Before;
 import org.junit.Test;
 

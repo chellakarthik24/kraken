@@ -13,7 +13,7 @@ import com.kraken.runtime.entity.task.TaskTest;
 import com.kraken.runtime.event.TaskCancelledEvent;
 import com.kraken.runtime.event.TaskExecutedEvent;
 import com.kraken.runtime.server.service.TaskListService;
-import com.kraken.test.utils.TestUtils;
+import com.kraken.tests.utils.TestUtils;
 import com.kraken.tools.event.bus.EventBus;
 import com.kraken.tools.sse.SSEService;
 import org.junit.Test;

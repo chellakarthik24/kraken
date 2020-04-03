@@ -5,7 +5,7 @@ import com.google.common.testing.NullPointerTester;
 import org.junit.Test;
 
 import static com.google.common.testing.NullPointerTester.Visibility.PACKAGE;
-import static com.kraken.test.utils.TestUtils.*;
+import static com.kraken.tests.utils.TestUtils.*;
 
 public class HostTest {
 

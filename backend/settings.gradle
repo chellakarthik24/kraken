@@ -123,6 +123,7 @@ include ':commons:ee:license-l4j'
 include ':commons:ee:runtime-backend-kubernetes'
 
 include ':tests:tests-utils'
+include ':tests:tests-security-web'
 
 include ':applications:storage'
 findProject(':applications:storage')?.name = 'app-storage'

@@ -1,4 +1,4 @@
-package com.kraken.test.utils;
+package com.kraken.tests.utils;
 
 import com.google.common.testing.NullPointerTester;
 import nl.jqno.equalsverifier.EqualsVerifier;

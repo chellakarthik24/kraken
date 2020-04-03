@@ -9,7 +9,7 @@ import com.kraken.security.entity.KrakenRole;
 import com.kraken.security.entity.KrakenTokenTest;
 import com.kraken.security.entity.KrakenUser;
 import com.kraken.security.entity.KrakenUserTest;
-import com.kraken.test.utils.TestUtils;
+import com.kraken.tests.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -3,6 +3,7 @@ package com.kraken.security.authentication.web;
 import com.google.common.collect.ImmutableList;
 import com.kraken.security.decoder.api.TokenDecoder;
 import com.kraken.security.entity.KrakenUserTest;
+import com.kraken.tests.security.JwtTestFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +34,7 @@ public class JwtConverterTest {
 
   @Test
   public void shouldConvert() {
-    final var jwt = JwtTestFactory.JWT_FACTORY.create(ImmutableList.of("USER"),
+    final var jwt = JwtTestFactory.JWT_FACTORY.create("token", ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.empty());
     final var result = converter.convert(jwt);
     assertThat(result).isNotNull();

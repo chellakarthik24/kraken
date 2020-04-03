@@ -1,4 +1,4 @@
-package com.kraken.security.authentication.web;
+package com.kraken.tests.security;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -8,9 +8,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-interface JwtTestFactory {
+public interface JwtTestFactory {
 
-   JwtTestFactory JWT_FACTORY = (final List<String> roles, final List<String> groups, final Optional<String> group) -> {
+   JwtTestFactory JWT_FACTORY = (final String token, final List<String> roles, final List<String> groups, final Optional<String> group) -> {
     final var rolesArray = new JSONArray();
     roles.forEach(rolesArray::appendElement);
     final var realmAccess = new JSONObject();
@@ -18,7 +18,7 @@ interface JwtTestFactory {
     final var groupsArray = new JSONArray();
     groups.forEach(groupsArray::appendElement);
 
-    final var jwt = Jwt.withTokenValue("token")
+    final var jwt = Jwt.withTokenValue(token)
         .claim("preferred_username", "username")
         .claim("user_groups", groupsArray)
         .claim("realm_access", realmAccess)
@@ -31,6 +31,6 @@ interface JwtTestFactory {
     return jwt.build();
   };
 
-  Jwt create(List<String> roles, List<String> groups, Optional<String> group);
+  Jwt create(String token, List<String> roles, List<String> groups, Optional<String> group);
 
 }

@@ -1,7 +1,7 @@
 package com.kraken.runtime.container.properties;
 
 import com.kraken.runtime.entity.task.TaskType;
-import com.kraken.test.utils.TestUtils;
+import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 
 public class ContainerPropertiesTest {

@@ -1,4 +1,4 @@
-package com.kraken.test.utils;
+package com.kraken.tests.utils;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

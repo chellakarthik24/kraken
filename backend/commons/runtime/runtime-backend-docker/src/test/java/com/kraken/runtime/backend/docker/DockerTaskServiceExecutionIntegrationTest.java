@@ -10,7 +10,7 @@ import com.kraken.runtime.entity.log.Log;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.runtime.logs.LogsService;
-import com.kraken.test.utils.ResourceUtils;
+import com.kraken.tests.utils.ResourceUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

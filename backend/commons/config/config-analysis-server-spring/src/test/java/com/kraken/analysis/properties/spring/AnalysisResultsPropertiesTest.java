@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.nio.file.Paths;
 
-import static com.kraken.test.utils.TestUtils.shouldPassAll;
+import static com.kraken.tests.utils.TestUtils.shouldPassAll;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnalysisResultsPropertiesTest {

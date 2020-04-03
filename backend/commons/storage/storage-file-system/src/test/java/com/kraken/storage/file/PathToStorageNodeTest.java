@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 import static com.kraken.storage.entity.StorageNodeType.FILE;
 import static com.kraken.storage.entity.StorageNodeType.NONE;
-import static com.kraken.test.utils.TestUtils.shouldPassNPE;
+import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

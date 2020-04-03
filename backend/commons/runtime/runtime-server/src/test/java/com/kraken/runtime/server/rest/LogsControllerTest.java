@@ -20,7 +20,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.Optional;
 
-import static com.kraken.test.utils.TestUtils.shouldPassNPE;
+import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 

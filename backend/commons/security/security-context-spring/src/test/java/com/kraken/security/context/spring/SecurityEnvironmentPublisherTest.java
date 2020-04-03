@@ -1,6 +1,5 @@
 package com.kraken.security.context.spring;
 
-import com.kraken.Application;
 import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.runtime.context.entity.ExecutionContextBuilderTest;
 import com.kraken.runtime.entity.environment.ExecutionEnvironmentEntry;
@@ -8,7 +7,7 @@ import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.security.authentication.api.UserProvider;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.entity.KrakenTokenTest;
-import com.kraken.test.utils.TestUtils;
+import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

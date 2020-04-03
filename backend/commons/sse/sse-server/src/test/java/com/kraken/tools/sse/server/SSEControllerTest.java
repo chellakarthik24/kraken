@@ -7,7 +7,7 @@ import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.TaskTest;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.entity.StorageWatcherEventTest;
-import com.kraken.test.utils.TestUtils;
+import com.kraken.tests.utils.TestUtils;
 import com.kraken.tools.sse.SSEService;
 import com.kraken.tools.sse.SSEWrapper;
 import com.kraken.tools.sse.SSEWrapperTest;

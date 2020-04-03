@@ -3,7 +3,7 @@ package com.kraken.runtime.entity.task;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
-import static com.kraken.test.utils.TestUtils.shouldPassAll;
+import static com.kraken.tests.utils.TestUtils.shouldPassAll;
 
 public class TaskTest {
 

@@ -7,7 +7,6 @@ import com.kraken.storage.entity.StorageNodeTest;
 import com.kraken.storage.entity.StorageWatcherEvent;
 import com.kraken.storage.file.StorageService;
 import com.kraken.storage.file.StorageWatcherService;
-import com.kraken.tools.configuration.jackson.MediaTypes;
 import com.kraken.tools.sse.SSEService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -34,7 +33,7 @@ import java.util.Optional;
 
 import static com.kraken.storage.entity.StorageNodeType.DIRECTORY;
 import static com.kraken.storage.entity.StorageWatcherEventTest.STORAGE_WATCHER_EVENT;
-import static com.kraken.test.utils.TestUtils.shouldPassNPE;
+import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 

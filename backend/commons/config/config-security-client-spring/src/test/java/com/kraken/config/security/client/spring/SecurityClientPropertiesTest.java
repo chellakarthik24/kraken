@@ -1,7 +1,7 @@
 package com.kraken.config.security.client.spring;
 
 import com.kraken.config.security.client.api.SecurityClientProperties;
-import com.kraken.test.utils.TestUtils;
+import com.kraken.tests.utils.TestUtils;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 

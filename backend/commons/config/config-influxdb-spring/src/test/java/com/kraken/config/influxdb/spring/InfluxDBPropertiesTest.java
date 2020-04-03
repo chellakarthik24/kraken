@@ -3,7 +3,7 @@ package com.kraken.config.influxdb.spring;
 import com.kraken.config.influxdb.api.InfluxDBProperties;
 import org.junit.Test;
 
-import static com.kraken.test.utils.TestUtils.shouldPassAll;
+import static com.kraken.tests.utils.TestUtils.shouldPassAll;
 
 public class InfluxDBPropertiesTest {
 

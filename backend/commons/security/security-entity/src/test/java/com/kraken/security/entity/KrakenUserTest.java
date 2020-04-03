@@ -1,7 +1,7 @@
 package com.kraken.security.entity;
 
 import com.google.common.collect.ImmutableList;
-import com.kraken.test.utils.TestUtils;
+import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -14,6 +14,16 @@ public class KrakenUserTest {
       .userId("userId")
       .username("username")
       .roles(ImmutableList.of(KrakenRole.USER))
+      .groups(ImmutableList.of("/default-kraken"))
+      .currentGroup("/default-kraken")
+      .build();
+
+  public static final KrakenUser KRAKEN_ADMIN = KrakenUser.builder()
+      .issuedAt(Instant.EPOCH)
+      .expirationTime(Instant.EPOCH.plusMillis(1))
+      .userId("userId")
+      .username("username")
+      .roles(ImmutableList.of(KrakenRole.ADMIN))
       .groups(ImmutableList.of("/default-kraken"))
       .currentGroup("/default-kraken")
       .build();

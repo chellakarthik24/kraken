@@ -1,7 +1,6 @@
 package com.kraken.config.storage.spring;
 
-import com.kraken.config.storage.spring.SpringStorageProperties;
-import com.kraken.test.utils.TestUtils;
+import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 
 public class StoragePropertiesTest {

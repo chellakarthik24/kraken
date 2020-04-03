@@ -3,7 +3,7 @@ package com.kraken.runtime.context.entity;
 import com.kraken.runtime.entity.task.TaskType;
 import org.junit.Test;
 
-import static com.kraken.test.utils.TestUtils.shouldPassAll;
+import static com.kraken.tests.utils.TestUtils.shouldPassAll;
 
 public class CancelContextTest {
 
