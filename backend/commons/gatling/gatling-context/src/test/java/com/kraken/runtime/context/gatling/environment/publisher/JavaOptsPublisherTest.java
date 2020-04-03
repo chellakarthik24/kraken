@@ -48,14 +48,14 @@ public class JavaOptsPublisherTest {
         ExecutionEnvironmentEntry.builder().scope("").from(USER).key("test").value("someValue").build(),
         ExecutionEnvironmentEntry.builder().scope("other").from(USER).key("KRAKEN_VERSION").value("1.3.0").build()))).block();
     assertThat(result).isNotNull();
-    final var hostIdJavaOpts = result.getEntries()
+    final var hostIdJavaOpts = result
         .stream().filter(entry -> entry.getScope().equals("hostId") && entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))
         .findFirst();
-    final var otherJavaOpts = result.getEntries()
+    final var otherJavaOpts = result
         .stream().filter(entry -> entry.getScope().equals("other") && entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))
         .findFirst();
 
-    assertThat(result.getEntries().stream().anyMatch(entry -> entry.getScope().equals("") && entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))).isFalse();
+    assertThat(result.stream().anyMatch(entry -> entry.getScope().equals("") && entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))).isFalse();
     assertThat(hostIdJavaOpts.isPresent()).isTrue();
     assertThat(hostIdJavaOpts.get().getValue()).isEqualTo("-Dtest=someValue -Dfoo=bar");
     assertThat(otherJavaOpts.isPresent()).isTrue();
@@ -67,7 +67,7 @@ public class JavaOptsPublisherTest {
     final var entries = publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(
     ))).block();
     assertThat(entries).isNotNull();
-    final var javaOptsEntry = entries.getEntries()
+    final var javaOptsEntry = entries
         .stream().filter(entry -> entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))
         .findFirst();
 

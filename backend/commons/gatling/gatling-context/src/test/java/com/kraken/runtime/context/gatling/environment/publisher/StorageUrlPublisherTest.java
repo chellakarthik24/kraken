@@ -42,7 +42,7 @@ public class StorageUrlPublisherTest {
   public void shouldApply() {
     final var env = publisher.apply(ExecutionContextBuilderTest.EXECUTION_CONTEXT_BUILDER).block();
     assertThat(env).isNotNull();
-    assertThat(env.getEntries().stream().map(ExecutionEnvironmentEntry::getKey).anyMatch(key -> key.equals(KRAKEN_STORAGE_URL.name()))).isTrue();
+    assertThat(env.stream().map(ExecutionEnvironmentEntry::getKey).anyMatch(key -> key.equals(KRAKEN_STORAGE_URL.name()))).isTrue();
   }
 
   @Test

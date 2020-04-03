@@ -21,7 +21,7 @@ public class ExecutionContextBuilder {
   @NonNull String file;
   @NonNull Integer containersCount;
   @NonNull List<String> hostIds;
-  @With
+  @With(AccessLevel.PRIVATE)
   @NonNull List<ExecutionEnvironmentEntry> entries;
 
   public ExecutionContextBuilder addEntries(List<ExecutionEnvironmentEntry> entries) {

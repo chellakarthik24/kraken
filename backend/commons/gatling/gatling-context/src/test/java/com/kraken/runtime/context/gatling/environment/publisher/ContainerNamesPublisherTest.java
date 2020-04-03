@@ -35,7 +35,7 @@ public class ContainerNamesPublisherTest {
   public void shouldApply() {
     final var env = publisher.apply(EXECUTION_CONTEXT_BUILDER).block();
     assertThat(env).isNotNull();
-    assertThat(env.getEntries()
+    assertThat(env
         .stream()
         .map(ExecutionEnvironmentEntry::getKey)
         .collect(toUnmodifiableSet())).isEqualTo(ImmutableSet.of(

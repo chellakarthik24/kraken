@@ -6,6 +6,7 @@ import com.kraken.runtime.context.entity.ExecutionContextBuilder;
 import com.kraken.runtime.entity.environment.ExecutionEnvironmentEntry;
 import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.security.authentication.api.UserProvider;
+import com.kraken.security.client.api.SecurityClient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -26,23 +27,20 @@ final class SecurityEnvironmentPublisher implements EnvironmentPublisher {
 
   @NonNull SecurityClientProperties clientProperties;
   @NonNull UserProvider userProvider;
+  @NonNull SecurityClient client;
 
   @Override
   public Mono<List<ExecutionEnvironmentEntry>> apply(ExecutionContextBuilder context) {
-    // TODO Call client to get access/refresh token pair !
-//    return userProvider.getAuthenticatedUser().map(krakenUser -> {
-//      return context.addEntries();
-//    });
-
-    return Mono.just(of(
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_URL.name()).value(clientProperties.getUrl()).build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_APIID.name()).value(clientProperties.getApiId()).build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_APISECRET.name()).value(clientProperties.getApiSecret()).build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_WEBID.name()).value(clientProperties.getWebId()).build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REALM.name()).value(clientProperties.getRealm()).build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_ACCESSTOKEN.name()).value("todo").build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REFRESHTOKEN.name()).value("todo").build()
-    ));
+    return userProvider.getTokenValue().flatMap(client::exchangeToken)
+        .map(krakenToken -> of(
+            ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_URL.name()).value(clientProperties.getUrl()).build(),
+            ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_APIID.name()).value(clientProperties.getApiId()).build(),
+            ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_APISECRET.name()).value(clientProperties.getApiSecret()).build(),
+            ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_WEBID.name()).value(clientProperties.getWebId()).build(),
+            ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REALM.name()).value(clientProperties.getRealm()).build(),
+            ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_ACCESSTOKEN.name()).value(krakenToken.getAccessToken()).build(),
+            ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REFRESHTOKEN.name()).value(krakenToken.getRefreshToken()).build()
+        ));
   }
 
   @Override

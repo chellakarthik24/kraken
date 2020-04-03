@@ -49,7 +49,7 @@ public class InfluxDBUrlPublisherTest {
   public void shouldGet() {
     final var env = publisher.apply(ExecutionContextBuilderTest.EXECUTION_CONTEXT_BUILDER).block();
     assertThat(env).isNotNull();
-    assertThat(env.getEntries()
+    assertThat(env
         .stream()
         .map(ExecutionEnvironmentEntry::getKey)
         .collect(Collectors.toUnmodifiableSet())).isEqualTo(ImmutableSet.of(

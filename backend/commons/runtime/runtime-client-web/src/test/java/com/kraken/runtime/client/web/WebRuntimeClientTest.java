@@ -67,24 +67,6 @@ public class WebRuntimeClientTest {
   }
 
   @Test
-  public void shouldSetFailedStatus() throws InterruptedException {
-    server.enqueue(
-        new MockResponse()
-            .setResponseCode(200)
-            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-    );
-
-    client.setFailedStatus(FlatContainerTest.CONTAINER).block();
-
-    final var request = server.takeRequest();
-    assertThat(request.getPath()).isEqualTo("/container/status/FAILED?taskId=taskId&containerId=id&containerName=name");
-
-    client.setStatus(FlatContainerTest.CONTAINER, ContainerStatus.DONE);
-    assertThat(server.getRequestCount()).isEqualTo(1);
-    assertThat(client.getLastStatus()).isEqualTo(ContainerStatus.FAILED);
-  }
-
-  @Test
   public void shouldWaitForStatus() throws InterruptedException, IOException {
     final var expectedStatus = ContainerStatus.READY;
     final var flatContainer = FlatContainerTest.CONTAINER;
