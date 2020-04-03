@@ -30,6 +30,7 @@ import reactor.util.function.Tuples;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static com.kraken.runtime.entity.environment.ExecutionEnvironmentEntrySource.TASK_CONFIGURATION;
 import static java.util.stream.Collectors.toUnmodifiableList;
@@ -116,7 +117,8 @@ class SpringExecutionContextService implements ExecutionContextService {
     return Flux
       .fromIterable(this.publishers)
       .filter(publisher -> publisher.test(context.getTaskType()))
-      .reduce(context, (currentContext, publisher) -> publisher.apply(currentContext));
+      .flatMap(environmentPublisher -> environmentPublisher.apply(context))
+      .reduce(context, ExecutionContextBuilder::addEntries);
   }
 
   private ExecutionContextBuilder newExecutionContextBuilder(final TaskConfiguration taskConfiguration, final String applicationId, final ExecutionEnvironment environment) {

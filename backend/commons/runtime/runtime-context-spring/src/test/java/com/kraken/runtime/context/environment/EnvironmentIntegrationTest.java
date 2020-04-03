@@ -59,7 +59,8 @@ public class EnvironmentIntegrationTest {
     final var published = Flux
         .fromIterable(this.publishers)
         .filter(publisher -> publisher.test(contextBuilder.getTaskType()))
-        .reduce(contextBuilder, (context, publisher) -> publisher.apply(context)).block();
+        .flatMap(environmentPublisher -> environmentPublisher.apply(contextBuilder))
+        .reduce(contextBuilder, ExecutionContextBuilder::addEntries).block();
     assertThat(published).isNotNull();
     assertThat(checker.test(published.getTaskType())).isTrue();
     final var map = published.getEntries().stream()

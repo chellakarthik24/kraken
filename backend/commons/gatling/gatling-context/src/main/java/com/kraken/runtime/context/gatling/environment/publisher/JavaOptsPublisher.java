@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.function.Function;
@@ -30,7 +31,7 @@ class JavaOptsPublisher implements EnvironmentPublisher {
   }
 
   @Override
-  public ExecutionContextBuilder apply(final ExecutionContextBuilder context) {
+  public Mono<List<ExecutionEnvironmentEntry>> apply(final ExecutionContextBuilder context) {
     final var userEntries = context.getEntries().stream()
         .filter(entry -> entry.getFrom() == USER)
         .collect(Collectors.toUnmodifiableList());
@@ -59,7 +60,7 @@ class JavaOptsPublisher implements EnvironmentPublisher {
         .map(hostId -> newJavaOptsEntry(hostId, ImmutableList.<ExecutionEnvironmentEntry>builder().addAll(globalUserEntries).addAll(hostEntries.apply(hostId)).build()))
         .collect(Collectors.toUnmodifiableList());
 
-    return context.addEntries(javaOptsEntries);
+    return Mono.just(javaOptsEntries);
   }
 
   private ExecutionEnvironmentEntry newJavaOptsEntry(final String hostId, final List<ExecutionEnvironmentEntry> entries) {

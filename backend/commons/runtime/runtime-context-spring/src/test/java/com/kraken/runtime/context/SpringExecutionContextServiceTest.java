@@ -63,7 +63,7 @@ public class SpringExecutionContextServiceTest {
     given(configurationService.getConfiguration(any())).willReturn(Mono.just(taskConfiguration));
     given(idGenerator.generate()).willReturn("taskId");
     given(publisher.test(any())).willReturn(true);
-    given(publisher.apply(any())).willReturn(contextBuilder.addEntries(ImmutableList.of(
+    given(publisher.apply(any())).willReturn(Mono.just(ImmutableList.of(
         ExecutionEnvironmentEntry.builder()
             .key("hello")
             .value("world")
@@ -110,6 +110,12 @@ public class SpringExecutionContextServiceTest {
             ).build()).build());
     verify(toMap).apply("hostId", ImmutableList.of(
         ExecutionEnvironmentEntry.builder().scope("").from(USER).key("KRAKEN_VERSION").value("bar").build(),
+        ExecutionEnvironmentEntry.builder().scope("").from(TASK_CONFIGURATION).key("key").value("value").build(),
+        ExecutionEnvironmentEntry.builder().scope("").from(BACKEND).key("hello").value("world").build()
+    ));
+    verify(toMap).apply("other", ImmutableList.of(
+        ExecutionEnvironmentEntry.builder().scope("").from(USER).key("KRAKEN_VERSION").value("bar").build(),
+        ExecutionEnvironmentEntry.builder().scope("").from(TASK_CONFIGURATION).key("key").value("value").build(),
         ExecutionEnvironmentEntry.builder().scope("").from(BACKEND).key("hello").value("world").build()
     ));
     verify(templateService, times(2)).replaceAll("template", ImmutableMap.of("hello", "toMap"));

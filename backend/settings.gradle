@@ -116,6 +116,7 @@ include ':commons:security:security-exchange-filter-spring'
 include ':commons:security:security-decoder-api'
 include ':commons:security:security-decoder-spring'
 include ':commons:security:security-entity'
+include ':commons:security:security-context-spring'
 
 include ':commons:ee:license-api'
 include ':commons:ee:license-l4j'

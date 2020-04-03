@@ -46,7 +46,8 @@ public class JavaOptsPublisherTest {
     final var result = publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(
         ExecutionEnvironmentEntry.builder().scope("hostId").from(USER).key("foo").value("bar").build(),
         ExecutionEnvironmentEntry.builder().scope("").from(USER).key("test").value("someValue").build(),
-        ExecutionEnvironmentEntry.builder().scope("other").from(USER).key("KRAKEN_VERSION").value("1.3.0").build())));
+        ExecutionEnvironmentEntry.builder().scope("other").from(USER).key("KRAKEN_VERSION").value("1.3.0").build()))).block();
+    assertThat(result).isNotNull();
     final var hostIdJavaOpts = result.getEntries()
         .stream().filter(entry -> entry.getScope().equals("hostId") && entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))
         .findFirst();
@@ -63,8 +64,10 @@ public class JavaOptsPublisherTest {
 
   @Test
   public void shouldGenerateEmptyOpts() {
-    final var javaOptsEntry = publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(
-    ))).getEntries()
+    final var entries = publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(
+    ))).block();
+    assertThat(entries).isNotNull();
+    final var javaOptsEntry = entries.getEntries()
         .stream().filter(entry -> entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))
         .findFirst();
 
@@ -73,23 +76,23 @@ public class JavaOptsPublisherTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void shouldFail1(){
-    publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(ExecutionEnvironmentEntry.builder().scope("").from(USER).key("4foo").value("bar").build())));
+  public void shouldFail1() {
+    publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(ExecutionEnvironmentEntry.builder().scope("").from(USER).key("4foo").value("bar").build()))).block();
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void shouldFail2(){
-    publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(ExecutionEnvironmentEntry.builder().scope("").from(USER).key("fo o").value("bar").build())));
+  public void shouldFail2() {
+    publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(ExecutionEnvironmentEntry.builder().scope("").from(USER).key("fo o").value("bar").build()))).block();
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void shouldFail3(){
-    publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(ExecutionEnvironmentEntry.builder().scope("").from(USER).key("fo-o").value("bar").build())));
+  public void shouldFail3() {
+    publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(ExecutionEnvironmentEntry.builder().scope("").from(USER).key("fo-o").value("bar").build()))).block();
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void shouldFail4(){
-    publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(ExecutionEnvironmentEntry.builder().scope("").from(USER).key("foo").value("joe bar").build())));
+  public void shouldFail4() {
+    publisher.apply(WITH_ENTRIES.apply(ImmutableList.of(ExecutionEnvironmentEntry.builder().scope("").from(USER).key("foo").value("joe bar").build()))).block();
   }
 
   @Test

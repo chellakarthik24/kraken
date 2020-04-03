@@ -11,7 +11,7 @@ import static java.util.Optional.ofNullable;
 
 @Value
 @ConstructorBinding
-@ConfigurationProperties("kraken.container.security")
+@ConfigurationProperties("kraken.security")
 final class SpringSecurityContainerProperties implements SecurityContainerProperties {
 
   String accessToken;

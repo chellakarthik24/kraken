@@ -40,12 +40,13 @@ public class StorageUrlPublisherTest {
 
   @Test
   public void shouldApply() {
-    final var env = publisher.apply(ExecutionContextBuilderTest.EXECUTION_CONTEXT_BUILDER);
+    final var env = publisher.apply(ExecutionContextBuilderTest.EXECUTION_CONTEXT_BUILDER).block();
+    assertThat(env).isNotNull();
     assertThat(env.getEntries().stream().map(ExecutionEnvironmentEntry::getKey).anyMatch(key -> key.equals(KRAKEN_STORAGE_URL.name()))).isTrue();
   }
 
   @Test
-  public void shouldTestUtils(){
+  public void shouldTestUtils() {
     TestUtils.shouldPassNPE(StorageUrlPublisher.class);
   }
 }

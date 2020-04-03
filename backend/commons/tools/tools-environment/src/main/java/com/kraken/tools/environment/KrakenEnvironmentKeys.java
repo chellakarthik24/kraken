@@ -1,6 +1,7 @@
 package com.kraken.tools.environment;
 
 import com.kraken.tools.obfuscation.ExcludeFromObfuscation;
+import lombok.NonNull;
 
 @ExcludeFromObfuscation
 public enum KrakenEnvironmentKeys {
@@ -33,5 +34,13 @@ public enum KrakenEnvironmentKeys {
   KRAKEN_GATLING_CONTAINER_NAME,
   KRAKEN_GATLING_CONTAINER_LABEL,
   KRAKEN_GATLING_SIDEKICK_NAME,
-  KRAKEN_GATLING_SIDEKICK_LABEL
+  KRAKEN_GATLING_SIDEKICK_LABEL,
+
+  KRAKEN_SECURITY_URL,
+  KRAKEN_SECURITY_WEBID,
+  KRAKEN_SECURITY_APIID,
+  KRAKEN_SECURITY_APISECRET,
+  KRAKEN_SECURITY_REALM,
+  KRAKEN_SECURITY_ACCESSTOKEN,
+  KRAKEN_SECURITY_REFRESHTOKEN,
 }

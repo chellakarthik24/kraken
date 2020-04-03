@@ -47,7 +47,8 @@ public class InfluxDBUrlPublisherTest {
 
   @Test
   public void shouldGet() {
-    final var env = publisher.apply(ExecutionContextBuilderTest.EXECUTION_CONTEXT_BUILDER);
+    final var env = publisher.apply(ExecutionContextBuilderTest.EXECUTION_CONTEXT_BUILDER).block();
+    assertThat(env).isNotNull();
     assertThat(env.getEntries()
         .stream()
         .map(ExecutionEnvironmentEntry::getKey)

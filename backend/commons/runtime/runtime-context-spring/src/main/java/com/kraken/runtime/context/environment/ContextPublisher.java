@@ -9,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 import static com.kraken.runtime.entity.environment.ExecutionEnvironmentEntrySource.BACKEND;
 import static com.kraken.tools.environment.KrakenEnvironmentKeys.*;
@@ -24,8 +27,8 @@ class ContextPublisher implements EnvironmentPublisher {
   }
 
   @Override
-  public ExecutionContextBuilder apply(final ExecutionContextBuilder context) {
-    return context.addEntries(ImmutableList.of(
+  public Mono<List<ExecutionEnvironmentEntry>> apply(final ExecutionContextBuilder context) {
+    return Mono.just(ImmutableList.of(
         ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_TASKID.name()).value(context.getTaskId()).build(),
         ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_DESCRIPTION.name()).value(context.getDescription()).build(),
         ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_APPLICATION_ID.name()).value(context.getApplicationId()).build(),
