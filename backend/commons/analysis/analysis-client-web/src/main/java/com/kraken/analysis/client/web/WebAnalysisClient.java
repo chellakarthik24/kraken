@@ -5,6 +5,7 @@ import com.kraken.analysis.entity.DebugEntry;
 import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.config.analysis.client.api.AnalysisClientProperties;
+import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import com.kraken.storage.entity.StorageNode;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +22,13 @@ import static lombok.AccessLevel.PRIVATE;
 final class WebAnalysisClient implements AnalysisClient {
   WebClient webClient;
 
-  WebAnalysisClient(final AnalysisClientProperties properties) {
+  WebAnalysisClient(final AnalysisClientProperties properties,
+                    final ExchangeFilter exchangeFilter) {
     this.webClient = WebClient
-      .builder()
-      .baseUrl(properties.getUrl())
-      .build();
+        .builder()
+        .baseUrl(properties.getUrl())
+        .filter(exchangeFilter)
+        .build();
   }
 
   @Override

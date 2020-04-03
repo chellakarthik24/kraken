@@ -7,6 +7,7 @@ import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
 import com.kraken.config.storage.api.StorageProperties;
+import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.client.web.WebStorageClient;
 import com.kraken.storage.entity.StorageNode;
@@ -61,12 +62,15 @@ public class WebStorageClientTest {
   @MockBean
   StorageProperties properties;
 
+  @MockBean
+  ExchangeFilter exchangeFilter;
+
   @Before
   public void before() {
     server = new MockWebServer();
     final String baseUrl = server.url("/").toString();
     when(properties.getUrl()).thenReturn(baseUrl);
-    client = new WebStorageClient(properties, jsonMapper, yamlMapper);
+    client = new WebStorageClient(properties, jsonMapper, yamlMapper, exchangeFilter);
   }
 
   @After

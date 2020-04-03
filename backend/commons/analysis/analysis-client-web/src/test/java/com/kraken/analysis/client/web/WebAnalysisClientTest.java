@@ -8,6 +8,7 @@ import com.kraken.analysis.entity.DebugEntryTest;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
 import com.kraken.config.analysis.client.api.AnalysisClientProperties;
+import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import com.kraken.storage.entity.StorageNodeTest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -36,6 +37,9 @@ public class WebAnalysisClientTest {
   @Mock
   AnalysisClientProperties properties;
 
+  @Mock
+  ExchangeFilter filter;
+
   @Before
   public void before() {
     mapper = new ObjectMapper();
@@ -44,7 +48,7 @@ public class WebAnalysisClientTest {
     final String url = server.url("/").toString();
     when(properties.getUrl()).thenReturn(url);
 
-    client = new WebAnalysisClient(properties);
+    client = new WebAnalysisClient(properties, filter);
   }
 
   @After

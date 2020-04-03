@@ -1,6 +1,7 @@
 package com.kraken.storage.client.web;
 
 import com.kraken.analysis.entity.Result;
+import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.test.utils.ResourceUtils;
 import com.kraken.test.utils.TestConfiguration;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -26,6 +28,9 @@ public class WebStorageClientIntegrationTest {
 
   @Autowired
   private StorageClient client;
+
+  @MockBean
+  ExchangeFilter exchangeFilter;
 
   @Test
   public void shouldDownloadFile() {

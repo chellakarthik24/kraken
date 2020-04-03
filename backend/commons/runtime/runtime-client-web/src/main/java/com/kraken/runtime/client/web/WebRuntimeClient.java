@@ -1,12 +1,12 @@
 package com.kraken.runtime.client.web;
 
-import com.google.common.collect.ImmutableList;
 import com.kraken.config.runtime.client.api.RuntimeClientProperties;
 import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.log.Log;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.Task;
+import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -35,10 +35,12 @@ final class WebRuntimeClient implements RuntimeClient {
   WebClient webClient;
   AtomicReference<ContainerStatus> lastStatus;
 
-  WebRuntimeClient(final RuntimeClientProperties properties) {
+  WebRuntimeClient(final RuntimeClientProperties properties,
+                   final ExchangeFilter exchangeFilter) {
     this.webClient = WebClient
         .builder()
         .baseUrl(properties.getUrl())
+        .filter(exchangeFilter)
         .build();
     this.lastStatus = new AtomicReference<>(STARTING);
   }

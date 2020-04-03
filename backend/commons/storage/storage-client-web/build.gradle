@@ -1,5 +1,6 @@
 dependencies {
     implementation project(':commons:storage:storage-client-api')
+    implementation project(':commons:security:security-exchange-filter-api')
     implementation project(':commons:tools:tools-configuration')
     implementation group: 'org.zeroturnaround', name: 'zt-zip', version: ztZipVersion
 

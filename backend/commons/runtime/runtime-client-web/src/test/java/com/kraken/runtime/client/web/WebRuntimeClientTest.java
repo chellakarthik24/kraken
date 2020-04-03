@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.kraken.config.runtime.client.api.RuntimeClientProperties;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
+import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
@@ -31,6 +32,8 @@ public class WebRuntimeClientTest {
 
   @Mock
   RuntimeClientProperties properties;
+  @Mock
+  ExchangeFilter exchangeFilter;
 
   @Before
   public void setUp() {
@@ -38,7 +41,7 @@ public class WebRuntimeClientTest {
     mapper = new ObjectMapper();
     final String url = server.url("/").toString();
     given(properties.getUrl()).willReturn(url);
-    client = new WebRuntimeClient(properties);
+    client = new WebRuntimeClient(properties, exchangeFilter);
   }
 
   @After
