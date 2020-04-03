@@ -18,8 +18,6 @@ public interface RuntimeClient {
 
   Mono<Void> setStatus(FlatContainer container, ContainerStatus status);
 
-  Mono<Void> setFailedStatus(FlatContainer container);
-
   Mono<FlatContainer> find(String taskId, String containerName);
 
   Flux<Log> watchLogs(String applicationId);

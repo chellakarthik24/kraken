@@ -37,9 +37,9 @@ final class WebRuntimeClient implements RuntimeClient {
 
   WebRuntimeClient(final RuntimeClientProperties properties) {
     this.webClient = WebClient
-      .builder()
-      .baseUrl(properties.getUrl())
-      .build();
+        .builder()
+        .baseUrl(properties.getUrl())
+        .build();
     this.lastStatus = new AtomicReference<>(STARTING);
   }
 
@@ -54,16 +54,6 @@ final class WebRuntimeClient implements RuntimeClient {
         .filter(Optional::isPresent)
         .map(Optional::get)
         .doOnNext(task -> log.info(String.format("Matching task found: %s", task)))
-        .onErrorResume(throwable -> this.setFailedStatus(container).map(aVoid -> Task.builder()
-            .id(container.getTaskId())
-            .startDate(container.getStartDate())
-            .status(ContainerStatus.FAILED)
-            .type(container.getTaskType())
-            .containers(ImmutableList.of())
-            .expectedCount(1)
-            .description(container.getDescription())
-            .applicationId(container.getApplicationId())
-            .build()))
         .next();
   }
 
@@ -76,17 +66,6 @@ final class WebRuntimeClient implements RuntimeClient {
 
   @Override
   public Mono<Void> setStatus(final FlatContainer container, final ContainerStatus status) {
-    return this._setStatus(container, status)
-        .onErrorResume(throwable -> this.setFailedStatus(container));
-  }
-
-  @Override
-  public Mono<Void> setFailedStatus(FlatContainer container) {
-    return this._setStatus(container, ContainerStatus.FAILED)
-        .onErrorContinue((throwable, o) -> log.error("Failed to set FAILED status", throwable));
-  }
-
-  private Mono<Void> _setStatus(final FlatContainer container, final ContainerStatus status) {
     return Mono.fromCallable(() -> this.lastStatus.get().isTerminal())
         .flatMap(terminal -> terminal ? Mono.empty() : webClient
             .post()
