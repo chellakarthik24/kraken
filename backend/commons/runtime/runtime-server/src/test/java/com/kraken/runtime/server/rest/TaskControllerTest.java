@@ -13,6 +13,7 @@ import com.kraken.runtime.entity.task.TaskTest;
 import com.kraken.runtime.event.TaskCancelledEvent;
 import com.kraken.runtime.event.TaskExecutedEvent;
 import com.kraken.runtime.server.service.TaskListService;
+import com.kraken.tests.security.AuthControllerTest;
 import com.kraken.tests.utils.TestUtils;
 import com.kraken.tools.event.bus.EventBus;
 import com.kraken.tools.sse.SSEService;
@@ -39,30 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(
-    classes = {TaskController.class})
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableAutoConfiguration
-public class TaskControllerTest {
-
-  @Autowired
-  WebTestClient webTestClient;
-
-  @MockBean
-  TaskService taskService;
-
-  @MockBean
-  TaskListService taskListService;
-
-  @MockBean
-  ExecutionContextService contextService;
-
-  @MockBean
-  EventBus eventBus;
-
-  @MockBean
-  SSEService sse;
+public class TaskControllerTest  extends RuntimeControllerTest {
 
   @Test
   public void shouldPassTestUtils() {
@@ -83,6 +61,7 @@ public class TaskControllerTest {
     webTestClient.post()
         .uri(uriBuilder -> uriBuilder.path("/task")
             .build())
+        .header("Authorization", "Bearer user-token")
         .header("ApplicationId", applicationId)
         .body(BodyInserters.fromValue(env))
         .exchange()
@@ -102,6 +81,7 @@ public class TaskControllerTest {
     webTestClient.post()
         .uri(uriBuilder -> uriBuilder.path("/task")
             .build())
+        .header("Authorization", "Bearer user-token")
         .header("ApplicationId", applicationId)
         .body(BodyInserters.fromValue(env))
         .exchange()
@@ -125,6 +105,7 @@ public class TaskControllerTest {
             .pathSegment(taskType.toString())
             .queryParam("taskId", taskId)
             .build())
+        .header("Authorization", "Bearer user-token")
         .header("ApplicationId", applicationId)
         .exchange()
         .expectStatus().isOk();
@@ -151,6 +132,7 @@ public class TaskControllerTest {
             .pathSegment(taskType.toString())
             .queryParam("taskId", taskId)
             .build())
+        .header("Authorization", "Bearer user-token")
         .header("ApplicationId", applicationId)
         .exchange()
         .expectStatus().isOk();
@@ -166,6 +148,7 @@ public class TaskControllerTest {
             .pathSegment("GATLING_RUN")
             .queryParam("taskId", "taskId")
             .build())
+        .header("Authorization", "Bearer user-token")
         .header("ApplicationId", applicationId)
         .exchange()
         .expectStatus().is5xxServerError();
@@ -179,6 +162,7 @@ public class TaskControllerTest {
 
     webTestClient.get()
         .uri("/task/list")
+        .header("Authorization", "Bearer user-token")
         .header("ApplicationId", "app")
         .exchange()
         .expectStatus().isOk()
@@ -196,6 +180,7 @@ public class TaskControllerTest {
 
     final var result = webTestClient.get()
         .uri("/task/watch/app")
+        .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
         .expectStatus().isOk()

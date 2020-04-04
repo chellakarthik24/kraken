@@ -12,4 +12,10 @@ dependencies {
     testImplementation project(path: ':commons:runtime:runtime-context-api', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:runtime:runtime-context-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:sse:sse-entity', configuration: 'testArtifacts')
+
+    // Security
+    implementation project(':commons:security:security-authentication-api')
+    implementation project(':commons:security:security-authentication-web')
+    testImplementation project(path: ':tests:tests-security-web')
+    testImplementation project(path: ':tests:tests-security-web', configuration: 'testArtifacts')
 }

@@ -3,6 +3,7 @@ package com.kraken.runtime.server.rest;
 import com.google.common.base.Charsets;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.logs.LogsService;
+import com.kraken.tests.security.AuthControllerTest;
 import com.kraken.tools.sse.SSEService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -24,21 +25,7 @@ import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(
-    classes = {LogsController.class})
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableAutoConfiguration
-public class LogsControllerTest {
-
-  @Autowired
-  WebTestClient webTestClient;
-
-  @MockBean
-  LogsService logsService;
-
-  @MockBean
-  SSEService sse;
+public class LogsControllerTest extends RuntimeControllerTest {
 
   @Test
   public void shouldPassTestUtils() {
@@ -55,6 +42,7 @@ public class LogsControllerTest {
 
     final var result = webTestClient.get()
         .uri(uriBuilder -> uriBuilder.path("/logs/watch").pathSegment(applicationId).build())
+        .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
         .expectStatus().isOk()
@@ -73,6 +61,7 @@ public class LogsControllerTest {
     final var applicationId = "applicationId"; // Should match [a-z0-9]*
     webTestClient.get()
         .uri(uriBuilder -> uriBuilder.path("/logs/watch").pathSegment(applicationId).build())
+        .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
         .expectStatus().is5xxServerError();

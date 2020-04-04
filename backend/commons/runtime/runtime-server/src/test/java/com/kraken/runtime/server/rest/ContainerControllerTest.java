@@ -1,18 +1,9 @@
 package com.kraken.runtime.server.rest;
 
-import com.kraken.runtime.backend.api.ContainerService;
 import com.kraken.runtime.entity.task.ContainerTest;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.FlatContainerTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 
@@ -20,18 +11,7 @@ import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(
-    classes = {ContainerController.class})
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableAutoConfiguration
-public class ContainerControllerTest {
-
-  @Autowired
-  WebTestClient webTestClient;
-
-  @MockBean
-  ContainerService service;
+public class ContainerControllerTest extends RuntimeControllerTest {
 
   @Test
   public void shouldPassTestUtils() {
@@ -54,6 +34,7 @@ public class ContainerControllerTest {
             .queryParam("containerId", containerId)
             .build())
         .header("ApplicationId", applicationId)
+        .header("Authorization", "Bearer user-token")
         .exchange()
         .expectStatus().isOk();
 
@@ -70,6 +51,7 @@ public class ContainerControllerTest {
             .queryParam("containerId", "containerId")
             .build())
         .header("ApplicationId", applicationId)
+        .header("Authorization", "Bearer user-token")
         .body(BodyInserters.fromValue(ContainerTest.CONTAINER))
         .exchange()
         .expectStatus().is5xxServerError();
@@ -87,6 +69,7 @@ public class ContainerControllerTest {
             .queryParam("id", "id")
             .build())
         .header("ApplicationId", appId)
+        .header("Authorization", "Bearer user-token")
         .exchange()
         .expectStatus().isOk();
 
@@ -109,6 +92,7 @@ public class ContainerControllerTest {
             .queryParam("containerName", containerName)
             .queryParam("containerId", containerId)
             .build())
+        .header("Authorization", "Bearer user-token")
         .exchange()
         .expectStatus().isOk();
 
@@ -128,6 +112,7 @@ public class ContainerControllerTest {
             .queryParam("taskId", taskId)
             .queryParam("containerName", containerName)
             .build())
+        .header("Authorization", "Bearer user-token")
         .exchange()
         .expectStatus().isOk()
         .expectBody(FlatContainer.class)

@@ -49,6 +49,7 @@ public class AnalysisControllerTest extends AuthControllerTest {
     webTestClient.post()
         .uri(uriBuilder -> uriBuilder.path("/result")
             .build())
+        .header("Authorization", "Bearer no-role-token")
         .body(BodyInserters.fromValue(result))
         .exchange()
         .expectStatus().is4xxClientError();
@@ -78,6 +79,7 @@ public class AnalysisControllerTest extends AuthControllerTest {
         .uri(uriBuilder -> uriBuilder.path("/result")
             .queryParam("resultId", resultId)
             .build())
+        .header("Authorization", "Bearer no-role-token")
         .exchange()
         .expectStatus().is4xxClientError();
   }
@@ -115,6 +117,7 @@ public class AnalysisControllerTest extends AuthControllerTest {
         .uri(uriBuilder -> uriBuilder.path("/result/status/COMPLETED")
             .queryParam("resultId", resultId)
             .build())
+        .header("Authorization", "Bearer no-role-token")
         .exchange()
         .expectStatus().is4xxClientError();
   }
@@ -141,6 +144,7 @@ public class AnalysisControllerTest extends AuthControllerTest {
     webTestClient.post()
         .uri(uriBuilder -> uriBuilder.path("/result/debug")
             .build())
+        .header("Authorization", "Bearer no-role-token")
         .body(BodyInserters.fromValue(debug))
         .exchange()
         .expectStatus().is4xxClientError();

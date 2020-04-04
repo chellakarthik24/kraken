@@ -11,15 +11,14 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
 @EnableWebFluxSecurity
-public class SecurityConfiguration {
+public class AnalysisSecurityConfiguration {
   @Bean
   SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final Converter<Jwt, Mono<AbstractAuthenticationToken>> converter) {
     http
         .authorizeExchange()
-        .anyExchange().permitAll()
-//        .pathMatchers(HttpMethod.OPTIONS).permitAll()
-//        .pathMatchers("/result/**").hasAnyAuthority("USER", "ADMIN")
-//        .anyExchange().denyAll()
+        .pathMatchers(HttpMethod.OPTIONS).permitAll()
+        .pathMatchers("/result/**").hasAnyAuthority("USER", "ADMIN")
+        .anyExchange().denyAll()
         .and()
         .oauth2ResourceServer()
         .jwt()

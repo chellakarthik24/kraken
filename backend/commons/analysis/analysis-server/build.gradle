@@ -14,7 +14,6 @@ dependencies {
     // Security
     implementation project(':commons:security:security-authentication-api')
     implementation project(':commons:security:security-authentication-web')
-
     testImplementation project(path: ':tests:tests-security-web')
     testImplementation project(path: ':tests:tests-security-web', configuration: 'testArtifacts')
 

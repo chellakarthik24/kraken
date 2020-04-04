@@ -32,12 +32,18 @@ public abstract class AuthControllerTest {
 
   @Before
   public void setUp() throws IOException {
+    // User
     given(jwtDecoder.decode("user-token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create("user-token", ImmutableList.of("USER"),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"))));
     given(tokenDecoder.decode("user-token")).willReturn(KrakenUserTest.KRAKEN_USER);
+    // Admin
     given(jwtDecoder.decode("admin-token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create("admin-token", ImmutableList.of("ADMIN"),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"))));
     given(tokenDecoder.decode("admin-token")).willReturn(KrakenUserTest.KRAKEN_ADMIN);
+    // No role
+    given(jwtDecoder.decode("no-role-token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create("no-role-token", ImmutableList.of(),
+        ImmutableList.of(), Optional.empty())));
+    given(tokenDecoder.decode("no-role-token")).willReturn(KrakenUserTest.KRAKEN_ADMIN);
   }
 
 
