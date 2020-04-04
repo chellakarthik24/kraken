@@ -18,7 +18,7 @@ export const testKeycloakConfiguration: () => KeycloakConfig = () => {
 export const securityConfigurationServiceSpy = () => {
   return {
     keycloakConfiguration: testKeycloakConfiguration()
-  };
+  } as SecurityConfigurationService;
 };
 
 describe('SecurityConfigurationService', () => {
@@ -44,7 +44,7 @@ describe('SecurityConfigurationService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return analysisApiUrl', () => {
+  it('should return keycloakConfiguration', () => {
     configuration.value.and.returnValue(testKeycloakConfiguration());
     expect(service.keycloakConfiguration).toEqual(testKeycloakConfiguration());
   });

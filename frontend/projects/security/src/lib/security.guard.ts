@@ -19,7 +19,7 @@ export class SecurityGuard implements CanActivate {
         if (!authenticated) {
           return this.security.login().pipe(map(() => false));
         }
-        return of(authenticated);
+        return of(true);
       })
     );
   }
