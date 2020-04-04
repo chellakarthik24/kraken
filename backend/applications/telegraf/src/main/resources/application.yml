@@ -34,3 +34,11 @@ kraken:
     url: url
   storage:
     url: url
+  security:
+    url: http://localhost:9080
+    realm: kraken
+    webId: kraken-web
+    apiId: kraken-api
+    apiSecret: secret
+    access-token: accessToken
+    refresh-token: refreshToken

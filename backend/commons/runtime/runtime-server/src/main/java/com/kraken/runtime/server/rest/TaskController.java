@@ -74,8 +74,8 @@ public class TaskController {
         .map(CancelContext::getTaskId);
   }
 
-  @GetMapping(value = "/watch/{applicationId}")
-  public Flux<ServerSentEvent<List<Task>>> watch(@PathVariable("applicationId") @Pattern(regexp = "[a-z0-9]*") final String applicationId) {
+  @GetMapping(value = "/watch")
+  public Flux<ServerSentEvent<List<Task>>> watch(@RequestHeader("ApplicationId") @Pattern(regexp = "[a-z0-9]*") final String applicationId) {
     log.info("Watch tasks lists");
     return sse.keepAlive(taskListService.watch(of(applicationId)));
   }

@@ -179,7 +179,8 @@ public class TaskControllerTest  extends RuntimeControllerTest {
     given(sse.keepAlive(tasksFlux)).willReturn(eventsFlux);
 
     final var result = webTestClient.get()
-        .uri("/task/watch/app")
+        .uri("/task/watch")
+        .header("ApplicationId", "app")
         .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()

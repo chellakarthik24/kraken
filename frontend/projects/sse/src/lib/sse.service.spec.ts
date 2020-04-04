@@ -10,7 +10,6 @@ import {configurationServiceMock} from 'projects/commons/src/lib/config/configur
 import {RetriesService} from 'projects/tools/src/lib/retries.service';
 import {retriesServiceSpy} from 'projects/tools/src/lib/retries.service.spec';
 import {DurationToStringPipe} from 'projects/date/src/lib/duration-to-string.pipe';
-import {QueryParamsToStringPipe} from 'projects/tools/src/lib/query-params-to-string.pipe';
 import {NotificationEvent} from 'projects/notification/src/lib/notification-event';
 import {Log} from 'projects/runtime/src/lib/entities/log';
 import {testLog} from 'projects/runtime/src/lib/entities/log.spec';
@@ -44,9 +43,9 @@ describe('SSEService', () => {
         {provide: ConfigurationService, useValue: configurationServiceMock()},
         {provide: SSEConfigurationService, useValue: sseConfigurationServiceSpy()},
         {provide: RetriesService, useValue: retriesServiceSpy()},
+        {provide: RetriesService, useValue: retriesServiceSpy()},
         SSEService,
         DurationToStringPipe,
-        QueryParamsToStringPipe,
       ]
     });
     eventBus = TestBed.inject(EventBusService);

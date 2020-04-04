@@ -41,7 +41,8 @@ public class LogsControllerTest extends RuntimeControllerTest {
     given(sse.keepAlive(logFlux)).willReturn(eventsFlux);
 
     final var result = webTestClient.get()
-        .uri(uriBuilder -> uriBuilder.path("/logs/watch").pathSegment(applicationId).build())
+        .uri(uriBuilder -> uriBuilder.path("/logs/watch").build())
+        .header("ApplicationId", applicationId)
         .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
@@ -60,7 +61,8 @@ public class LogsControllerTest extends RuntimeControllerTest {
   public void shouldFailToWatch() {
     final var applicationId = "applicationId"; // Should match [a-z0-9]*
     webTestClient.get()
-        .uri(uriBuilder -> uriBuilder.path("/logs/watch").pathSegment(applicationId).build())
+        .uri(uriBuilder -> uriBuilder.path("/logs/watch").build())
+        .header("ApplicationId", applicationId)
         .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()

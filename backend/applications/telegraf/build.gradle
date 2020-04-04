@@ -9,4 +9,7 @@ dependencies {
     implementation project(':commons:storage:storage-client-web')
     implementation project(':commons:config:config-storage-spring')
     implementation project(':commons:config:config-telegraf-spring')
+
+    implementation project(':commons:security:security-authentication-container')
+    implementation project(':commons:security:security-exchange-filter-spring')
 }

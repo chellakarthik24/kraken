@@ -66,7 +66,7 @@ describe('EventSourceService', () => {
     observable.subscribe(() => {
     }, (err) => error = err, () => {
     });
-    expect(service.newEventSource).toHaveBeenCalledWith('path');
+    expect(service.newEventSource).toHaveBeenCalledWith('path', {errorMessage: 'error'});
     (eventSource as any).readyState = 2;
     eventSource.onerror(null);
     expect(eventSource.close).toHaveBeenCalled();

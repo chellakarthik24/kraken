@@ -7,23 +7,17 @@ import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.TaskTest;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.entity.StorageWatcherEventTest;
+import com.kraken.tests.security.AuthControllerTest;
 import com.kraken.tests.utils.TestUtils;
 import com.kraken.tools.sse.SSEService;
 import com.kraken.tools.sse.SSEWrapper;
 import com.kraken.tools.sse.SSEWrapperTest;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
 import java.util.Optional;
@@ -31,22 +25,16 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(
-    classes = {SSEController.class})
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableAutoConfiguration
-public class SSEControllerTest {
-
-  @Autowired
-  WebTestClient webTestClient;
+public class SSEControllerTest extends AuthControllerTest {
 
   @MockBean
   SSEService sse;
 
-  @MockBean RuntimeClient runtimeClient;
+  @MockBean
+  RuntimeClient runtimeClient;
 
-  @MockBean StorageClient storageClient;
+  @MockBean
+  StorageClient storageClient;
 
   @Test
   public void shouldPassTestUtils() {
@@ -63,7 +51,9 @@ public class SSEControllerTest {
     given(storageClient.watch()).willReturn(Flux.just(StorageWatcherEventTest.STORAGE_WATCHER_EVENT));
 
     final var result = webTestClient.get()
-        .uri(uriBuilder -> uriBuilder.path("/watch").pathSegment(applicationId).build())
+        .uri(uriBuilder -> uriBuilder.path("/watch").build())
+        .header("ApplicationId", applicationId)
+        .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
         .expectStatus().isOk()
@@ -73,16 +63,29 @@ public class SSEControllerTest {
     final var body = new String(Optional.ofNullable(result.getResponseBody()).orElse(new byte[0]), Charsets.UTF_8);
     Assertions.assertThat(body).isEqualTo("data:{\"type\":\"String\",\"value\":\"value\"}\n" +
         "\n");
-
   }
 
   @Test
-  public void shouldFailToWatch() {
+  public void shouldFailToWatchHeader() {
     final var applicationId = "applicationId"; // Should match [a-z0-9]*
     webTestClient.get()
-        .uri(uriBuilder -> uriBuilder.path("/watch").pathSegment(applicationId).build())
+        .uri(uriBuilder -> uriBuilder.path("/watch").build())
+        .header("Authorization", "Bearer user-token")
+        .header("ApplicationId", applicationId)
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
         .expectStatus().is5xxServerError();
+  }
+
+  @Test
+  public void shouldFailToWatchForbidden() {
+    final var applicationId = "app";
+    webTestClient.get()
+        .uri(uriBuilder -> uriBuilder.path("/watch").build())
+        .header("Authorization", "Bearer no-role-token")
+        .header("ApplicationId", applicationId)
+        .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
+        .exchange()
+        .expectStatus().is4xxClientError();
   }
 }

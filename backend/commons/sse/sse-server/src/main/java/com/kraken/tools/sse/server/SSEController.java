@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
@@ -32,8 +32,8 @@ public class SSEController {
 
   @NonNull StorageClient storageClient;
 
-  @GetMapping(value = "/watch/{applicationId}")
-  public Flux<ServerSentEvent<SSEWrapper>> watch(@PathVariable("applicationId") @Pattern(regexp = "[a-z0-9]*") final String applicationId) {
+  @GetMapping(value = "/watch")
+  public Flux<ServerSentEvent<SSEWrapper>> watch(@RequestHeader("ApplicationId") @Pattern(regexp = "[a-z0-9]*") final String applicationId) {
     return sse.keepAlive(sse.merge(ImmutableMap.of("NODE", storageClient.watch(), "LOG", runtimeClient.watchLogs(applicationId), "TASKS", runtimeClient.watchTasks(applicationId))));
   }
 }

@@ -38,6 +38,14 @@ kraken:
     description: Dev test
     simulation:
       name: computerdatabase.BasicSimulation
+  security:
+    url: http://localhost:9080
+    realm: kraken
+    webId: kraken-web
+    apiId: kraken-api
+    apiSecret: secret
+    access-token: accessToken
+    refresh-token: refreshToken
 
 logging:
   level:

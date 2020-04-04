@@ -4,4 +4,6 @@ dependencies {
     implementation project(':commons:sse:sse-spring')
     implementation project(':commons:tools:tools-configuration')
     implementation project(':commons:config:config-kraken')
+    implementation project(':commons:security:security-exchange-filter-spring')
+    implementation project(':commons:security:security-decoder-spring')
 }
