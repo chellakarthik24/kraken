@@ -47,6 +47,20 @@ spec:
           value: "${KRAKEN_GATLING_SIMULATION_PACKAGENAME}"
         - name: KRAKEN_GATLING_HARPATH_REMOTE
           value: "${KRAKEN_GATLING_HARPATH_REMOTE}"
+        - name: KRAKEN_SECURITY_URL
+          value: "${KRAKEN_SECURITY_URL}"
+        - name: KRAKEN_SECURITY_WEBID
+          value: "${KRAKEN_SECURITY_WEBID}"
+        - name: KRAKEN_SECURITY_APIID
+          value: "${KRAKEN_SECURITY_APIID}"
+        - name: KRAKEN_SECURITY_APISECRET
+          value: "${KRAKEN_SECURITY_APISECRET}"
+        - name: KRAKEN_SECURITY_REALM
+          value: "${KRAKEN_SECURITY_REALM}"
+        - name: KRAKEN_SECURITY_ACCESSTOKEN
+          value: "${KRAKEN_SECURITY_ACCESSTOKEN}"
+        - name: KRAKEN_SECURITY_REFRESHTOKEN
+          value: "${KRAKEN_SECURITY_REFRESHTOKEN}"
     -
       image: "octoperf/kraken-har-parser:${KRAKEN_VERSION}"
       name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASKID}-${KRAKEN_HOSTID}-${KRAKEN_GATLING_SIDEKICK_NAME}"
@@ -78,6 +92,20 @@ spec:
           value: "${KRAKEN_ANALYSIS_URL}"
         - name: KRAKEN_HARPARSER_REMOTE
           value: "${KRAKEN_GATLING_HARPATH_REMOTE}"
+        - name: KRAKEN_SECURITY_URL
+          value: "${KRAKEN_SECURITY_URL}"
+        - name: KRAKEN_SECURITY_WEBID
+          value: "${KRAKEN_SECURITY_WEBID}"
+        - name: KRAKEN_SECURITY_APIID
+          value: "${KRAKEN_SECURITY_APIID}"
+        - name: KRAKEN_SECURITY_APISECRET
+          value: "${KRAKEN_SECURITY_APISECRET}"
+        - name: KRAKEN_SECURITY_REALM
+          value: "${KRAKEN_SECURITY_REALM}"
+        - name: KRAKEN_SECURITY_ACCESSTOKEN
+          value: "${KRAKEN_SECURITY_ACCESSTOKEN}"
+        - name: KRAKEN_SECURITY_REFRESHTOKEN
+          value: "${KRAKEN_SECURITY_REFRESHTOKEN}"
   nodeSelector:
     com.kraken/hostId: "${KRAKEN_HOSTID}"
   restartPolicy: Never

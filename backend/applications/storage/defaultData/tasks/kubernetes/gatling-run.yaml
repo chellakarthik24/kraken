@@ -45,6 +45,20 @@ spec:
           value: "${KRAKEN_GATLING_SIMULATION_NAME}"
         - name: KRAKEN_GATLING_DESCRIPTION
           value: "${KRAKEN_DESCRIPTION}"
+        - name: KRAKEN_SECURITY_URL
+          value: "${KRAKEN_SECURITY_URL}"
+        - name: KRAKEN_SECURITY_WEBID
+          value: "${KRAKEN_SECURITY_WEBID}"
+        - name: KRAKEN_SECURITY_APIID
+          value: "${KRAKEN_SECURITY_APIID}"
+        - name: KRAKEN_SECURITY_APISECRET
+          value: "${KRAKEN_SECURITY_APISECRET}"
+        - name: KRAKEN_SECURITY_REALM
+          value: "${KRAKEN_SECURITY_REALM}"
+        - name: KRAKEN_SECURITY_ACCESSTOKEN
+          value: "${KRAKEN_SECURITY_ACCESSTOKEN}"
+        - name: KRAKEN_SECURITY_REFRESHTOKEN
+          value: "${KRAKEN_SECURITY_REFRESHTOKEN}"
     -
       image: "octoperf/kraken-telegraf:${KRAKEN_VERSION}"
       name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASKID}-${KRAKEN_HOSTID}-${KRAKEN_GATLING_SIDEKICK_NAME}"
@@ -80,6 +94,20 @@ spec:
           value: "${KRAKEN_STORAGE_URL}"
         - name: KRAKEN_RUNTIME_URL
           value: "${KRAKEN_RUNTIME_URL}"
+        - name: KRAKEN_SECURITY_URL
+          value: "${KRAKEN_SECURITY_URL}"
+        - name: KRAKEN_SECURITY_WEBID
+          value: "${KRAKEN_SECURITY_WEBID}"
+        - name: KRAKEN_SECURITY_APIID
+          value: "${KRAKEN_SECURITY_APIID}"
+        - name: KRAKEN_SECURITY_APISECRET
+          value: "${KRAKEN_SECURITY_APISECRET}"
+        - name: KRAKEN_SECURITY_REALM
+          value: "${KRAKEN_SECURITY_REALM}"
+        - name: KRAKEN_SECURITY_ACCESSTOKEN
+          value: "${KRAKEN_SECURITY_ACCESSTOKEN}"
+        - name: KRAKEN_SECURITY_REFRESHTOKEN
+          value: "${KRAKEN_SECURITY_REFRESHTOKEN}"
   hostAliases:
     - hostnames:
         - kraken-gatling-telegraf
