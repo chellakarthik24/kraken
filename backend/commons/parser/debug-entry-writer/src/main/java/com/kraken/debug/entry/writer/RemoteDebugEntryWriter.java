@@ -2,7 +2,7 @@ package com.kraken.debug.entry.writer;
 
 import com.kraken.analysis.client.api.AnalysisClient;
 import com.kraken.analysis.entity.DebugEntry;
-import com.kraken.runtime.container.properties.ContainerProperties;
+import com.kraken.config.runtime.container.api.ContainerProperties;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;

@@ -1,5 +1,6 @@
-package com.kraken.runtime.container.properties;
+package com.kraken.config.runtime.container.spring;
 
+import com.kraken.config.runtime.container.api.ContainerProperties;
 import com.kraken.runtime.entity.task.TaskType;
 import lombok.Builder;
 import lombok.NonNull;

@@ -2,7 +2,7 @@ package com.kraken.runtime.container.predicate;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
-import com.kraken.runtime.container.properties.ContainerProperties;
+import com.kraken.config.runtime.container.api.ContainerProperties;
 import com.kraken.runtime.entity.task.Container;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.Task;

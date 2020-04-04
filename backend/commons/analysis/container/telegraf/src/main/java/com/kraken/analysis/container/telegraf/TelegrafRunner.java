@@ -8,10 +8,7 @@ import com.kraken.runtime.command.Command;
 import com.kraken.runtime.command.CommandService;
 import com.kraken.runtime.container.executor.ContainerExecutor;
 import com.kraken.runtime.container.predicate.TaskPredicate;
-import com.kraken.runtime.container.properties.ContainerProperties;
-import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.storage.client.api.StorageClient;
-import com.kraken.tools.reactor.utils.ReactorUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -20,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Supplier;
 

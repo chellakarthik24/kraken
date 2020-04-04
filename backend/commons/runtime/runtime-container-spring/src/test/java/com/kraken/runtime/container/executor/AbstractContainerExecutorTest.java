@@ -1,8 +1,8 @@
 package com.kraken.runtime.container.executor;
 
+import com.kraken.config.runtime.container.api.ContainerProperties;
+import com.kraken.config.runtime.container.spring.SpringContainerPropertiesTest;
 import com.kraken.runtime.client.api.RuntimeClient;
-import com.kraken.runtime.container.properties.ContainerProperties;
-import com.kraken.runtime.container.properties.ContainerPropertiesTest;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.FlatContainerTest;
 import org.junit.Before;
@@ -30,7 +30,7 @@ public abstract class AbstractContainerExecutorTest {
   @Before
   public void setUp() {
     me = FlatContainerTest.CONTAINER;
-    containerProperties = ContainerPropertiesTest.RUNTIME_PROPERTIES;
+    containerProperties = SpringContainerPropertiesTest.RUNTIME_PROPERTIES;
     doAnswer(invocation -> {
       final Optional<Consumer<FlatContainer>> setUp = invocation.getArgument(0);
       final Consumer<FlatContainer> execute = invocation.getArgument(1);

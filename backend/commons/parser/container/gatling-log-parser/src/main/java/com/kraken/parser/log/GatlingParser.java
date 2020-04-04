@@ -11,8 +11,6 @@ import com.kraken.runtime.command.Command;
 import com.kraken.runtime.command.CommandService;
 import com.kraken.runtime.container.executor.ContainerExecutor;
 import com.kraken.runtime.container.predicate.TaskPredicate;
-import com.kraken.runtime.container.properties.ContainerProperties;
-import com.kraken.runtime.entity.task.ContainerStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -27,9 +25,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static com.kraken.tools.reactor.utils.ReactorUtils.waitFor;
-import static java.nio.file.Paths.get;
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 @Slf4j
 @Component

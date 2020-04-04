@@ -1,10 +1,9 @@
 package com.kraken.runtime.container.executor;
 
 
+import com.kraken.config.runtime.container.api.ContainerProperties;
 import com.kraken.runtime.client.api.RuntimeClient;
-import com.kraken.runtime.container.properties.ContainerProperties;
 import com.kraken.runtime.entity.task.ContainerStatus;
-import com.kraken.runtime.entity.task.FlatContainer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -13,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static lombok.AccessLevel.PACKAGE;
 

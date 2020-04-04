@@ -1,7 +1,7 @@
-package com.kraken.runtime.container.properties;
+package com.kraken.config.runtime.container.api;
 
-import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.config.api.KrakenProperties;
+import com.kraken.runtime.entity.task.TaskType;
 
 public interface ContainerProperties extends KrakenProperties {
 

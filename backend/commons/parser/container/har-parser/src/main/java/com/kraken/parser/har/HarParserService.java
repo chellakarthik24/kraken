@@ -3,17 +3,14 @@ package com.kraken.parser.har;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.kraken.analysis.entity.DebugEntry;
+import com.kraken.config.api.ApplicationProperties;
 import com.kraken.config.har.parser.api.HarParserProperties;
 import com.kraken.debug.entry.writer.DebugEntryWriter;
 import com.kraken.har.parser.HarParser;
-import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.command.Command;
 import com.kraken.runtime.command.CommandService;
 import com.kraken.runtime.container.executor.ContainerExecutor;
-import com.kraken.runtime.container.properties.ContainerProperties;
-import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.storage.client.api.StorageClient;
-import com.kraken.config.api.ApplicationProperties;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -26,7 +23,6 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Optional;
 
-import static java.nio.file.Paths.get;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 

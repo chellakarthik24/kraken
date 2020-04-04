@@ -1,8 +1,8 @@
 package com.kraken.runtime.container.executor;
 
 import com.kraken.Application;
+import com.kraken.config.runtime.container.api.ContainerProperties;
 import com.kraken.runtime.client.api.RuntimeClient;
-import com.kraken.runtime.container.properties.ContainerProperties;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.FlatContainerTest;
@@ -10,7 +10,6 @@ import com.kraken.runtime.entity.task.TaskTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,12 +17,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;

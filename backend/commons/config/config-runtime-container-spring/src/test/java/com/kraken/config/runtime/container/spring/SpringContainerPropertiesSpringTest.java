@@ -1,6 +1,8 @@
-package com.kraken.runtime.container.properties;
+package com.kraken.config.runtime.container.spring;
 
 import com.kraken.Application;
+import com.kraken.config.runtime.container.api.ContainerProperties;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class ContainerPropertiesSpringTest {
+public class SpringContainerPropertiesSpringTest {
   @Autowired
   ContainerProperties properties;
 
