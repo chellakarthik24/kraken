@@ -3,6 +3,7 @@ package com.kraken.runtime.container.predicate;
 import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
 import com.kraken.config.runtime.container.api.ContainerProperties;
+import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.task.Container;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.Task;
@@ -27,6 +28,8 @@ public class OtherContainersStoppingPredicateTest {
   OtherContainersStoppingPredicate taskPredicate;
   @MockBean
   ContainerProperties container;
+  @MockBean
+  RuntimeClient client;
 
   @Before
   public void setUp() {

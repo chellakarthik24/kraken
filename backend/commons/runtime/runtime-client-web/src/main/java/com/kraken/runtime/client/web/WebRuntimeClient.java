@@ -105,7 +105,8 @@ final class WebRuntimeClient implements RuntimeClient {
   public Flux<Log> watchLogs(String applicationId) {
     return webClient
         .get()
-        .uri(uriBuilder -> uriBuilder.path("/logs/watch").pathSegment(applicationId).build())
+        .uri(uriBuilder -> uriBuilder.path("/logs/watch").build())
+        .header("ApplicationId", applicationId)
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .retrieve()
         .bodyToFlux(Log.class)
@@ -117,7 +118,8 @@ final class WebRuntimeClient implements RuntimeClient {
   public Flux<List<Task>> watchTasks(String applicationId) {
     return webClient
         .get()
-        .uri(uriBuilder -> uriBuilder.path("/task/watch").pathSegment(applicationId).build())
+        .uri(uriBuilder -> uriBuilder.path("/task/watch").build())
+        .header("ApplicationId", applicationId)
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .retrieve()
         .bodyToFlux(new ParameterizedTypeReference<List<Task>>() {

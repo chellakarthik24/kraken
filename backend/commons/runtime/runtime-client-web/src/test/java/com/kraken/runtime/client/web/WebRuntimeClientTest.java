@@ -125,30 +125,7 @@ public class WebRuntimeClientTest {
 
     final var request = server.takeRequest();
     assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.TEXT_EVENT_STREAM_VALUE);
-    assertThat(request.getPath()).isEqualTo("/task/watch/app");
-  }
-
-  @Test
-  public void shouldWaitForStatusFail() throws InterruptedException {
-    final var flatContainer = FlatContainerTest.CONTAINER;
-
-    // Tasks stream
-    server.enqueue(
-        new MockResponse()
-            .setResponseCode(500)
-            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_EVENT_STREAM_VALUE)
-            .setBody(""));
-
-    // Set status
-    server.enqueue(
-        new MockResponse()
-            .setResponseCode(200)
-            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-    );
-
-    client.waitForStatus(flatContainer, ContainerStatus.RUNNING).block();
-
-    assertThat(client.getLastStatus()).isEqualTo(ContainerStatus.FAILED);
+    assertThat(request.getPath()).isEqualTo("/task/watch");
   }
 
   @Test
@@ -199,7 +176,7 @@ public class WebRuntimeClientTest {
 
     final var request = server.takeRequest();
     assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.TEXT_EVENT_STREAM_VALUE);
-    assertThat(request.getPath()).isEqualTo("/logs/watch/app");
+    assertThat(request.getPath()).isEqualTo("/logs/watch");
   }
 
 }
