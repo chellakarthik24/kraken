@@ -12,7 +12,7 @@ export class EventSourceService {
   }
 
   newEventSource(path: string, headers?: { [key in string]: string }): EventSource {
-    return new EventSourcePolyfill('/events', {
+    return new EventSourcePolyfill(path, {
       headers
     });
   }

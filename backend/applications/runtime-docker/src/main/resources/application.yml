@@ -35,7 +35,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://${kraken.ip}:9080/auth/realms/kraken
+          issuer-uri: http://localhost:9080/auth/realms/kraken
 
 kraken:
   storage:

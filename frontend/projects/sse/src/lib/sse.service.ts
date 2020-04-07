@@ -15,9 +15,7 @@ import {SSEEvent} from 'projects/sse/src/lib/events/sse-event';
 import {SecurityService} from 'projects/security/src/lib/security.service';
 import {flatMap} from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SSEService implements OnDestroy, Observer<SSEWrapper> {
 
   _subscription: Subscription;
