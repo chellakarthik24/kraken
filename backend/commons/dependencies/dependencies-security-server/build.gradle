@@ -1,4 +1,5 @@
 dependencies {
     implementation project(':commons:security:security-exchange-filter-spring')
     implementation project(':commons:security:security-decoder-spring')
+    implementation project(':commons:security:security-authentication-web')
 }

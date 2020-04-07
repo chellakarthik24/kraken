@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
+import javax.swing.text.html.Option;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -38,7 +39,7 @@ public class ServiceAccountUserProvider implements UserProvider {
     this.clientProperties = requireNonNull(clientProperties);
     this.decoder = requireNonNull(decoder);
     this.client = requireNonNull(client);
-    this.token = new AtomicReference<>();
+    this.token = new AtomicReference<>(Optional.empty());
   }
 
   @Override
@@ -56,7 +57,7 @@ public class ServiceAccountUserProvider implements UserProvider {
             return Mono.fromCallable(() -> decoder.decode(token.get().getAccessToken()))
                 .flatMap(user -> {
                   if (user.getExpirationTime().minusSeconds(MIN_VALIDITY).isBefore(Instant.now())) {
-                    return client.refreshToken(clientProperties.getContainer(), token.get().getRefreshToken()).doOnNext(this::setToken);
+                    return client.refreshToken(clientProperties.getApi(), token.get().getRefreshToken()).doOnNext(this::setToken);
                   }
                   return Mono.just(token.get());
                 });
