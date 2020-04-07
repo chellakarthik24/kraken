@@ -17,6 +17,6 @@ dependencies {
     implementation project(':commons:gatling:gatling-event')
     implementation project(':commons:template:template-string')
     implementation project(':commons:tools:tools-configuration')
-    implementation project(':commons:security:security-exchange-filter-spring')
-    implementation project(':commons:security:security-decoder-spring')
+
+    implementation project(':commons:dependencies:dependencies-security-runtime-server')
 }

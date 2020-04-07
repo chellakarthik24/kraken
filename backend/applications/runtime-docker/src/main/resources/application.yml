@@ -6,6 +6,11 @@ kraken:
     user: admin
     password: kraken
     database: gatling
+  security:
+    realm: kraken
+    webId: kraken-web
+    apiId: kraken-api
+    apiSecret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4
 
 spring:
   servlet:
@@ -46,6 +51,8 @@ kraken:
     url: http://localhost:8082
   influxdb:
     url: http://localhost:8086
+  security:
+    url: http://localhost:9080
 
 ---
 spring:
@@ -65,3 +72,5 @@ kraken:
     url: http://kraken-runtime:8082
   influxdb:
     url: http://kraken-influxdb:8086
+  security:
+    url: http://kraken-keycloak:9080

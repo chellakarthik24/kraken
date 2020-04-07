@@ -120,6 +120,10 @@ include ':commons:security:security-decoder-spring'
 include ':commons:security:security-entity'
 include ':commons:security:security-context-spring'
 
+include ':commons:dependencies:dependencies-security-server'
+include ':commons:dependencies:dependencies-security-runtime-server'
+include ':commons:dependencies:dependencies-security-container'
+
 include ':commons:ee:license-api'
 include ':commons:ee:license-l4j'
 include ':commons:ee:runtime-backend-kubernetes'
@@ -148,6 +152,6 @@ findProject(':applications:sse')?.name = 'app-sse'
 
 include 'applications:ee:runtime-kubernetes'
 findProject(':applications:ee:runtime-kubernetes')?.name = 'app-runtime-kubernetes'
-
-include ':applications:security-configuration-test'
+include 'commons:dependencies:dependencies-security-server'
+findProject(':commons:dependencies:dependencies-security-server')?.name = 'dependencies-security-server'
 

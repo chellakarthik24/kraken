@@ -6,6 +6,5 @@ dependencies {
     implementation project(':commons:config:config-runtime-client-spring')
     implementation project(':commons:storage:storage-client-web')
     implementation project(':commons:config:config-storage-spring')
-    implementation project(':commons:security:security-exchange-filter-spring')
-    implementation project(':commons:security:security-decoder-spring')
+    implementation project(':commons:dependencies:dependencies-security-server')
 }

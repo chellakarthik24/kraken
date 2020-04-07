@@ -54,9 +54,6 @@ serve-storage:
 serve-sse:
 	$(MAKE) serve APP=:applications:app-sse
 
-serve-security-test:
-	$(MAKE) serve APP=:applications:security-configuration-test
-
 clean:
 	./gradlew $(APP):clean
 
