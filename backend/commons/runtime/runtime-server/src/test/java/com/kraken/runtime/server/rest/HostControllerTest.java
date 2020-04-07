@@ -35,6 +35,22 @@ public class HostControllerTest  extends RuntimeControllerTest {
   }
 
   @Test
+  public void shouldListAdmin() {
+    final var hostsFlux = Flux.just(HostTest.HOST);
+    given(hostService.list())
+        .willReturn(hostsFlux);
+
+    webTestClient.get()
+        .uri("/host/list")
+        .header("Authorization", "Bearer admin-token")
+        .exchange()
+        .expectStatus().isOk()
+        .expectBodyList(Host.class)
+        .contains(HostTest.HOST);
+  }
+
+
+  @Test
   public void shouldListAll() {
     final var hostsFlux = Flux.just(HostTest.HOST);
     given(hostService.listAll())

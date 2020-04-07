@@ -18,7 +18,7 @@ public class RuntimeSecurityConfiguration {
         .authorizeExchange()
         .pathMatchers(HttpMethod.OPTIONS).permitAll()
         .pathMatchers("/container/**").hasAnyAuthority("USER", "ADMIN")
-        .pathMatchers("/host/list").hasAnyAuthority("USER")
+        .pathMatchers("/host/list").hasAnyAuthority("USER", "ADMIN")
         .pathMatchers("/host/**").hasAnyAuthority("ADMIN")
         .pathMatchers("/logs/**").hasAnyAuthority("USER", "ADMIN")
         .pathMatchers("/task/**").hasAnyAuthority("USER", "ADMIN")

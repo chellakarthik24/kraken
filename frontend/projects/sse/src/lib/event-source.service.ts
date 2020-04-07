@@ -12,9 +12,7 @@ export class EventSourceService {
   }
 
   newEventSource(path: string, headers?: { [key in string]: string }): EventSource {
-    return new EventSourcePolyfill(path, {
-      headers
-    });
+    return new EventSourcePolyfill(path, {headers});
   }
 
   newObservable<R>(path: string,
@@ -23,9 +21,10 @@ export class EventSourceService {
     options = _.defaults(options, {
       errorMessage: '',
       converter: _.identity,
+      headers: {}
     });
     return new Observable(observer => {
-      const eventSource = this.newEventSource(path);
+      const eventSource = this.newEventSource(path, options.headers);
       eventSource.onmessage = event => {
         observer.next(options.converter(event.data));
       };
