@@ -29,7 +29,7 @@ describe('EventSourceService', () => {
   });
 
   it('should return eventSource', () => {
-    expect(service.newEventSource('test')).toBeTruthy();
+    expect(service.newEventSource('127.0.0.1')).toBeTruthy();
   });
 
   it('should newObservable cancel', () => {
@@ -37,7 +37,7 @@ describe('EventSourceService', () => {
     spyOn(service, 'newEventSource').and.returnValue(eventSource);
     const observable = service.newObservable('path');
     observable.subscribe().unsubscribe();
-    expect(service.newEventSource).toHaveBeenCalledWith('path');
+    expect(service.newEventSource).toHaveBeenCalledWith('path', {});
     expect(eventSource.close).toHaveBeenCalled();
   });
 
@@ -50,7 +50,7 @@ describe('EventSourceService', () => {
     observable.subscribe(d => data = d, () => {
       console.log('FUUUUU');
     }, () => complete = true);
-    expect(service.newEventSource).toHaveBeenCalledWith('path');
+    expect(service.newEventSource).toHaveBeenCalledWith('path', {});
     eventSource.onmessage({data: 'data'});
     eventSource.onerror(null);
     expect(data).toBe('data');
@@ -66,7 +66,7 @@ describe('EventSourceService', () => {
     observable.subscribe(() => {
     }, (err) => error = err, () => {
     });
-    expect(service.newEventSource).toHaveBeenCalledWith('path', {errorMessage: 'error'});
+    expect(service.newEventSource).toHaveBeenCalledWith('path', {});
     (eventSource as any).readyState = 2;
     eventSource.onerror(null);
     expect(eventSource.close).toHaveBeenCalled();
