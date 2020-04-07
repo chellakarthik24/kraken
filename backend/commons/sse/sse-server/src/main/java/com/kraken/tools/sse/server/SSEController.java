@@ -34,6 +34,10 @@ public class SSEController {
 
   @GetMapping(value = "/watch")
   public Flux<ServerSentEvent<SSEWrapper>> watch(@RequestHeader("ApplicationId") @Pattern(regexp = "[a-z0-9]*") final String applicationId) {
-    return sse.keepAlive(sse.merge(ImmutableMap.of("NODE", storageClient.watch(), "LOG", runtimeClient.watchLogs(applicationId), "TASKS", runtimeClient.watchTasks(applicationId))));
+    return sse.keepAlive(sse.merge(ImmutableMap.of("NODE", storageClient.watch(), "LOG", runtimeClient.watchLogs(applicationId), "TASKS", runtimeClient.watchTasks(applicationId))))
+        .map(event -> {
+          log.debug(event.toString());
+          return event;
+        });
   }
 }

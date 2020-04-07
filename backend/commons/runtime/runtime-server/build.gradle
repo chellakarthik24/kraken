@@ -1,4 +1,5 @@
 dependencies {
+    implementation project(':commons:runtime:runtime-entity')
     implementation project(':commons:runtime:runtime-event')
     implementation project(':commons:runtime:runtime-backend-api')
     implementation project(':commons:runtime:runtime-context-api')

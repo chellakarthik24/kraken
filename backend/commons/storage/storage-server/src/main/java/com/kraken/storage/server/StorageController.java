@@ -153,7 +153,10 @@ class StorageController {
   @GetMapping(value = "/watch")
   public Flux<ServerSentEvent<StorageWatcherEvent>> watch() {
     log.info("Watch storage events");
-    return this.sse.keepAlive(this.watcher.watch());
+    return this.sse.keepAlive(this.watcher.watch()).map(event -> {
+      log.debug(event.toString());
+      return event;
+    });
   }
 
   @PostMapping("/copy")
