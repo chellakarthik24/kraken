@@ -8,9 +8,14 @@ kraken:
     database: gatling
   security:
     realm: kraken
-    webId: kraken-web
-    apiId: kraken-api
-    apiSecret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4
+    web:
+      id: kraken-web
+    container:
+      id: kraken-container
+      secret: 6caa811c-5a41-4a53-aa5d-51c575330146
+    api:
+      id: kraken-api
+      secret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4
 
 spring:
   servlet:

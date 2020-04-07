@@ -111,6 +111,7 @@ include ':commons:template:template-string'
 include ':commons:security:security-authentication-api'
 include ':commons:security:security-authentication-web'
 include ':commons:security:security-authentication-container'
+include ':commons:security:security-authentication-runtime'
 include ':commons:security:security-client-api'
 include ':commons:security:security-client-keycloak'
 include ':commons:security:security-exchange-filter-api'
@@ -123,6 +124,7 @@ include ':commons:security:security-context-spring'
 include ':commons:dependencies:dependencies-security-server'
 include ':commons:dependencies:dependencies-security-runtime-server'
 include ':commons:dependencies:dependencies-security-container'
+
 
 include ':commons:ee:license-api'
 include ':commons:ee:license-l4j'
@@ -152,6 +154,4 @@ findProject(':applications:sse')?.name = 'app-sse'
 
 include 'applications:ee:runtime-kubernetes'
 findProject(':applications:ee:runtime-kubernetes')?.name = 'app-runtime-kubernetes'
-include 'commons:dependencies:dependencies-security-server'
-findProject(':commons:dependencies:dependencies-security-server')?.name = 'dependencies-security-server'
 

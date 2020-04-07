@@ -1,6 +1,8 @@
 package com.kraken.security.authentication.container;
 
 import com.google.common.collect.ImmutableList;
+import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
+import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.config.security.container.api.SecurityContainerProperties;
 import com.kraken.security.authentication.api.UserProvider;
 import com.kraken.security.client.api.SecurityClient;
@@ -26,11 +28,13 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class ContainerUserProviderTest {
   @Mock
-  SecurityContainerProperties properties;
-
+  SecurityContainerProperties containerProperties;
+  @Mock
+  SecurityClientProperties clientProperties;
+  @Mock
+  SecurityClientCredentialsProperties credentialsProperties;
   @Mock
   TokenDecoder decoder;
-
   @Mock
   SecurityClient client;
 
@@ -38,10 +42,11 @@ public class ContainerUserProviderTest {
 
   @Before
   public void setUp() {
-    given(properties.getAccessToken()).willReturn("accessToken");
-    given(properties.getRefreshToken()).willReturn("refreshToken");
-    given(properties.getMinValidity()).willReturn(60L);
-    userProvider = new ContainerUserProvider(properties, decoder, client);
+    given(containerProperties.getAccessToken()).willReturn("accessToken");
+    given(containerProperties.getRefreshToken()).willReturn("refreshToken");
+    given(containerProperties.getMinValidity()).willReturn(60L);
+    given(clientProperties.getContainer()).willReturn(credentialsProperties);
+    userProvider = new ContainerUserProvider(clientProperties, containerProperties, decoder, client);
   }
 
   @Test
@@ -54,7 +59,7 @@ public class ContainerUserProviderTest {
 
   @Test
   public void shouldGetTokenValue() throws IOException {
-    given(client.refreshToken("refreshToken")).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
+    given(client.refreshToken(credentialsProperties, "refreshToken")).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
     given(decoder.decode("accessToken")).willReturn(KrakenUserTest.KRAKEN_USER);
     final var token = userProvider.getTokenValue().block();
     assertThat(token).isNotNull();

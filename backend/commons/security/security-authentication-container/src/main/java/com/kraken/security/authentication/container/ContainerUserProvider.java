@@ -1,5 +1,6 @@
 package com.kraken.security.authentication.container;
 
+import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.config.security.container.api.SecurityContainerProperties;
 import com.kraken.security.authentication.api.UserProvider;
 import com.kraken.security.client.api.SecurityClient;
@@ -15,7 +16,6 @@ import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 import java.time.Instant;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.requireNonNull;
@@ -25,20 +25,23 @@ import static java.util.Objects.requireNonNull;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ContainerUserProvider implements UserProvider {
 
-  SecurityContainerProperties properties;
+  SecurityClientProperties clientProperties;
+  SecurityContainerProperties containerProperties;
   TokenDecoder decoder;
   SecurityClient client;
   AtomicReference<KrakenToken> token;
 
-  public ContainerUserProvider(final SecurityContainerProperties properties,
+  public ContainerUserProvider(final SecurityClientProperties clientProperties,
+                               final SecurityContainerProperties containerProperties,
                                final TokenDecoder decoder,
                                final SecurityClient client) {
-    this.properties = requireNonNull(properties);
+    this.clientProperties = requireNonNull(clientProperties);
+    this.containerProperties = requireNonNull(containerProperties);
     this.decoder = requireNonNull(decoder);
     this.client = requireNonNull(client);
     this.token = new AtomicReference<>(KrakenToken.builder()
-        .accessToken(properties.getAccessToken())
-        .refreshToken(properties.getRefreshToken())
+        .accessToken(containerProperties.getAccessToken())
+        .refreshToken(containerProperties.getRefreshToken())
         .build());
   }
 
@@ -54,8 +57,8 @@ public class ContainerUserProvider implements UserProvider {
         .flatMap(t2 -> {
           final var token = t2.getT1();
           final var user = t2.getT2();
-          if (user.getExpirationTime().minusSeconds(properties.getMinValidity()).isBefore(Instant.now())) {
-            return client.refreshToken(token.getRefreshToken()).doOnNext(this.token::set);
+          if (user.getExpirationTime().minusSeconds(containerProperties.getMinValidity()).isBefore(Instant.now())) {
+            return client.refreshToken(clientProperties.getContainer(), token.getRefreshToken()).doOnNext(this.token::set);
           }
           return Mono.just(token);
         }).map(KrakenToken::getAccessToken);
