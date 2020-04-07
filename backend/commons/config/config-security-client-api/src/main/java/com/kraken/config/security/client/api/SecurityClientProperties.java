@@ -4,11 +4,11 @@ import com.kraken.config.api.UrlProperty;
 
 public interface SecurityClientProperties extends UrlProperty {
 
-  String getWebId();
+  SecurityClientCredentialsProperties getWeb();
 
-  String getApiId();
+  SecurityClientCredentialsProperties getApi();
 
-  String getApiSecret();
+  SecurityClientCredentialsProperties getContainer();
 
   String getRealm();
 }

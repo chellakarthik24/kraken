@@ -1,5 +1,6 @@
 package com.kraken.security.client.keycloak;
 
+import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
 import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.entity.KrakenToken;
@@ -35,44 +36,61 @@ final class KeycloakSecurityClient implements SecurityClient {
   }
 
   @Override
-  public Mono<KrakenToken> userLogin(final String username, final String password) {
+  public Mono<KrakenToken> userLogin(final SecurityClientCredentialsProperties client,
+                                     final String username,
+                                     final String password) {
     return webClient
         .post()
         .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
         .body(BodyInserters.fromFormData("username", username)
             .with("password", password)
             .with("grant_type", "password")
-            .with("client_id", properties.getWebId()))
+            .with("client_id", client.getId()))
         .retrieve()
         .bodyToMono(KrakenToken.class)
         .retryBackoff(NUM_RETRIES, FIRST_BACKOFF);
   }
 
   @Override
-  public Mono<KrakenToken> exchangeToken(final String accessToken) {
+  public Mono<KrakenToken> clientLogin(final SecurityClientCredentialsProperties client) {
     return webClient
         .post()
         .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
-        .body(BodyInserters.fromFormData("client_id", properties.getApiId())
-            .with("client_secret", properties.getApiSecret())
-            .with("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
-            .with("subject_token", accessToken)
-            .with("requested_token_type", "urn:ietf:params:oauth:token-type:refresh_token")
-            .with("audience", properties.getApiId()))
+        .body(BodyInserters.fromFormData("client_id", client.getId())
+            .with("client_secret", client.getSecret())
+            .with("grant_type", "client_credentials"))
         .retrieve()
         .bodyToMono(KrakenToken.class)
         .retryBackoff(NUM_RETRIES, FIRST_BACKOFF);
   }
 
   @Override
-  public Mono<KrakenToken> refreshToken(final String refreshToken) {
+  public Mono<KrakenToken> exchangeToken(final SecurityClientCredentialsProperties client,
+                                         final String accessToken) {
+    return webClient
+        .post()
+        .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
+        .body(BodyInserters.fromFormData("client_id", client.getId())
+            .with("client_secret", client.getSecret())
+            .with("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
+            .with("subject_token", accessToken)
+            .with("requested_token_type", "urn:ietf:params:oauth:token-type:refresh_token")
+            .with("audience", client.getId()))
+        .retrieve()
+        .bodyToMono(KrakenToken.class)
+        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF);
+  }
+
+  @Override
+  public Mono<KrakenToken> refreshToken(final SecurityClientCredentialsProperties client,
+                                        final String refreshToken) {
     return webClient
         .post()
         .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
         .body(BodyInserters.fromFormData("grant_type", "refresh_token")
             .with("refresh_token", refreshToken)
-            .with("client_id", properties.getApiId())
-            .with("client_secret", properties.getApiSecret()))
+            .with("client_id", client.getId())
+            .with("client_secret", client.getSecret()))
         .retrieve()
         .bodyToMono(KrakenToken.class)
         .retryBackoff(NUM_RETRIES, FIRST_BACKOFF);

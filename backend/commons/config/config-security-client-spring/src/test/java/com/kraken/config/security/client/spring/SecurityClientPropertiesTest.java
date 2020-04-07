@@ -12,9 +12,9 @@ public class SecurityClientPropertiesTest {
   public static final SecurityClientProperties SECURITY_CLIENT_PROPERTIES = SpringSecurityClientProperties.builder()
       .url("url")
       .realm("realm")
-      .apiId("apiId")
-      .apiSecret("secret")
-      .webId("webId")
+      .web(new SpringSecurityClientCredentialsProperties("kraken-web", ""))
+      .api(new SpringSecurityClientCredentialsProperties("kraken-api", "secret"))
+      .container(new SpringSecurityClientCredentialsProperties("kraken-container", "secret"))
       .build();
 
   @Test
@@ -25,11 +25,6 @@ public class SecurityClientPropertiesTest {
   @Test
   public void shouldPassEqualsVerifier() {
     EqualsVerifier.forClass(SpringSecurityClientProperties.class).verify();
-  }
-
-  @Test
-  public void shouldPassNPE() {
-    TestUtils.shouldPassNPE(SpringSecurityClientProperties.class);
   }
 
   @Test
