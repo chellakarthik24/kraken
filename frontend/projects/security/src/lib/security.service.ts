@@ -46,10 +46,15 @@ export class SecurityService {
   }
 
   public get username(): string {
-    return (this._kcInstance.tokenParsed as any).preferred_username;
+    if (this._kcInstance && this._kcInstance.tokenParsed) {
+      return (this._kcInstance.tokenParsed as any).preferred_username;
+    }
   }
 
   public get roles(): string[] {
-    return this._kcInstance.tokenParsed.realm_access.roles;
+    if (this._kcInstance && this._kcInstance.tokenParsed) {
+      return this._kcInstance.tokenParsed.realm_access.roles;
+    }
   }
+
 }
