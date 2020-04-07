@@ -8,6 +8,7 @@ export const securityServiceSpy = () => {
   const spy = jasmine.createSpyObj('SecurityService', [
     'init',
     'login',
+    'logout',
   ]);
   return spy;
 };
@@ -78,5 +79,16 @@ describe('SecurityService', () => {
       }
     } as any;
     expect(service.username).toBe('username');
+  });
+
+  it('should roles', () => {
+    service._kcInstance = {
+      tokenParsed: {
+        realm_access: {
+          roles: ['USER']
+        }
+      }
+    } as any;
+    expect(service.roles).toEqual(['USER']);
   });
 });

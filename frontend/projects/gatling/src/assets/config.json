@@ -40,5 +40,6 @@
     "url": "http://localhost:9080/auth",
     "realm": "kraken",
     "clientId": "kraken-web"
-  }
+  },
+  "expectedRoles": ["USER"]
 }

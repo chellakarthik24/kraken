@@ -40,5 +40,6 @@
     "url": "/api/keycloak",
     "realm": "kraken",
     "clientId": "kraken-web"
-  }
+  },
+  "expectedRoles": ["USER"]
 }

@@ -24,9 +24,7 @@ export class SecurityService {
   }
 
   public login(): Observable<void> {
-    return from(this._kcInstance.login()).pipe(
-      tap(() => console.log(this._kcInstance.tokenParsed))
-    );
+    return from(this._kcInstance.login());
   }
 
   public logout(): Observable<void> {
@@ -49,5 +47,9 @@ export class SecurityService {
 
   public get username(): string {
     return (this._kcInstance.tokenParsed as any).preferred_username;
+  }
+
+  public get roles(): string[] {
+    return this._kcInstance.tokenParsed.realm_access.roles;
   }
 }
