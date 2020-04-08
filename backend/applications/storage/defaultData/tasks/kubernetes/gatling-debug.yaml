@@ -50,12 +50,12 @@ spec:
           value: "${KRAKEN_DESCRIPTION}"
         - name: KRAKEN_SECURITY_URL
           value: "${KRAKEN_SECURITY_URL}"
-        - name: KRAKEN_SECURITY_WEBID
-          value: "${KRAKEN_SECURITY_WEBID}"
-        - name: KRAKEN_SECURITY_APIID
-          value: "${KRAKEN_SECURITY_APIID}"
-        - name: KRAKEN_SECURITY_APISECRET
-          value: "${KRAKEN_SECURITY_APISECRET}"
+        - name: KRAKEN_SECURITY_WEB_ID
+          value: "${KRAKEN_SECURITY_WEB_ID}"
+        - name: KRAKEN_SECURITY_CONTAINER_ID
+          value: "${KRAKEN_SECURITY_CONTAINER_ID}"
+        - name: KRAKEN_SECURITY_CONTAINER_SECRET
+          value: "${KRAKEN_SECURITY_CONTAINER_SECRET}"
         - name: KRAKEN_SECURITY_REALM
           value: "${KRAKEN_SECURITY_REALM}"
         - name: KRAKEN_SECURITY_ACCESSTOKEN
@@ -96,12 +96,12 @@ spec:
           value: "${KRAKEN_ANALYSIS_URL}"
         - name: KRAKEN_SECURITY_URL
           value: "${KRAKEN_SECURITY_URL}"
-        - name: KRAKEN_SECURITY_WEBID
-          value: "${KRAKEN_SECURITY_WEBID}"
-        - name: KRAKEN_SECURITY_APIID
-          value: "${KRAKEN_SECURITY_APIID}"
-        - name: KRAKEN_SECURITY_APISECRET
-          value: "${KRAKEN_SECURITY_APISECRET}"
+        - name: KRAKEN_SECURITY_WEB_ID
+          value: "${KRAKEN_SECURITY_WEB_ID}"
+        - name: KRAKEN_SECURITY_CONTAINER_ID
+          value: "${KRAKEN_SECURITY_CONTAINER_ID}"
+        - name: KRAKEN_SECURITY_CONTAINER_SECRET
+          value: "${KRAKEN_SECURITY_CONTAINER_SECRET}"
         - name: KRAKEN_SECURITY_REALM
           value: "${KRAKEN_SECURITY_REALM}"
         - name: KRAKEN_SECURITY_ACCESSTOKEN

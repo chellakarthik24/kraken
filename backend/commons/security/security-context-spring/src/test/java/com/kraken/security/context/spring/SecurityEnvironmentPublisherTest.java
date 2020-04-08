@@ -1,5 +1,6 @@
 package com.kraken.security.context.spring;
 
+import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
 import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.runtime.context.entity.ExecutionContextBuilderTest;
 import com.kraken.runtime.entity.environment.ExecutionEnvironmentEntry;
@@ -32,6 +33,10 @@ public class SecurityEnvironmentPublisherTest {
   SecurityEnvironmentPublisher publisher;
   @MockBean
   SecurityClientProperties clientProperties;
+  @MockBean(name = "web")
+  SecurityClientCredentialsProperties webProperties;
+  @MockBean(name = "container")
+  SecurityClientCredentialsProperties containerProperties;
   @MockBean
   UserProvider userProvider;
   @MockBean
@@ -45,19 +50,21 @@ public class SecurityEnvironmentPublisherTest {
   @Test
   public void shouldGet() {
     given(clientProperties.getUrl()).willReturn("url");
-    given(clientProperties.getApiId()).willReturn("apiId");
-    given(clientProperties.getApiSecret()).willReturn("apiSecret");
-    given(clientProperties.getWebId()).willReturn("webId");
     given(clientProperties.getRealm()).willReturn("realm");
+    given(clientProperties.getWeb()).willReturn(webProperties);
+    given(clientProperties.getContainer()).willReturn(containerProperties);
+    given(webProperties.getId()).willReturn("webId");
+    given(containerProperties.getId()).willReturn("containerId");
+    given(containerProperties.getSecret()).willReturn("containerSecret");
     given(userProvider.getTokenValue()).willReturn(Mono.just("token"));
-    given(client.exchangeToken("token")).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
+    given(client.exchangeToken(containerProperties, "token")).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
     final var env = publisher.apply(ExecutionContextBuilderTest.EXECUTION_CONTEXT_BUILDER).block();
     assertThat(env).isNotNull();
     assertThat(env).isEqualTo(of(
         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_URL.name()).value("url").build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_APIID.name()).value("apiId").build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_APISECRET.name()).value("apiSecret").build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_WEBID.name()).value("webId").build(),
+        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_CONTAINER_ID.name()).value("containerId").build(),
+        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_CONTAINER_SECRET.name()).value("containerSecret").build(),
+        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_WEB_ID.name()).value("webId").build(),
         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REALM.name()).value("realm").build(),
         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_ACCESSTOKEN.name()).value("accessToken").build(),
         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REFRESHTOKEN.name()).value("refreshToken").build()

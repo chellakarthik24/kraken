@@ -36,9 +36,9 @@ public class SecurityEnvironmentCheckerTest {
   public void shouldSucceed() {
     final var env = ImmutableMap.<String, String>builder()
         .put(KRAKEN_SECURITY_URL.name(), "value")
-        .put(KRAKEN_SECURITY_APIID.name(), "value")
-        .put(KRAKEN_SECURITY_APISECRET.name(), "value")
-        .put(KRAKEN_SECURITY_WEBID.name(), "value")
+        .put(KRAKEN_SECURITY_CONTAINER_ID.name(), "value")
+        .put(KRAKEN_SECURITY_CONTAINER_SECRET.name(), "value")
+        .put(KRAKEN_SECURITY_WEB_ID.name(), "value")
         .put(KRAKEN_SECURITY_REALM.name(), "value")
         .put(KRAKEN_SECURITY_ACCESSTOKEN.name(), "value")
         .put(KRAKEN_SECURITY_REFRESHTOKEN.name(), "value")

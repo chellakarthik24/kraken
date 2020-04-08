@@ -20,9 +20,9 @@ final class SecurityEnvironmentChecker implements EnvironmentChecker {
   public void accept(Map<String, String> environment) {
     requireEnv(environment,
         KRAKEN_SECURITY_URL,
-        KRAKEN_SECURITY_APIID,
-        KRAKEN_SECURITY_APISECRET,
-        KRAKEN_SECURITY_WEBID,
+        KRAKEN_SECURITY_CONTAINER_ID,
+        KRAKEN_SECURITY_CONTAINER_SECRET,
+        KRAKEN_SECURITY_WEB_ID,
         KRAKEN_SECURITY_REALM,
         KRAKEN_SECURITY_ACCESSTOKEN,
         KRAKEN_SECURITY_REFRESHTOKEN);
