@@ -30,6 +30,11 @@ public class KeycloakSecurityClientIntegrationTest {
   TokenDecoder decoder;
 
   @Test
+  public void shouldImpersonateFail() throws IOException {
+    client.impersonate(properties.getApi(), "nope").block();
+  }
+
+  @Test
   public void shouldImpersonate() throws IOException {
     final var impersonated = client.impersonate(properties.getApi(), "2e44ffae-111c-4f59-ae2b-65000de6f7b7").block();
     assertThat(impersonated).isNotNull();

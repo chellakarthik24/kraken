@@ -43,7 +43,9 @@ public abstract class AbstractAuthenticatedClientFactory<T extends Authenticated
         .findFirst()
         .orElseThrow()
         .create(userId);
-    return this.create(WebClient.builder().filter(filter).baseUrl(property.getUrl()));
+    return this.create(WebClient.builder()
+        .filter(filter)
+        .baseUrl(property.getUrl()));
   }
 
   protected abstract T create(WebClient.Builder webClientBuilder);

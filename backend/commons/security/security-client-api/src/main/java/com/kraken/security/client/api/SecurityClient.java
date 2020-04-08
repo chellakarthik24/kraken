@@ -2,9 +2,10 @@ package com.kraken.security.client.api;
 
 import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
 import com.kraken.security.entity.KrakenToken;
+import com.kraken.tools.webclient.Client;
 import reactor.core.publisher.Mono;
 
-public interface SecurityClient {
+public interface SecurityClient extends Client {
 
   Mono<KrakenToken> userLogin(SecurityClientCredentialsProperties client,
                               String username,

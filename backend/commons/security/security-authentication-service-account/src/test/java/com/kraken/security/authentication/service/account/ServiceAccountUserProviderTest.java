@@ -52,9 +52,6 @@ public class ServiceAccountUserProviderTest {
     final var token = userProvider.getTokenValue().block();
     assertThat(token).isNotNull();
     assertThat(token).isEqualTo("accessToken");
-    final var user = userProvider.getAuthenticatedUser().block();
-    assertThat(user).isNotNull();
-    assertThat(user).isEqualTo(KrakenUserTest.KRAKEN_USER);
 
     // Then refresh
     given(client.refreshToken(credentialsProperties, "refreshToken")).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
@@ -63,7 +60,7 @@ public class ServiceAccountUserProviderTest {
     assertThat(tokenRefresh).isEqualTo("accessToken");
 
     // Then same
-    given(decoder.decode("accessToken")).willReturn(KrakenUser.builder()
+    final var decoded = KrakenUser.builder()
         .issuedAt(Instant.now().plusSeconds(30))
         .expirationTime(Instant.now().plusSeconds(1800))
         .userId("userId")
@@ -71,10 +68,16 @@ public class ServiceAccountUserProviderTest {
         .roles(ImmutableList.of(KrakenRole.USER))
         .groups(ImmutableList.of("/default-kraken"))
         .currentGroup("/default-kraken")
-        .build());
+        .build();
+    given(decoder.decode("accessToken")).willReturn(decoded);
     final var tokenSame = userProvider.getTokenValue().block();
     assertThat(tokenSame).isNotNull();
     assertThat(tokenSame).isSameAs(tokenRefresh);
+
+    // Finally user
+    final var user = userProvider.getAuthenticatedUser().block();
+    assertThat(user).isNotNull();
+    assertThat(user).isEqualTo(decoded);
   }
 
   @Test

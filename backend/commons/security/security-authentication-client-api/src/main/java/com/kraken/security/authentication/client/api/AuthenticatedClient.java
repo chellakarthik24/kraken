@@ -1,4 +1,6 @@
 package com.kraken.security.authentication.client.api;
 
-public interface AuthenticatedClient {
+import com.kraken.tools.webclient.Client;
+
+public interface AuthenticatedClient extends Client {
 }

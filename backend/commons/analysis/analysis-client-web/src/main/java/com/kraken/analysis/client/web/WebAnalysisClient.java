@@ -23,42 +23,42 @@ final class WebAnalysisClient implements AnalysisClient {
 
   @Override
   public Mono<StorageNode> create(final Result result) {
-    return webClient.post()
+    return retry(webClient.post()
         .uri(uriBuilder -> uriBuilder.path("/result")
             .build())
         .body(BodyInserters.fromValue(result))
         .retrieve()
-        .bodyToMono(StorageNode.class);
+        .bodyToMono(StorageNode.class), log);
   }
 
   @Override
   public Mono<String> delete(final String resultId) {
-    return webClient.delete()
+    return retry(webClient.delete()
         .uri(uriBuilder -> uriBuilder.path("/result")
             .queryParam("resultId", resultId)
             .build())
         .retrieve()
-        .bodyToMono(String.class);
+        .bodyToMono(String.class), log);
   }
 
   @Override
   public Mono<StorageNode> setStatus(final String resultId, final ResultStatus status) {
-    return webClient.post()
+    return retry(webClient.post()
         .uri(uriBuilder -> uriBuilder.path("/result/status")
             .pathSegment(status.toString())
             .queryParam("resultId", resultId)
             .build())
         .retrieve()
-        .bodyToMono(StorageNode.class);
+        .bodyToMono(StorageNode.class), log);
   }
 
   @Override
   public Mono<DebugEntry> debug(final DebugEntry debug) {
-    return webClient.post()
+    return retry(webClient.post()
         .uri(uriBuilder -> uriBuilder.path("/result/debug")
             .build())
         .body(BodyInserters.fromValue(debug))
         .retrieve()
-        .bodyToMono(DebugEntry.class);
+        .bodyToMono(DebugEntry.class), log);
   }
 }
