@@ -6,16 +6,18 @@ import reactor.core.publisher.Mono;
 
 public interface SecurityClient {
 
-  Mono<KrakenToken> userLogin(final SecurityClientCredentialsProperties client,
-                              final String username,
-                              final String password);
+  Mono<KrakenToken> userLogin(SecurityClientCredentialsProperties client,
+                              String username,
+                              String password);
 
-  Mono<KrakenToken> clientLogin(final SecurityClientCredentialsProperties client);
+  Mono<KrakenToken> clientLogin(SecurityClientCredentialsProperties client);
 
-  Mono<KrakenToken> exchangeToken(final SecurityClientCredentialsProperties client,
-                                  final String accessToken);
+  Mono<KrakenToken> exchangeToken(SecurityClientCredentialsProperties client,
+                                  String accessToken);
 
-  Mono<KrakenToken> refreshToken(final SecurityClientCredentialsProperties client,
-                                 final String refreshToken);
+  Mono<KrakenToken> refreshToken(SecurityClientCredentialsProperties client,
+                                 String refreshToken);
 
+  Mono<KrakenToken> impersonate(SecurityClientCredentialsProperties client,
+                                String userId);
 }

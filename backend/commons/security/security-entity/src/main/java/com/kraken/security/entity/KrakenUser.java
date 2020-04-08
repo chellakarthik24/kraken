@@ -50,8 +50,8 @@ public class KrakenUser {
         .map(KrakenRole::valueOf).collect(Collectors.toUnmodifiableList());
     this.groups = ofNullable(groups).orElse(of());
     this.currentGroup = nullToEmpty(currentGroup);
-    this.expirationTime = Instant.ofEpochMilli(requireNonNull(expirationTime));
-    this.issuedAt = Instant.ofEpochMilli(requireNonNull(issuedAt));
+    this.expirationTime = Instant.ofEpochSecond(requireNonNull(expirationTime));
+    this.issuedAt = Instant.ofEpochSecond(requireNonNull(issuedAt));
   }
 
   @Builder

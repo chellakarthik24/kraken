@@ -2,6 +2,8 @@ dependencies {
     implementation project(':commons:security:security-client-api')
 
     testImplementation project(path: ':commons:security:security-entity', configuration: 'testArtifacts')
+    testImplementation project(':commons:security:security-decoder-api')
+    testImplementation project(':commons:security:security-decoder-spring')
     testImplementation project(':commons:config:config-security-client-spring')
     testImplementation project(':commons:tools:tools-application')
 

@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 @Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ContainerUserProvider implements UserProvider {
+final class ContainerUserProvider implements UserProvider {
 
   SecurityClientProperties clientProperties;
   SecurityContainerProperties containerProperties;

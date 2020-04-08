@@ -25,7 +25,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Component
 @AllArgsConstructor(access = PACKAGE)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class JwtConverter implements Converter<Jwt, Mono<AbstractAuthenticationToken>> {
+final class JwtConverter implements Converter<Jwt, Mono<AbstractAuthenticationToken>> {
 
   @NonNull TokenDecoder decoder;
 

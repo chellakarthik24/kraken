@@ -10,3 +10,9 @@ kraken:
     container:
       id: kraken-container
       secret: 6caa811c-5a41-4a53-aa5d-51c575330146
+
+logging:
+  level:
+    root: INFO
+  com:
+    kraken: INFO

@@ -96,6 +96,21 @@ final class KeycloakSecurityClient implements SecurityClient {
         .retryBackoff(NUM_RETRIES, FIRST_BACKOFF);
   }
 
+  @Override
+  public Mono<KrakenToken> impersonate(final SecurityClientCredentialsProperties client,
+                                       final String userId) {
+    return webClient
+        .post()
+        .uri(uriBuilder -> uriBuilder.path(this.getOpenIdTokenUrl()).build())
+        .body(BodyInserters.fromFormData("client_id", client.getId())
+            .with("client_secret", client.getSecret())
+            .with("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
+            .with("requested_subject", userId))
+        .retrieve()
+        .bodyToMono(KrakenToken.class)
+        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF);
+  }
+
   private String getOpenIdTokenUrl() {
     return String.format("/auth/realms/%s/protocol/openid-connect/token", this.properties.getRealm());
   }

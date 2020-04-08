@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 @Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ServiceAccountUserProvider implements UserProvider {
+final class ServiceAccountUserProvider implements UserProvider {
   private static final Long MIN_VALIDITY = 60L;
 
   SecurityClientProperties clientProperties;
