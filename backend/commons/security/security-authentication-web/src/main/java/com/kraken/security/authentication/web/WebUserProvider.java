@@ -1,6 +1,7 @@
 package com.kraken.security.authentication.web;
 
 
+import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.authentication.api.UserProvider;
 import com.kraken.security.entity.KrakenUser;
 import lombok.AccessLevel;
@@ -13,6 +14,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import static com.kraken.security.authentication.api.AuthenticationMode.WEB;
 
 @Slf4j
 @Component

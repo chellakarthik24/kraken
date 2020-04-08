@@ -3,12 +3,14 @@ package com.kraken.analysis.client.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import com.kraken.Application;
 import com.kraken.analysis.client.api.AnalysisClient;
 import com.kraken.analysis.entity.DebugEntryTest;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
 import com.kraken.config.analysis.client.api.AnalysisClientProperties;
-import com.kraken.security.exchange.filter.api.ExchangeFilter;
+import com.kraken.security.authentication.api.ExchangeFilter;
+import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import com.kraken.storage.entity.StorageNodeTest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -19,26 +21,31 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class)
 public class WebAnalysisClientTest {
 
   private ObjectMapper mapper;
   private MockWebServer server;
   private AnalysisClient client;
 
-  @Mock
+  @Autowired
+  List<ExchangeFilterFactory> filterFactories;
+  @MockBean
   AnalysisClientProperties properties;
-
-  @Mock
-  ExchangeFilter filter;
 
   @Before
   public void before() {
@@ -47,8 +54,7 @@ public class WebAnalysisClientTest {
 
     final String url = server.url("/").toString();
     when(properties.getUrl()).thenReturn(url);
-
-    client = new WebAnalysisClient(properties, filter);
+    client = new WebAnalysisClientFactory(filterFactories, properties).create();
   }
 
   @After

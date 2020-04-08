@@ -945,11 +945,11 @@
       "allowRemoteResourceManagement" : false,
       "policyEnforcementMode" : "ENFORCING",
       "resources" : [ {
-        "name" : "client.resource.757cb0ac-b8c2-43bb-a623-de9d0bf733c8",
+        "name" : "client.resource.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a",
         "type" : "Client",
         "ownerManagedAccess" : false,
         "attributes" : { },
-        "_id" : "52ca5d8c-620f-4122-a745-9db25e0cc046",
+        "_id" : "9e439860-cdaf-4cf3-98ab-d98cefc5a27c",
         "uris" : [ ],
         "scopes" : [ {
           "name" : "view"
@@ -966,10 +966,38 @@
         }, {
           "name" : "token-exchange"
         } ]
+      }, {
+        "name" : "Users",
+        "ownerManagedAccess" : false,
+        "attributes" : { },
+        "_id" : "02c2ee10-0156-421e-ae6e-3712ca5d83f8",
+        "uris" : [ ],
+        "scopes" : [ {
+          "name" : "user-impersonated"
+        }, {
+          "name" : "view"
+        }, {
+          "name" : "manage-group-membership"
+        }, {
+          "name" : "impersonate"
+        }, {
+          "name" : "map-roles"
+        }, {
+          "name" : "manage"
+        } ]
       } ],
       "policies" : [ {
         "id" : "9df9f2ce-8d24-4954-bc3b-1d194e06829d",
-        "name" : "kraken-api-exchange",
+        "name" : "kraken-container-exchange",
+        "type" : "client",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "clients" : "[\"kraken-container\"]"
+        }
+      }, {
+        "id" : "22b46fa4-33ca-4e41-af40-3e8a483e1697",
+        "name" : "kraken-api-client-impersonate",
         "type" : "client",
         "logic" : "POSITIVE",
         "decisionStrategy" : "UNANIMOUS",
@@ -977,75 +1005,155 @@
           "clients" : "[\"kraken-api\"]"
         }
       }, {
-        "id" : "c486c75c-e3f6-4252-8ba4-e827ec142f92",
-        "name" : "manage.permission.client.757cb0ac-b8c2-43bb-a623-de9d0bf733c8",
+        "id" : "45ad9ba0-0fd2-4975-a34f-1572b7340832",
+        "name" : "kraken-api-service-account-role",
+        "type" : "role",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "roles" : "[{\"id\":\"API\",\"required\":true}]"
+        }
+      }, {
+        "id" : "eda00486-1df9-4230-addc-bda904b16ae6",
+        "name" : "cannot-impersonate-admins",
+        "type" : "role",
+        "logic" : "NEGATIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "roles" : "[{\"id\":\"ADMIN\",\"required\":true}]"
+        }
+      }, {
+        "id" : "652bbe21-0265-4868-b894-396aa2f0df60",
+        "name" : "manage.permission.client.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a",
         "type" : "scope",
         "logic" : "POSITIVE",
         "decisionStrategy" : "UNANIMOUS",
         "config" : {
-          "resources" : "[\"client.resource.757cb0ac-b8c2-43bb-a623-de9d0bf733c8\"]",
+          "resources" : "[\"client.resource.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a\"]",
           "scopes" : "[\"manage\"]"
         }
       }, {
-        "id" : "10738897-fc06-4b3d-b599-5b963459efc6",
-        "name" : "configure.permission.client.757cb0ac-b8c2-43bb-a623-de9d0bf733c8",
+        "id" : "269917ec-83f4-4667-934f-690c0e8d6981",
+        "name" : "configure.permission.client.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a",
         "type" : "scope",
         "logic" : "POSITIVE",
         "decisionStrategy" : "UNANIMOUS",
         "config" : {
-          "resources" : "[\"client.resource.757cb0ac-b8c2-43bb-a623-de9d0bf733c8\"]",
+          "resources" : "[\"client.resource.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a\"]",
           "scopes" : "[\"configure\"]"
         }
       }, {
-        "id" : "3b3c7b9a-a802-4e03-8d9e-5a6c7c0f2847",
-        "name" : "view.permission.client.757cb0ac-b8c2-43bb-a623-de9d0bf733c8",
+        "id" : "f202625b-a15b-4d2a-8a15-306fbbe8d7e3",
+        "name" : "view.permission.client.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a",
         "type" : "scope",
         "logic" : "POSITIVE",
         "decisionStrategy" : "UNANIMOUS",
         "config" : {
-          "resources" : "[\"client.resource.757cb0ac-b8c2-43bb-a623-de9d0bf733c8\"]",
+          "resources" : "[\"client.resource.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a\"]",
           "scopes" : "[\"view\"]"
         }
       }, {
-        "id" : "1653fcb9-6cbe-4807-a2dc-2fb4296a7e8c",
-        "name" : "map-roles.permission.client.757cb0ac-b8c2-43bb-a623-de9d0bf733c8",
+        "id" : "df87dc81-2eb6-4fe1-abda-2a57cdad15bf",
+        "name" : "map-roles.permission.client.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a",
         "type" : "scope",
         "logic" : "POSITIVE",
         "decisionStrategy" : "UNANIMOUS",
         "config" : {
-          "resources" : "[\"client.resource.757cb0ac-b8c2-43bb-a623-de9d0bf733c8\"]",
+          "resources" : "[\"client.resource.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a\"]",
           "scopes" : "[\"map-roles\"]"
         }
       }, {
-        "id" : "9a69bc17-66cd-4a67-90b8-41272daf139a",
-        "name" : "map-roles-client-scope.permission.client.757cb0ac-b8c2-43bb-a623-de9d0bf733c8",
+        "id" : "93c04c90-2d21-419a-a762-97e77e5d38d5",
+        "name" : "map-roles-client-scope.permission.client.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a",
         "type" : "scope",
         "logic" : "POSITIVE",
         "decisionStrategy" : "UNANIMOUS",
         "config" : {
-          "resources" : "[\"client.resource.757cb0ac-b8c2-43bb-a623-de9d0bf733c8\"]",
+          "resources" : "[\"client.resource.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a\"]",
           "scopes" : "[\"map-roles-client-scope\"]"
         }
       }, {
-        "id" : "88aa2e44-6bca-4696-89d0-e863ff69c446",
-        "name" : "map-roles-composite.permission.client.757cb0ac-b8c2-43bb-a623-de9d0bf733c8",
+        "id" : "9b13931a-e90d-4e6c-9d4e-6982b1c7321e",
+        "name" : "map-roles-composite.permission.client.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a",
         "type" : "scope",
         "logic" : "POSITIVE",
         "decisionStrategy" : "UNANIMOUS",
         "config" : {
-          "resources" : "[\"client.resource.757cb0ac-b8c2-43bb-a623-de9d0bf733c8\"]",
+          "resources" : "[\"client.resource.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a\"]",
           "scopes" : "[\"map-roles-composite\"]"
         }
       }, {
-        "id" : "c8d11089-d531-460a-afa2-ab4e49a1af6d",
-        "name" : "token-exchange.permission.client.757cb0ac-b8c2-43bb-a623-de9d0bf733c8",
+        "id" : "846bd399-4786-4e62-b523-bb2aa5951e50",
+        "name" : "token-exchange.permission.client.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a",
         "type" : "scope",
         "logic" : "POSITIVE",
         "decisionStrategy" : "UNANIMOUS",
         "config" : {
-          "resources" : "[\"client.resource.757cb0ac-b8c2-43bb-a623-de9d0bf733c8\"]",
+          "resources" : "[\"client.resource.ebe67e46-89c6-4c92-94e1-3ff93bde8a7a\"]",
           "scopes" : "[\"token-exchange\"]",
-          "applyPolicies" : "[\"kraken-api-exchange\"]"
+          "applyPolicies" : "[\"kraken-container-exchange\"]"
+        }
+      }, {
+        "id" : "d4525c6f-4228-4c4d-8d80-185a76d41624",
+        "name" : "manage.permission.users",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "resources" : "[\"Users\"]",
+          "scopes" : "[\"manage\"]"
+        }
+      }, {
+        "id" : "74b3b59b-f053-4e63-9261-4cc7861b1f17",
+        "name" : "view.permission.users",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "resources" : "[\"Users\"]",
+          "scopes" : "[\"view\"]"
+        }
+      }, {
+        "id" : "1cbe8e19-adf5-44fb-956c-66550023d5db",
+        "name" : "map-roles.permission.users",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "resources" : "[\"Users\"]",
+          "scopes" : "[\"map-roles\"]"
+        }
+      }, {
+        "id" : "d08e6905-c473-4888-9a9b-074a725858d5",
+        "name" : "manage-group-membership.permission.users",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "resources" : "[\"Users\"]",
+          "scopes" : "[\"manage-group-membership\"]"
+        }
+      }, {
+        "id" : "1e7bc1d9-20d3-4607-a5fb-301c0e570c18",
+        "name" : "admin-impersonating.permission.users",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "resources" : "[\"Users\"]",
+          "scopes" : "[\"impersonate\"]",
+          "applyPolicies" : "[\"kraken-api-service-account-role\",\"kraken-api-client-impersonate\"]"
+        }
+      }, {
+        "id" : "9a7f822c-bf46-47d7-a297-70db1eea06c2",
+        "name" : "user-impersonated.permission.users",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "resources" : "[\"Users\"]",
+          "scopes" : "[\"user-impersonated\"]",
+          "applyPolicies" : "[\"cannot-impersonate-admins\"]"
         }
       } ],
       "scopes" : [ {
@@ -1069,6 +1177,15 @@
       }, {
         "id" : "1ef9c5ba-84d7-47b8-9f20-7300c908c74e",
         "name" : "token-exchange"
+      }, {
+        "id" : "27e64c9e-194a-4cce-99f5-bdd1da263afe",
+        "name" : "impersonate"
+      }, {
+        "id" : "3b29198a-1d7b-45dd-81ec-2652248bee9f",
+        "name" : "user-impersonated"
+      }, {
+        "id" : "cd773750-281e-4bf2-837f-c645c4eba53e",
+        "name" : "manage-group-membership"
       } ],
       "decisionStrategy" : "UNANIMOUS"
     }

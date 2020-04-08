@@ -35,6 +35,10 @@ public class KeycloakSecurityClientIntegrationTest {
     assertThat(impersonated).isNotNull();
     System.out.println(impersonated);
     System.out.println(decoder.decode(impersonated.getAccessToken()));
+    final var refreshedToken = client.refreshToken(properties.getApi(), impersonated.getRefreshToken()).block();
+    assertThat(refreshedToken).isNotNull();
+    System.out.println(refreshedToken);
+    System.out.println(decoder.decode(refreshedToken.getAccessToken()));
   }
 
   @Test

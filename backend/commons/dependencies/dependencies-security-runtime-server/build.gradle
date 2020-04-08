@@ -1,7 +1,8 @@
 dependencies {
+//     TODO remove this module
     implementation project(':commons:security:security-exchange-filter-spring')
     implementation project(':commons:security:security-decoder-spring')
-    implementation project(':commons:security:security-authentication-runtime')
+    implementation project(':commons:security:security-authentication-service-account')
     implementation project(':commons:security:security-context-spring')
     implementation project(':commons:security:security-client-keycloak')
     implementation project(':commons:config:config-security-client-spring')

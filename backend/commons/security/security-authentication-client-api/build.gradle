@@ -1,0 +1,4 @@
+dependencies {
+    api project(':commons:security:security-authentication-api')
+    api project(':commons:config:config-api')
+}

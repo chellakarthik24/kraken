@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Deprecated
 final class SpringExchangeFilter implements ExchangeFilter {
 
   @NonNull UserProvider userProvider;

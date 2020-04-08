@@ -1,6 +1,7 @@
 dependencies {
     implementation project(':commons:security:security-authentication-api')
     implementation project(':commons:security:security-decoder-api')
+    implementation project(':commons:security:security-authentication-utils')
 
     implementation project(':commons:dependencies:dependencies-security-spring')
 

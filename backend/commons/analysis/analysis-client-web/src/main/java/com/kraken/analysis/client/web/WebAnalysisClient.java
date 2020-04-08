@@ -4,12 +4,11 @@ import com.kraken.analysis.client.api.AnalysisClient;
 import com.kraken.analysis.entity.DebugEntry;
 import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
-import com.kraken.config.analysis.client.api.AnalysisClientProperties;
-import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import com.kraken.storage.entity.StorageNode;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -17,19 +16,10 @@ import reactor.core.publisher.Mono;
 import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
-@Component
+@AllArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 final class WebAnalysisClient implements AnalysisClient {
-  WebClient webClient;
-
-  WebAnalysisClient(final AnalysisClientProperties properties,
-                    final ExchangeFilter exchangeFilter) {
-    this.webClient = WebClient
-        .builder()
-        .baseUrl(properties.getUrl())
-        .filter(exchangeFilter)
-        .build();
-  }
+  @NonNull WebClient webClient;
 
   @Override
   public Mono<StorageNode> create(final Result result) {
