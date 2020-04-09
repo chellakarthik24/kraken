@@ -1,4 +1,0 @@
-dependencies {
-    implementation project(':commons:security:security-exchange-filter-api')
-    implementation project(':commons:security:security-authentication-api')
-}
