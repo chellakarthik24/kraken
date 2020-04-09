@@ -1,5 +1,6 @@
 package com.kraken.storage.client.api;
 
+import com.kraken.security.authentication.client.api.AuthenticatedClient;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageWatcherEvent;
 import reactor.core.publisher.Flux;
@@ -8,7 +9,7 @@ import reactor.core.publisher.Mono;
 import java.nio.file.Path;
 import java.util.Optional;
 
-public interface StorageClient {
+public interface StorageClient extends AuthenticatedClient {
 
   Mono<StorageNode> createFolder(String path);
 

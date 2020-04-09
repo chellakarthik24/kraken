@@ -5,7 +5,7 @@ dependencies {
     implementation project(':commons:runtime:runtime-container-spring')
     implementation project(':commons:runtime:runtime-command-zt')
     implementation project(':commons:storage:storage-client-web')
-    implementation project(':commons:config:config-storage-spring')
+    implementation project(':commons:config:config-storage-client-spring')
     implementation project(':commons:config:config-gatling-spring')
     implementation project(':commons:config:config-runtime-container-spring')
 

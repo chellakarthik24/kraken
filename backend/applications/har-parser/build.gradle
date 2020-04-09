@@ -7,7 +7,7 @@ dependencies {
     implementation project(':commons:analysis:analysis-client-web')
     implementation project(':commons:config:config-analysis-client-spring')
     implementation project(':commons:storage:storage-client-web')
-    implementation project(':commons:config:config-storage-spring')
+    implementation project(':commons:config:config-storage-client-spring')
     implementation project(':commons:config:config-har-parser-spring')
     implementation project(':commons:config:config-runtime-container-spring')
 

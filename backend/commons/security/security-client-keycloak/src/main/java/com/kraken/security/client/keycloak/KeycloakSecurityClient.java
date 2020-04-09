@@ -57,8 +57,7 @@ final class KeycloakSecurityClient implements SecurityClient {
             .with("client_secret", client.getSecret())
             .with("grant_type", "client_credentials"))
         .retrieve()
-        .bodyToMono(KrakenToken.class)
-        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF), log);
+        .bodyToMono(KrakenToken.class), log);
   }
 
   @Override

@@ -3,13 +3,14 @@ package com.kraken.storage.client.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import com.kraken.Application;
 import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
-import com.kraken.config.storage.api.StorageProperties;
+import com.kraken.config.storage.client.api.StorageClientProperties;
+import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import com.kraken.storage.client.api.StorageClient;
-import com.kraken.storage.client.web.WebStorageClient;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageWatcherEventTest;
 import com.kraken.tools.configuration.jackson.JacksonConfiguration;
@@ -37,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static com.kraken.analysis.entity.ResultType.RUN;
 import static com.kraken.storage.entity.StorageNodeTest.STORAGE_NODE;
@@ -46,31 +48,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes =  JacksonConfiguration.class)
+@SpringBootTest(classes =  Application.class)
 public class WebStorageClientTest {
 
   private MockWebServer server;
   private StorageClient client;
 
   @Autowired
-  @Qualifier("yamlObjectMapper")
-  ObjectMapper yamlMapper;
+  List<ExchangeFilterFactory> filterFactories;
+
 
   @Autowired
+  @Qualifier("yamlObjectMapper")
+  ObjectMapper yamlMapper;
+  @Autowired
   ObjectMapper jsonMapper;
-
   @MockBean
-  StorageProperties properties;
-
-  @MockBean
-  ExchangeFilter exchangeFilter;
+  StorageClientProperties properties;
 
   @Before
   public void before() {
     server = new MockWebServer();
     final String baseUrl = server.url("/").toString();
     when(properties.getUrl()).thenReturn(baseUrl);
-    client = new WebStorageClient(properties, jsonMapper, yamlMapper, exchangeFilter);
+    client = new WebStorageClientFactory(filterFactories, properties, jsonMapper, yamlMapper).create();
   }
 
   @After

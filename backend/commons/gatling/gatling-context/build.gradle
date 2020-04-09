@@ -1,6 +1,6 @@
 dependencies {
     implementation project(':commons:runtime:runtime-context-api')
-    implementation project(':commons:config:config-storage-api')
+    implementation project(':commons:config:config-storage-client-api')
     implementation project(':commons:config:config-analysis-client-api')
     implementation project(':commons:config:config-influxdb-api')
 

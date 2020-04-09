@@ -26,11 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
     initializers = {ConfigFileApplicationContextInitializer.class})
 public class WebStorageClientIntegrationTest {
 
+  //  TODO update this to handle authentication
   @Autowired
   private StorageClient client;
-
-  @MockBean
-  ExchangeFilter exchangeFilter;
 
   @Test
   public void shouldDownloadFile() {

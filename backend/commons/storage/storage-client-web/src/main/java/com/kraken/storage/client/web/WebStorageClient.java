@@ -1,11 +1,12 @@
 package com.kraken.storage.client.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kraken.config.storage.api.StorageProperties;
+import com.kraken.config.storage.client.api.StorageClientProperties;
 import com.kraken.security.exchange.filter.api.ExchangeFilter;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageWatcherEvent;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +41,9 @@ import static lombok.AccessLevel.PRIVATE;
 import static reactor.core.publisher.Mono.error;
 
 @Slf4j
-@Component
+@AllArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 class WebStorageClient implements StorageClient {
-
-  public static final int NUM_RETRIES = 5;
-  public static final Duration FIRST_BACKOFF = Duration.ofMillis(500);
 
   @NonNull
   WebClient webClient;
@@ -53,20 +51,6 @@ class WebStorageClient implements StorageClient {
   ObjectMapper mapper;
   @NonNull
   ObjectMapper yamlMapper;
-
-  WebStorageClient(
-      final StorageProperties properties,
-      final ObjectMapper mapper,
-      @Qualifier("yamlObjectMapper") final ObjectMapper yamlMapper,
-      final ExchangeFilter exchangeFilter) {
-    this.webClient = WebClient
-        .builder()
-        .baseUrl(properties.getUrl())
-        .filter(exchangeFilter)
-        .build();
-    this.mapper = requireNonNull(mapper);
-    this.yamlMapper = requireNonNull(yamlMapper);
-  }
 
   @Override
   public Flux<StorageWatcherEvent> watch() {
@@ -81,28 +65,26 @@ class WebStorageClient implements StorageClient {
 
   @Override
   public Mono<StorageNode> createFolder(final String path) {
-    return webClient
+    return retry(webClient
         .post()
         .uri(uriBuilder -> uriBuilder.path("/files/set/directory").queryParam("path", path).build())
         .retrieve()
         .bodyToMono(StorageNode.class)
-        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
         .doOnError(t -> log.error("Failed to create folder " + path, t))
-        .doOnSubscribe(subscription -> log.info("Creating folder " + path));
+        .doOnSubscribe(subscription -> log.info("Creating folder " + path)), log);
   }
 
   @Override
   public Mono<Boolean> delete(final String path) {
-    return webClient.post()
+    return retry(webClient.post()
         .uri("/files/delete")
         .body(BodyInserters.fromValue(Collections.singletonList(path)))
         .retrieve()
         .bodyToMono(new ParameterizedTypeReference<List<Boolean>>() {
         })
         .map(list -> list.get(0))
-        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
         .doOnError(t -> log.error("Failed to delete file " + path, t))
-        .doOnSubscribe(subscription -> log.info("Deleting file " + path));
+        .doOnSubscribe(subscription -> log.info("Deleting file " + path)), log);
   }
 
   @Override
@@ -112,15 +94,14 @@ class WebStorageClient implements StorageClient {
 
   @Override
   public <T> Mono<T> getJsonContent(final String path, final Class<T> clazz) {
-    return webClient.get()
+    return retry(webClient.get()
         .uri(uriBuilder -> uriBuilder.path("/files/get/json")
             .queryParam("path", path).build())
         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
         .retrieve()
         .bodyToMono(clazz)
-        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
         .doOnError(t -> log.error("Failed to get json file content " + path, t))
-        .doOnSubscribe(subscription -> log.info("Getting json file content " + path));
+        .doOnSubscribe(subscription -> log.info("Getting json file content " + path)), log);
   }
 
   @Override
@@ -131,38 +112,35 @@ class WebStorageClient implements StorageClient {
 
   @Override
   public Mono<StorageNode> setContent(final String path, final String content) {
-    return webClient.post()
+    return retry(webClient.post()
         .uri(uriBuilder -> uriBuilder.path("/files/set/content")
             .queryParam("path", path)
             .build())
         .body(BodyInserters.fromValue(content))
         .retrieve()
         .bodyToMono(StorageNode.class)
-        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
         .doOnError(t -> log.error("Failed to set file content " + path, t))
-        .doOnSubscribe(subscription -> log.info("Setting file content " + path));
+        .doOnSubscribe(subscription -> log.info("Setting file content " + path)), log);
   }
 
   @Override
   public Mono<String> getContent(final String path) {
-    return webClient.get()
+    return retry(webClient.get()
         .uri(uriBuilder -> uriBuilder.path("/files/get/content")
             .queryParam("path", path).build())
         .retrieve()
         .bodyToMono(String.class)
-        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
         .doOnError(t -> log.error("Failed to get file content " + path, t))
-        .doOnSubscribe(subscription -> log.info("Getting file content " + path));
+        .doOnSubscribe(subscription -> log.info("Getting file content " + path)), log);
   }
 
   @Override
   public Mono<Void> downloadFile(final Path localFilePath, final String remotePath) {
     final Flux<DataBuffer> flux = this.getFile(remotePath);
     try {
-      return DataBufferUtils.write(flux, new FileOutputStream(localFilePath.toFile(), false).getChannel())
+      return retry(DataBufferUtils.write(flux, new FileOutputStream(localFilePath.toFile(), false).getChannel())
           .map(DataBufferUtils::release)
-          .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
-          .doOnError(t -> log.error("Failed to download file " + remotePath, t))
+          .doOnError(t -> log.error("Failed to download file " + remotePath, t)), log)
           .then()
           .doOnSubscribe(subscription -> log.info(String.format("Downloading local: %s - remote: %s", localFilePath, remotePath)));
     } catch (IOException e) {
@@ -178,11 +156,11 @@ class WebStorageClient implements StorageClient {
 
     final Flux<DataBuffer> flux = this.getFile(path);
     try {
-      return DataBufferUtils.write(flux, new FileOutputStream(zipPath.toFile()).getChannel())
-          .map(DataBufferUtils::release)
-          .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
-          .doOnError(t -> log.error("Failed to download folder " + path, t))
-          .doOnSubscribe(subscription -> log.info(String.format("Downloading local: %s - remote: %s", localParentFolderPath, path)))
+      return retry(DataBufferUtils.write(flux, new FileOutputStream(zipPath.toFile()).getChannel())
+              .map(DataBufferUtils::release)
+              .doOnError(t -> log.error("Failed to download folder " + path, t))
+              .doOnSubscribe(subscription -> log.info(String.format("Downloading local: %s - remote: %s", localParentFolderPath, path)))
+          , log)
           .then(Mono.fromCallable(() -> {
             ZipUtil.unpack(zipPath.toFile(), localParentFolderPath.toFile());
             try {
@@ -201,23 +179,21 @@ class WebStorageClient implements StorageClient {
 
   @Override
   public Mono<StorageNode> uploadFile(final Path localFilePath, final String remotePath) {
-    return this.zipLocalFile(localFilePath)
+    return retry(this.zipLocalFile(localFilePath)
         .flatMap(path -> this.setZip(path, remotePath))
-        .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
         .doOnError(t -> log.error("Failed to upload file " + localFilePath, t))
-        .doOnSubscribe(subscription -> log.info(String.format("Uploading local: %s - remote: %s", localFilePath, remotePath)));
+        .doOnSubscribe(subscription -> log.info(String.format("Uploading local: %s - remote: %s", localFilePath, remotePath))), log);
   }
 
   private Mono<StorageNode> setZip(final Path localZipFile, final String path) {
     try {
-      return webClient.post()
+      return retry(webClient.post()
           .uri(uri -> uri.path("/files/set/zip").queryParam("path", path).build())
           .body(BodyInserters.fromMultipartData("file", new UrlResource("file", localZipFile.toString())))
           .retrieve()
           .bodyToMono(StorageNode.class)
-          .retryBackoff(NUM_RETRIES, FIRST_BACKOFF)
           .doOnError(t -> log.error("Failed to upload zip " + localZipFile, t))
-          .doOnSubscribe(subscription -> log.info(String.format("Uploading local: %s - remote: %s", localZipFile, path)));
+          .doOnSubscribe(subscription -> log.info(String.format("Uploading local: %s - remote: %s", localZipFile, path))), log);
     } catch (MalformedURLException e) {
       log.error("Failed to upload file", e);
       return error(e);
@@ -225,10 +201,10 @@ class WebStorageClient implements StorageClient {
   }
 
   private Flux<DataBuffer> getFile(final String path) {
-    return webClient.get()
+    return retry(webClient.get()
         .uri(uri -> uri.path("/files/get/file").queryParam("path", path).build())
         .retrieve()
-        .bodyToFlux(DataBuffer.class);
+        .bodyToFlux(DataBuffer.class), log);
   }
 
 

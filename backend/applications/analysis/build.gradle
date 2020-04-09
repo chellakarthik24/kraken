@@ -6,7 +6,7 @@ dependencies {
     implementation project(':commons:analysis:grafana-client-web')
     implementation project(':commons:config:config-influxdb-spring')
     implementation project(':commons:analysis:influxdb-client-web')
-    implementation project(':commons:config:config-storage-spring')
+    implementation project(':commons:config:config-storage-client-spring')
     implementation project(':commons:storage:storage-client-web')
     implementation project(':commons:dependencies:dependencies-security-server')
 }
