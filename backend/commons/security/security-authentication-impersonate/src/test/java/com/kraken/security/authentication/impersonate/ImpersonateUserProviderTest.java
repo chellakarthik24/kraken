@@ -1,4 +1,4 @@
-package com.kraken.security.authentication.service.account;
+package com.kraken.security.authentication.impersonate;
 
 import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
 import com.kraken.config.security.client.api.SecurityClientProperties;
@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceAccountUserProviderTest {
+public class ImpersonateUserProviderTest {
   @Mock
   SecurityClientProperties clientProperties;
   @Mock
@@ -29,17 +29,17 @@ public class ServiceAccountUserProviderTest {
   @Mock
   SecurityClient client;
 
-  ServiceAccountUserProvider userProvider;
+  ImpersonateUserProvider userProvider;
 
   @Before
   public void setUp() {
     given(clientProperties.getApi()).willReturn(credentialsProperties);
-    userProvider = new ServiceAccountUserProvider(clientProperties, decoder, client);
+    userProvider = new ImpersonateUserProvider(clientProperties, decoder, client, "userId");
   }
 
   @Test
   public void shouldCreateToken() throws IOException {
-    given(client.clientLogin(credentialsProperties)).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
+    given(client.impersonate(credentialsProperties, "userId")).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
     final var token = userProvider.newToken().block();
     assertThat(token).isNotNull();
     assertThat(token).isEqualTo(KrakenTokenTest.KRAKEN_TOKEN);
@@ -55,6 +55,6 @@ public class ServiceAccountUserProviderTest {
 
   @Test
   public void shouldPassNPE() {
-    TestUtils.shouldPassNPE(ServiceAccountUserProvider.class);
+    TestUtils.shouldPassNPE(ImpersonateUserProvider.class);
   }
 }

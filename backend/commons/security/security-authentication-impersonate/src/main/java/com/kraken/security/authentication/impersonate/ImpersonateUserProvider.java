@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-final class ImpersonateUserProvider extends AtomicUserProvider {
+class ImpersonateUserProvider extends AtomicUserProvider {
 
   SecurityClientProperties clientProperties;
   SecurityClient client;

@@ -15,7 +15,7 @@ import static com.kraken.security.authentication.api.AuthenticationMode.WEB;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-final class WebUserProviderFactory implements UserProviderFactory {
+class WebUserProviderFactory implements UserProviderFactory {
 
   @NonNull WebUserProvider userProvider;
 

@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-final class ContainerUserProvider extends AtomicUserProvider {
+class ContainerUserProvider extends AtomicUserProvider {
 
   SecurityClientProperties clientProperties;
   SecurityContainerProperties containerProperties;

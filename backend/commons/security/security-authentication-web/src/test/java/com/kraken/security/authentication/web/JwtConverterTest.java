@@ -44,4 +44,11 @@ public class JwtConverterTest {
     assertThat(token.getDetails()).isEqualTo(KrakenUserTest.KRAKEN_USER);
   }
 
+  @Test(expected = RuntimeException.class)
+  public void shouldConvertFail() throws IOException {
+    given(decoder.decode("token")).willThrow(IOException.class);
+    final var jwt = JwtTestFactory.JWT_FACTORY.create("token", ImmutableList.of("USER"),
+        ImmutableList.of("/default-kraken"), Optional.empty());
+    converter.convert(jwt).block();
+  }
 }

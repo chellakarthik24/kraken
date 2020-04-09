@@ -1,5 +1,6 @@
 package com.kraken.security.authentication.service.account;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.config.security.container.api.SecurityContainerProperties;
 import com.kraken.security.authentication.api.AuthenticationMode;
@@ -27,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-final class ServiceAccountUserProvider extends AtomicUserProvider {
+class ServiceAccountUserProvider extends AtomicUserProvider {
 
   SecurityClientProperties clientProperties;
   SecurityClient client;

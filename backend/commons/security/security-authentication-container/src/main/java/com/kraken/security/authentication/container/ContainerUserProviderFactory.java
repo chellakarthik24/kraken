@@ -10,6 +10,7 @@ import com.kraken.security.decoder.api.TokenDecoder;
 import com.kraken.security.entity.KrakenToken;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,11 +23,15 @@ import static java.util.Objects.requireNonNull;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-final class ContainerUserProviderFactory implements UserProviderFactory {
+class ContainerUserProviderFactory implements UserProviderFactory {
 
+  @NonNull
   SecurityClientProperties clientProperties;
+  @NonNull
   SecurityContainerProperties containerProperties;
+  @NonNull
   TokenDecoder decoder;
+  @NonNull
   SecurityClient client;
 
   @Override

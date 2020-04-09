@@ -7,6 +7,7 @@ import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.decoder.api.TokenDecoder;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,11 +18,11 @@ import static com.kraken.security.authentication.api.AuthenticationMode.SERVICE_
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-final class ServiceAccountUserProviderFactory implements UserProviderFactory {
+class ServiceAccountUserProviderFactory implements UserProviderFactory {
 
-  SecurityClientProperties clientProperties;
-  TokenDecoder decoder;
-  SecurityClient client;
+  @NonNull SecurityClientProperties clientProperties;
+  @NonNull TokenDecoder decoder;
+  @NonNull SecurityClient client;
 
   @Override
   public ServiceAccountUserProvider create(final String userId) {

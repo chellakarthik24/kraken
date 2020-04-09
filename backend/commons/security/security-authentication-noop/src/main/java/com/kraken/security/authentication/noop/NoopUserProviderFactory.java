@@ -15,7 +15,7 @@ import static com.kraken.security.authentication.api.AuthenticationMode.NOOP;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-final class NoopUserProviderFactory implements UserProviderFactory {
+class NoopUserProviderFactory implements UserProviderFactory {
 
   @Override
   public NoopUserProvider create(final String userId) {
