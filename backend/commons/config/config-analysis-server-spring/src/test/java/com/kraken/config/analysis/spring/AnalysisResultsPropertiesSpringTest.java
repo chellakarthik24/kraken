@@ -1,4 +1,4 @@
-package com.kraken.analysis.properties.spring;
+package com.kraken.config.analysis.spring;
 
 import com.kraken.Application;
 import com.kraken.config.grafana.api.AnalysisResultsProperties;
