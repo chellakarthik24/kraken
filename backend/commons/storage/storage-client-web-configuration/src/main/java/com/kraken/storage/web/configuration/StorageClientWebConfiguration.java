@@ -1,4 +1,4 @@
-package com.kraken.storage.container.configuration;
+package com.kraken.storage.web.configuration;
 
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.storage.client.api.StorageClient;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class StorageClientWebConfiguration {
+class StorageClientWebConfiguration {
 
   @Bean
   public StorageClient storageClient(@NonNull final StorageClientFactory factory) {

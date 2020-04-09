@@ -49,7 +49,6 @@ public class SpringExecutionContextServiceTest {
   @Mock
   MapExecutionEnvironmentEntries toMap;
 
-  private ExecutionContextBuilder contextBuilder;
   private ExecutionEnvironment executionEnvironment;
   private TaskConfiguration taskConfiguration;
 
@@ -57,7 +56,6 @@ public class SpringExecutionContextServiceTest {
 
   @Before
   public void before() {
-    contextBuilder = ExecutionContextBuilderTest.EXECUTION_CONTEXT_BUILDER;
     executionEnvironment = ExecutionEnvironmentTest.EXECUTION_ENVIRONMENT;
     taskConfiguration = TaskConfigurationTest.TASK_CONFIGURATION;
     given(configurationService.getConfiguration(any())).willReturn(Mono.just(taskConfiguration));

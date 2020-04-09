@@ -35,8 +35,8 @@ public class SpringTokenDecoderTest {
                 .roles(ImmutableList.of(KrakenRole.USER))
                 .groups(ImmutableList.of("/default-kraken"))
                 .currentGroup("/default-kraken")
-                .issuedAt(Instant.ofEpochMilli(1585832216))
-                .expirationTime(Instant.ofEpochMilli(1585832516))
+                .issuedAt(Instant.ofEpochSecond(1585832216))
+                .expirationTime(Instant.ofEpochSecond(1585832516))
                 .build()
         );
   }
@@ -52,8 +52,8 @@ public class SpringTokenDecoderTest {
                 .roles(ImmutableList.of())
                 .groups(ImmutableList.of())
                 .currentGroup("")
-                .issuedAt(Instant.ofEpochMilli(1585832216))
-                .expirationTime(Instant.ofEpochMilli(1585834016))
+                .issuedAt(Instant.ofEpochSecond(1585832216))
+                .expirationTime(Instant.ofEpochSecond(1585834016))
                 .build()
         );
   }

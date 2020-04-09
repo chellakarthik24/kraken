@@ -3,7 +3,6 @@ package com.kraken.storage.web.configuration;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.client.api.StorageClientFactory;
-import com.kraken.storage.container.configuration.StorageClientWebConfiguration;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.BDDMockito.given;
+
 @RunWith(MockitoJUnitRunner.class)
 public class StorageClientWebConfigurationTest {
 
@@ -24,7 +24,7 @@ public class StorageClientWebConfigurationTest {
 
   @Before
   public void setUp() {
-    given(storageClientFactory.create(AuthenticationMode.CONTAINER)).willReturn(storageClient);
+    given(storageClientFactory.create(AuthenticationMode.WEB)).willReturn(storageClient);
     configuration = new StorageClientWebConfiguration();
   }
 

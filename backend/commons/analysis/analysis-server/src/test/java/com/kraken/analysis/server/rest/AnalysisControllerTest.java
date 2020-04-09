@@ -4,6 +4,7 @@ import com.kraken.analysis.entity.DebugEntryTest;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
 import com.kraken.analysis.server.service.AnalysisService;
+import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageNodeTest;
 import com.kraken.tests.security.AuthControllerTest;
@@ -19,6 +20,8 @@ import static org.mockito.BDDMockito.given;
 public class AnalysisControllerTest extends AuthControllerTest {
   @MockBean
   AnalysisService service;
+  @MockBean
+  StorageClient storageClient;
 
   @Test
   public void shouldPassTestUtils() {
