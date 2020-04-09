@@ -23,7 +23,7 @@ import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_ANALYSIS
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class AnalysisUrlPublisher implements EnvironmentPublisher {
+final class AnalysisUrlPublisher implements EnvironmentPublisher {
 
   @NonNull AnalysisClientProperties properties;
 

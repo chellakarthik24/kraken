@@ -27,7 +27,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Component
 @AllArgsConstructor(access = PACKAGE)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class SpringAnalysisService implements AnalysisService {
+final class SpringAnalysisService implements AnalysisService {
 
   private static final String RESULT_JSON = "result.json";
 

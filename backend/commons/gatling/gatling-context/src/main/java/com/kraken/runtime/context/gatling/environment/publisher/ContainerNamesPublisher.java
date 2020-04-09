@@ -23,7 +23,7 @@ import static com.kraken.tools.environment.KrakenEnvironmentKeys.*;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class ContainerNamesPublisher implements EnvironmentPublisher {
+final class ContainerNamesPublisher implements EnvironmentPublisher {
 
   private static final Map<TaskType, String> SIDEKICK_NAMES = of(
     GATLING_RUN, "telegraf",

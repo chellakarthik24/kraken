@@ -19,7 +19,7 @@ import static com.kraken.tools.environment.KrakenEnvironmentKeys.*;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class ContextPublisher implements EnvironmentPublisher {
+final class ContextPublisher implements EnvironmentPublisher {
 
   @Override
   public boolean test(final TaskType taskType) {

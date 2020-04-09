@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 @Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class SpringRulesApplier implements RulesApplier {
+final class SpringRulesApplier implements RulesApplier {
 
   List<ParserRule> rules;
 

@@ -9,7 +9,7 @@ import java.util.Map;
 import static com.kraken.tools.environment.KrakenEnvironmentKeys.*;
 
 @Component
-class BaseChecker implements EnvironmentChecker {
+final class BaseChecker implements EnvironmentChecker {
 
   @Override
   public void accept(final Map<String, String> environment) {

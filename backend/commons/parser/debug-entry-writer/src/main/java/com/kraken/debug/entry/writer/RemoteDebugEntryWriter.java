@@ -17,7 +17,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Component
 @AllArgsConstructor(access = PACKAGE)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class RemoteDebugEntryWriter implements DebugEntryWriter {
+final class RemoteDebugEntryWriter implements DebugEntryWriter {
   @NonNull ContainerProperties container;
   @NonNull AnalysisClient client;
 

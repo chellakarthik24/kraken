@@ -19,7 +19,7 @@ import static java.util.Optional.ofNullable;
 
 @Component
 @Slf4j
-public class StatusToEndDate implements Function<ResultStatus, Long> {
+final class StatusToEndDate implements Function<ResultStatus, Long> {
 
   private static final Supplier<Long> END_DATE_NOW = () -> new Date().getTime();
   private static final Supplier<Long> END_DATE_ZERO = () -> 0L;

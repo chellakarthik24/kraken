@@ -31,7 +31,7 @@ import static java.util.Optional.empty;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class GatlingParser {
+final class GatlingParser {
 
   @NonNull LogParser parser;
   @NonNull RuntimeClient runtimeClient;

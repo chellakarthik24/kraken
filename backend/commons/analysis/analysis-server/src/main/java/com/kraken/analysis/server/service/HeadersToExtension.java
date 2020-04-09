@@ -14,7 +14,7 @@ import static java.util.Optional.ofNullable;
 
 @Component
 @Slf4j
-public class HeadersToExtension implements Function<List<HttpHeader>, String> {
+final class HeadersToExtension implements Function<List<HttpHeader>, String> {
 
   private static final String CONTENT_TYPE = "Content-Type";
 

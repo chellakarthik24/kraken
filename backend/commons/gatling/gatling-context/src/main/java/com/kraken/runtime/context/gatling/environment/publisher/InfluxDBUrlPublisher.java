@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Component
 @AllArgsConstructor(access = PACKAGE)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class InfluxDBUrlPublisher implements EnvironmentPublisher {
+final class InfluxDBUrlPublisher implements EnvironmentPublisher {
 
   @NonNull InfluxDBProperties properties;
 

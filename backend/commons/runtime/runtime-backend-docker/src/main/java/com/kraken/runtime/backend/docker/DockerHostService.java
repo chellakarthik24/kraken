@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class DockerHostService implements HostService {
+final class DockerHostService implements HostService {
 
   private static final String EMPTY = "-";
 

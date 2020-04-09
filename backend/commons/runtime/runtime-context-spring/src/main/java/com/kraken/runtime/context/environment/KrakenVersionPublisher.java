@@ -21,7 +21,7 @@ import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_VERSION;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class KrakenVersionPublisher implements EnvironmentPublisher {
+final class KrakenVersionPublisher implements EnvironmentPublisher {
 
   @NonNull ApplicationProperties kraken;
 

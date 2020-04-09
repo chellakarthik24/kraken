@@ -23,7 +23,7 @@ import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_GATLING_
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class JavaOptsPublisher implements EnvironmentPublisher {
+final class JavaOptsPublisher implements EnvironmentPublisher {
 
   @Override
   public boolean test(final TaskType taskType) {

@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Component
 @AllArgsConstructor(access = PACKAGE)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-class RuntimeUrlPublisher implements EnvironmentPublisher {
+final class RuntimeUrlPublisher implements EnvironmentPublisher {
 
   @NonNull RuntimeClientProperties properties;
 

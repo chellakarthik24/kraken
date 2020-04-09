@@ -19,7 +19,7 @@ import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_HOSTID;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class HostIdsPublisher implements EnvironmentPublisher {
+final class HostIdsPublisher implements EnvironmentPublisher {
 
   @Override
   public boolean test(final TaskType taskType) {

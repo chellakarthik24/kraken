@@ -19,7 +19,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 @Slf4j
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Component
-class WebInfluxDBClient implements InfluxDBClient {
+final class WebInfluxDBClient implements InfluxDBClient {
 
   WebClient client;
   InfluxDBProperties influxdb;

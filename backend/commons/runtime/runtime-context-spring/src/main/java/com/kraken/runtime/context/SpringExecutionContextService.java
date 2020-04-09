@@ -39,7 +39,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @Slf4j
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class SpringExecutionContextService implements ExecutionContextService {
+final class SpringExecutionContextService implements ExecutionContextService {
 
   @NonNull TaskConfigurationService configurationService;
   @NonNull IdGenerator idGenerator;

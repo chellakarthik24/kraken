@@ -28,7 +28,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Slf4j
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Component
-class WebGrafanaClient implements GrafanaClient {
+final class WebGrafanaClient implements GrafanaClient {
 
   WebClient webClient;
   ObjectMapper mapper;

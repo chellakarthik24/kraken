@@ -30,7 +30,7 @@ import static java.util.Optional.of;
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class HarParserService {
+final class HarParserService {
 
   @NonNull HarParser parser;
   @NonNull StorageClient storage;

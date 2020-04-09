@@ -19,7 +19,7 @@ import java.util.Optional;
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
-public class SpringTaskListService implements TaskListService {
+final class SpringTaskListService implements TaskListService {
 
   final static Duration WATCH_TASKS_DELAY = Duration.ofSeconds(2);
 

@@ -21,7 +21,7 @@ import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_STORAGE_
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class StorageUrlPublisher implements EnvironmentPublisher {
+final class StorageUrlPublisher implements EnvironmentPublisher {
 
   @NonNull StorageClientProperties properties;
 

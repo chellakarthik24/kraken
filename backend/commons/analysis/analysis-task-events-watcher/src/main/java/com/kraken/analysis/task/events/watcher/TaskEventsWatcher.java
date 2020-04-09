@@ -18,7 +18,7 @@ import static com.kraken.security.authentication.api.AuthenticationMode.SERVICE_
 @Component
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class TaskEventsWatcher {
+final class TaskEventsWatcher {
 
   @NonNull RuntimeEventClientFactory clientFactory;
   @NonNull EventBus eventBus;
