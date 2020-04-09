@@ -1,6 +1,7 @@
 package com.kraken.analysis.client.web;
 
 import com.kraken.analysis.client.api.AnalysisClient;
+import com.kraken.analysis.client.api.AnalysisClientFactory;
 import com.kraken.config.analysis.client.api.AnalysisClientProperties;
 import com.kraken.security.authentication.api.ExchangeFilter;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
@@ -15,7 +16,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Component
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-final class WebAnalysisClientFactory extends AbstractAuthenticatedClientFactory<AnalysisClient> {
+final class WebAnalysisClientFactory extends AbstractAuthenticatedClientFactory<AnalysisClient> implements AnalysisClientFactory {
 
   public WebAnalysisClientFactory(final List<ExchangeFilterFactory> exchangeFilterFactories,
                                   final AnalysisClientProperties properties) {

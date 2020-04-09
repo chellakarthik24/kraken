@@ -3,10 +3,12 @@ package com.kraken.runtime.client.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.kraken.Application;
 import com.kraken.config.runtime.client.api.RuntimeClientProperties;
+import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
-import com.kraken.security.exchange.filter.api.ExchangeFilter;
+import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
@@ -14,26 +16,31 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class)
 public class WebRuntimeClientTest {
 
   private ObjectMapper mapper;
   private MockWebServer server;
-  private WebRuntimeClient client;
+  private RuntimeClient client;
 
-  @Mock
+  @Autowired
+  List<ExchangeFilterFactory> filterFactories;
+  @MockBean
   RuntimeClientProperties properties;
-  @Mock
-  ExchangeFilter exchangeFilter;
 
   @Before
   public void setUp() {
@@ -41,7 +48,7 @@ public class WebRuntimeClientTest {
     mapper = new ObjectMapper();
     final String url = server.url("/").toString();
     given(properties.getUrl()).willReturn(url);
-    client = new WebRuntimeClient(properties, exchangeFilter);
+    client = new WebRuntimeClientFactory(filterFactories, properties).create();
   }
 
   @After
@@ -66,7 +73,7 @@ public class WebRuntimeClientTest {
 
     set2.block();
     assertThat(server.getRequestCount()).isEqualTo(1);
-    assertThat(client.getLastStatus()).isEqualTo(ContainerStatus.DONE);
+    assertThat(((WebRuntimeClient) client).getLastStatus()).isEqualTo(ContainerStatus.DONE);
   }
 
   @Test
