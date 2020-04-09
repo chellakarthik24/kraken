@@ -5,6 +5,7 @@ import com.kraken.config.runtime.container.spring.SpringContainerPropertiesTest;
 import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.FlatContainerTest;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
+@SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "containerProperties is used in child tests")
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractContainerExecutorTest {
 

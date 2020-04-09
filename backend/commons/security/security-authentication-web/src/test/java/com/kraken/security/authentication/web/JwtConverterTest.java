@@ -5,6 +5,7 @@ import com.kraken.security.decoder.api.TokenDecoder;
 import com.kraken.security.entity.KrakenRole;
 import com.kraken.security.entity.KrakenUserTest;
 import com.kraken.tests.security.JwtTestFactory;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +51,8 @@ public class JwtConverterTest {
     given(decoder.decode("token")).willThrow(IOException.class);
     final var jwt = JwtTestFactory.JWT_FACTORY.create("token", ImmutableList.of(KrakenRole.USER.name()),
         ImmutableList.of("/default-kraken"), Optional.empty());
-    converter.convert(jwt).block();
+    final var mono = converter.convert(jwt);
+    assertThat(mono).isNotNull();
+    mono.block();
   }
 }
