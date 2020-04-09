@@ -8,7 +8,7 @@ dependencies {
     implementation project(':commons:config:config-telegraf-api')
     implementation project(':commons:config:config-runtime-container-api')
 
-    implementation project(':commons:storage:storage-client-api')
+    implementation project(':commons:storage:storage-client-container-configuration')
     implementation project(':commons:tools:tools-reactor-utils')
 
     testImplementation project(path: ':commons:tools:tools-application', configuration: 'testArtifacts')

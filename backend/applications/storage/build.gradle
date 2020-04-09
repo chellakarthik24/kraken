@@ -1,8 +1,12 @@
 dependencies {
+    // Storage server
     implementation project(':commons:storage:storage-server')
     implementation project(':commons:storage:storage-file-system')
     implementation project(':commons:sse:sse-spring')
-    implementation project(':commons:tools:tools-configuration')
     implementation project(':commons:config:config-kraken')
+
+    // Security
     implementation project(':commons:dependencies:dependencies-security-server')
+
+    implementation project(':commons:tools:tools-configuration')
 }
