@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
+import static com.kraken.security.entity.KrakenRole.USER;
+
 @EnableWebFluxSecurity
 public class StorageSecurityConfiguration {
   @Bean
@@ -18,7 +20,7 @@ public class StorageSecurityConfiguration {
         .authorizeExchange()
         .pathMatchers(HttpMethod.OPTIONS).permitAll()
         .pathMatchers("/static/**").permitAll()
-        .pathMatchers("/files/**").hasAnyAuthority("USER", "ADMIN")
+        .pathMatchers("/files/**").hasAnyAuthority(USER.name())
         .anyExchange().denyAll()
         .and()
         .oauth2ResourceServer()

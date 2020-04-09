@@ -1,5 +1,6 @@
 package com.kraken.tools.sse.server;
 
+import com.kraken.security.entity.KrakenRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
@@ -10,6 +11,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
+import static com.kraken.security.entity.KrakenRole.ADMIN;
+
 @EnableWebFluxSecurity
 public class SSESecurityConfiguration {
   @Bean
@@ -17,7 +20,7 @@ public class SSESecurityConfiguration {
     http
         .authorizeExchange()
         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-        .pathMatchers("/watch").hasAnyAuthority("USER", "ADMIN")
+        .pathMatchers("/watch").hasAnyAuthority(KrakenRole.USER.name())
         .anyExchange().denyAll()
         .and()
         .oauth2ResourceServer()

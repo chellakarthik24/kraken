@@ -37,6 +37,16 @@ public class KrakenUserTest {
       .currentGroup("/default-kraken")
       .build();
 
+  public static final KrakenUser KRAKEN_API = KrakenUser.builder()
+      .issuedAt(Instant.EPOCH)
+      .expirationTime(Instant.EPOCH.plusMillis(1))
+      .userId("userId")
+      .username("username")
+      .roles(ImmutableList.of(KrakenRole.API))
+      .groups(ImmutableList.of())
+      .currentGroup("")
+      .build();
+
   @Test
   public void shouldPassEquals() {
     TestUtils.shouldPassEquals(KRAKEN_USER.getClass());

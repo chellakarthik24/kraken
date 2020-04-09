@@ -1,17 +1,18 @@
 package com.kraken.runtime.server.rest;
 
+import com.google.common.collect.ImmutableMap;
 import com.kraken.runtime.backend.api.TaskService;
+import com.kraken.runtime.context.api.ExecutionContextService;
 import com.kraken.runtime.context.entity.CancelContext;
 import com.kraken.runtime.context.entity.ExecutionContext;
 import com.kraken.runtime.entity.environment.ExecutionEnvironment;
 import com.kraken.runtime.entity.task.Task;
 import com.kraken.runtime.entity.task.TaskType;
-import com.kraken.runtime.event.TaskCancelledEvent;
-import com.kraken.runtime.event.TaskExecutedEvent;
+import com.kraken.runtime.event.*;
 import com.kraken.runtime.server.service.TaskListService;
 import com.kraken.tools.event.bus.EventBus;
 import com.kraken.tools.sse.SSEService;
-import com.kraken.runtime.context.api.ExecutionContextService;
+import com.kraken.tools.sse.SSEWrapper;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -83,5 +84,17 @@ public class TaskController {
   @GetMapping(value = "/list")
   public Flux<Task> list(@RequestHeader("ApplicationId") @Pattern(regexp = "[a-z0-9]*") final String applicationId) {
     return taskListService.list(of(applicationId));
+  }
+
+  @GetMapping(value = "/events")
+  public Flux<ServerSentEvent<SSEWrapper>> events() {
+    log.info("Watch tasks events");
+    return sse.keepAlive(sse.merge(ImmutableMap.of(
+        "TaskExecutedEvent", eventBus.of(TaskExecutedEvent.class),
+        "TaskCreatedEvent", eventBus.of(TaskCreatedEvent.class),
+        "TaskStatusUpdatedEvent", eventBus.of(TaskStatusUpdatedEvent.class),
+        "TaskCancelledEvent", eventBus.of(TaskCancelledEvent.class),
+        "TaskRemovedEvent", eventBus.of(TaskRemovedEvent.class)
+    )));
   }
 }

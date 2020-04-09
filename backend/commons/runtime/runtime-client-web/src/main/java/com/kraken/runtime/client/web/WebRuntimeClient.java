@@ -115,7 +115,7 @@ final class WebRuntimeClient implements RuntimeClient {
         .bodyToFlux(new ParameterizedTypeReference<List<Task>>() {
         })
         .doOnSubscribe(subscription -> log.info("Watch tasks"))
-        .doOnError(t -> log.error("Failed to wWatch tasks", t));
+        .doOnError(t -> log.error("Failed to watch tasks", t));
   }
 
   ContainerStatus getLastStatus() {

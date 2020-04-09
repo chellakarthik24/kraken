@@ -6,6 +6,7 @@ import com.kraken.runtime.backend.api.TaskService;
 import com.kraken.runtime.context.api.ExecutionContextService;
 import com.kraken.runtime.logs.LogsService;
 import com.kraken.runtime.server.service.TaskListService;
+import com.kraken.runtime.server.service.TaskUpdateHandler;
 import com.kraken.tests.security.AuthControllerTest;
 import com.kraken.tools.event.bus.EventBus;
 import com.kraken.tools.sse.SSEService;
@@ -30,6 +31,9 @@ public abstract class RuntimeControllerTest extends AuthControllerTest {
 
   @MockBean
   protected TaskListService taskListService;
+
+  @MockBean
+  protected TaskUpdateHandler taskUpdateHandler;
 
   @MockBean
   protected ExecutionContextService contextService;

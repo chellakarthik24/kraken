@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
+import static com.kraken.security.entity.KrakenRole.*;
+
 @EnableWebFluxSecurity
 public class RuntimeSecurityConfiguration {
   @Bean
@@ -17,11 +19,12 @@ public class RuntimeSecurityConfiguration {
     http
         .authorizeExchange()
         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-        .pathMatchers("/container/**").hasAnyAuthority("USER", "ADMIN")
-        .pathMatchers("/host/list").hasAnyAuthority("USER", "ADMIN")
-        .pathMatchers("/host/**").hasAnyAuthority("ADMIN")
-        .pathMatchers("/logs/**").hasAnyAuthority("USER", "ADMIN")
-        .pathMatchers("/task/**").hasAnyAuthority("USER", "ADMIN")
+        .pathMatchers("/container/**").hasAnyAuthority(USER.name())
+        .pathMatchers("/host/list").hasAnyAuthority(USER.name())
+        .pathMatchers("/host/**").hasAnyAuthority(ADMIN.name())
+        .pathMatchers("/logs/**").hasAnyAuthority(USER.name())
+        .pathMatchers("/task/events").hasAnyAuthority(API.name())
+        .pathMatchers("/task/**").hasAnyAuthority(USER.name())
         .anyExchange().denyAll()
         .and()
         .oauth2ResourceServer()

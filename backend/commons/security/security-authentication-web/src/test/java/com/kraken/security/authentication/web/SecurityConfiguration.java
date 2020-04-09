@@ -10,19 +10,18 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
+import static com.kraken.security.entity.KrakenRole.ADMIN;
+import static com.kraken.security.entity.KrakenRole.USER;
+
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
   @Bean
   SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final Converter<Jwt, Mono<AbstractAuthenticationToken>> converter) {
     http
         .authorizeExchange()
-        .pathMatchers("/static/**")
-        .permitAll()
         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-//        .pathMatchers("/files/**").hasAuthority("USER")
-//        .pathMatchers("/files/**").hasAuthority("ADMIN")
-        .pathMatchers("/test/user").hasAuthority("USER")
-        .pathMatchers("/test/admin").hasAuthority("ADMIN")
+        .pathMatchers("/test/user").hasAuthority(USER.name())
+        .pathMatchers("/test/admin").hasAuthority(ADMIN.name())
         .anyExchange().denyAll()
         .and()
         .oauth2ResourceServer()

@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
+import static com.kraken.security.entity.KrakenRole.USER;
+
 @EnableWebFluxSecurity
 public class AnalysisSecurityConfiguration {
   @Bean
@@ -17,7 +19,7 @@ public class AnalysisSecurityConfiguration {
     http
         .authorizeExchange()
         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-        .pathMatchers("/result/**").hasAnyAuthority("USER", "ADMIN")
+        .pathMatchers("/result/**").hasAnyAuthority(USER.name())
         .anyExchange().denyAll()
         .and()
         .oauth2ResourceServer()

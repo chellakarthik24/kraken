@@ -5,6 +5,6 @@ dependencies {
 
     implementation project(':commons:dependencies:dependencies-security-spring')
 
-    testImplementation project(path: ':tests:tests-security-web')
-    testImplementation project(path: ':tests:tests-security-web', configuration: 'testArtifacts')
+    testImplementation project(path: ':tests:tests-web-security')
+    testImplementation project(path: ':tests:tests-web-security', configuration: 'testArtifacts')
 }

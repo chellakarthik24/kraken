@@ -6,7 +6,5 @@ dependencies {
     testImplementation project(path: ':commons:storage:storage-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:analysis:analysis-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:security:security-authentication-noop')
-
-    testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: okhttpVersion
-    testImplementation group: 'com.squareup.okhttp3', name: 'okhttp', version: okhttpVersion
+    testImplementation project(path: ':tests:tests-web-client')
 }

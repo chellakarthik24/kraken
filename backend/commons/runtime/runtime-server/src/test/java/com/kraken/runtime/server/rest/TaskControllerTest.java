@@ -10,13 +10,13 @@ import com.kraken.runtime.context.entity.ExecutionContextTest;
 import com.kraken.runtime.entity.environment.ExecutionEnvironmentTest;
 import com.kraken.runtime.entity.task.Task;
 import com.kraken.runtime.entity.task.TaskTest;
-import com.kraken.runtime.event.TaskCancelledEvent;
-import com.kraken.runtime.event.TaskExecutedEvent;
+import com.kraken.runtime.event.*;
 import com.kraken.runtime.server.service.TaskListService;
 import com.kraken.tests.security.AuthControllerTest;
 import com.kraken.tests.utils.TestUtils;
 import com.kraken.tools.event.bus.EventBus;
 import com.kraken.tools.sse.SSEService;
+import com.kraken.tools.sse.SSEWrapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +37,11 @@ import java.util.Optional;
 
 import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_DESCRIPTION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-public class TaskControllerTest  extends RuntimeControllerTest {
+public class TaskControllerTest extends RuntimeControllerTest {
 
   @Test
   public void shouldPassTestUtils() {
@@ -195,4 +196,38 @@ public class TaskControllerTest  extends RuntimeControllerTest {
         "\n");
   }
 
+  @Test
+  public void shouldEventsFail() {
+    webTestClient.get()
+        .uri("/task/events")
+        .header("Authorization", "Bearer user-token")
+        .exchange()
+        .expectStatus().is4xxClientError();
+  }
+
+  @Test
+  public void shouldEvents() {
+    given(eventBus.of(TaskExecutedEvent.class)).willReturn(Flux.just(TaskExecutedEventTest.TASK_EXECUTED_EVENT));
+    given(eventBus.of(TaskCreatedEvent.class)).willReturn(Flux.just(TaskCreatedEventTest.TASK_CREATED_EVENT));
+    given(eventBus.of(TaskStatusUpdatedEvent.class)).willReturn(Flux.just(TaskStatusUpdatedEventTest.TASK_STATUS_UPDATED_EVENT));
+    given(eventBus.of(TaskCancelledEvent.class)).willReturn(Flux.just(TaskCancelledEventTest.TASK_CANCELLED_EVENT));
+    given(eventBus.of(TaskRemovedEvent.class)).willReturn(Flux.just(TaskRemovedEventTest.TASK_REMOVED_EVENT));
+    final var wrapped = Flux.just(SSEWrapper.builder().type("TaskExecutedEvent").value(TaskExecutedEventTest.TASK_EXECUTED_EVENT).build());
+    given(sse.merge(any())).willReturn(wrapped);
+    final Flux<ServerSentEvent<SSEWrapper>> eventsFlux = wrapped.map(sseWrapper -> ServerSentEvent.<SSEWrapper>builder().data(sseWrapper).build());
+    given(sse.keepAlive(wrapped)).willReturn(eventsFlux);
+
+    final var result = webTestClient.get()
+        .uri("/task/events")
+        .header("Authorization", "Bearer api-token")
+        .exchange()
+        .expectStatus().isOk()
+        .expectHeader().contentType(MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8")
+        .expectBody()
+        .returnResult();
+
+    final var body = new String(Optional.ofNullable(result.getResponseBody()).orElse(new byte[0]), Charsets.UTF_8);
+    assertThat(body).isEqualTo("data:{\"type\":\"TaskExecutedEvent\",\"value\":{\"context\":{\"applicationId\":\"application\",\"taskId\":\"taskId\",\"taskType\":\"GATLING_RUN\",\"description\":\"description\",\"templates\":{\"hostId\":\"template\"}}}}\n" +
+        "\n");
+  }
 }

@@ -71,7 +71,9 @@ include ':commons:runtime:runtime-command-api'
 include ':commons:runtime:runtime-command-zt'
 include ':commons:runtime:runtime-container-api'
 include ':commons:runtime:runtime-container-spring'
-include ':commons:runtime:runtime-event'
+include ':commons:runtime:runtime-event-entity'
+include ':commons:runtime:runtime-event-client-api'
+include ':commons:runtime:runtime-event-client-spring'
 include ':commons:runtime:runtime-context-api'
 include ':commons:runtime:runtime-context-entity'
 include ':commons:runtime:runtime-context-spring'
@@ -135,7 +137,8 @@ include ':commons:ee:license-l4j'
 include ':commons:ee:runtime-backend-kubernetes'
 
 include ':tests:tests-utils'
-include ':tests:tests-security-web'
+include ':tests:tests-web-security'
+include ':tests:tests-web-client'
 
 include ':applications:storage'
 findProject(':applications:storage')?.name = 'app-storage'
@@ -158,5 +161,4 @@ findProject(':applications:sse')?.name = 'app-sse'
 
 include 'applications:ee:runtime-kubernetes'
 findProject(':applications:ee:runtime-kubernetes')?.name = 'app-runtime-kubernetes'
-
 
