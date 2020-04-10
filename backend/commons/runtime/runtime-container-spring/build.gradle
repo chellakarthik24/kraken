@@ -2,6 +2,7 @@ dependencies {
     implementation project(':commons:runtime:runtime-container-api')
     implementation project(':commons:runtime:runtime-client-api')
     implementation project(':commons:config:config-runtime-container-api')
+    implementation project(':commons:runtime:runtime-client-configuration-container')
 
     testImplementation project(path: ':commons:tools:tools-application', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:runtime:runtime-entity', configuration: 'testArtifacts')

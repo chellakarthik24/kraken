@@ -60,7 +60,7 @@ public class AbstractAuthenticatedClientFactoryTest {
   public void setUp() {
     given(noopFilterFactory.getMode()).willReturn(NOOP);
     given(noopFilterFactory.create(Mockito.anyString())).willReturn(noopExchangeFilter);
-    given(webFilterFactory.getMode()).willReturn(WEB);
+    given(webFilterFactory.getMode()).willReturn(SESSION);
     given(webFilterFactory.create(Mockito.anyString())).willReturn(webExchangeFilter);
     given(property.getUrl()).willReturn("url");
     factory = new TestAuthenticatedClientFactory(ImmutableList.of(noopFilterFactory, webFilterFactory), property);
@@ -74,13 +74,13 @@ public class AbstractAuthenticatedClientFactoryTest {
 
   @Test
   public void shouldCreateWeb() {
-    factory.create(WEB);
+    factory.create(SESSION);
     verify(webFilterFactory).create("");
   }
 
   @Test
   public void shouldCreateUserId() {
-    factory.create(WEB, "userId");
+    factory.create(SESSION, "userId");
     verify(webFilterFactory).create("userId");
   }
 

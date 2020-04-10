@@ -19,9 +19,11 @@ dependencies {
 
     // Storage client (tasks configuration)
     implementation project(':commons:storage:storage-client-web')
+    implementation project(':commons:storage:storage-client-configuration-session')
 
     // Security
     implementation project(':commons:dependencies:dependencies-security-server')
+    implementation project(':commons:security:security-context-spring')
 
     implementation project(':commons:tools:tools-configuration')
 }

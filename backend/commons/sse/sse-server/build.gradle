@@ -1,6 +1,4 @@
 dependencies {
-    implementation project(':commons:storage:storage-client-web-configuration')
-    implementation project(':commons:runtime:runtime-client-web-configuration')
     implementation project(':commons:tools:tools-environment')
     implementation project(':commons:sse:sse-api')
 
