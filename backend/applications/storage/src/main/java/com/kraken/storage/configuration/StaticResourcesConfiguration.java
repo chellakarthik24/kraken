@@ -16,7 +16,7 @@ import static lombok.AccessLevel.PACKAGE;
 @Configuration
 @AllArgsConstructor(access = PACKAGE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-final class StaticResourcesConfiguration implements WebFluxConfigurer {
+class StaticResourcesConfiguration implements WebFluxConfigurer {
 
   @NonNull ApplicationProperties kraken;
 

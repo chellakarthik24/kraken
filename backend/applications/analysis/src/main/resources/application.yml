@@ -10,6 +10,13 @@ kraken:
     user: admin
     password: kraken
     database: gatling
+  security:
+    realm: kraken
+    web:
+      id: kraken-web
+    api:
+      id: kraken-api
+      secret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4
 
 spring:
   servlet:
@@ -45,10 +52,14 @@ spring:
 kraken:
   storage:
     url: http://localhost:8080
+  runtime:
+    url: http://localhost:8082
   grafana:
     url: http://localhost:3000
   influxdb:
     url: http://localhost:8086
+  security:
+    url: http://localhost:9080
 
 ---
 spring:
@@ -62,7 +73,11 @@ spring:
 kraken:
   storage:
     url: http://kraken-storage:8080
+  runtime:
+    url: http://kraken-runtime:8082
   grafana:
     url: http://kraken-grafana:3000
   influxdb:
     url: http://kraken-influxdb:8086
+  security:
+    url: http://kraken-keycloak:9080

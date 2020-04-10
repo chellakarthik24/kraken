@@ -132,7 +132,6 @@ include ':commons:security:security-entity'
 include ':commons:security:security-context-spring'
 
 include ':commons:dependencies:dependencies-security-server'
-include ':commons:dependencies:dependencies-security-runtime-server'
 include ':commons:dependencies:dependencies-security-container'
 include ':commons:dependencies:dependencies-security-spring'
 

@@ -1,3 +1,20 @@
+kraken:
+  analysis:
+    results:
+      root: gatling/results
+  grafana:
+    dashboard: grafana/grafana-gatling-dashboard.json
+    user: admin
+    password: kraken
+  influxdb:
+    user: admin
+    password: kraken
+    database: gatling
+  security:
+    realm: kraken
+    web:
+      id: kraken-web
+
 spring:
   servlet:
     multipart:
@@ -33,6 +50,8 @@ kraken:
     url: http://localhost:8080
   runtime:
     url: http://localhost:8082
+  security:
+    url: http://localhost:9080
 
 ---
 spring:
@@ -48,3 +67,5 @@ kraken:
     url: http://kraken-storage:8080
   runtime:
     url: http://kraken-runtime:8082
+  security:
+    url: http://kraken-keycloak:9080

@@ -3,6 +3,7 @@ package com.kraken.runtime.event.client.spring;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kraken.config.runtime.client.api.RuntimeClientProperties;
 import com.kraken.runtime.event.client.api.RuntimeEventClient;
+import com.kraken.runtime.event.client.api.RuntimeEventClientFactory;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import com.kraken.security.authentication.client.spring.AbstractAuthenticatedClientFactory;
 import lombok.NonNull;
@@ -17,7 +18,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Component
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-final class WebRuntimeEventClientFactory extends AbstractAuthenticatedClientFactory<RuntimeEventClient> {
+final class WebRuntimeEventClientFactory extends AbstractAuthenticatedClientFactory<RuntimeEventClient> implements RuntimeEventClientFactory {
 
   @NonNull ObjectMapper mapper;
 
