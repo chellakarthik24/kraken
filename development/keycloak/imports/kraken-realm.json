@@ -22,14 +22,14 @@
   "enabled" : true,
   "sslRequired" : "external",
   "registrationAllowed" : true,
-  "registrationEmailAsUsername" : false,
+  "registrationEmailAsUsername" : true,
   "rememberMe" : false,
   "verifyEmail" : false,
   "loginWithEmailAllowed" : true,
   "duplicateEmailsAllowed" : false,
   "resetPasswordAllowed" : true,
   "editUsernameAllowed" : true,
-  "bruteForceProtected" : false,
+  "bruteForceProtected" : true,
   "permanentLockout" : false,
   "maxFailureWaitSeconds" : 900,
   "minimumQuickLoginWaitSeconds" : 60,
@@ -338,7 +338,7 @@
     "clientRoles" : { },
     "subGroups" : [ ]
   } ],
-  "defaultRoles" : [ "uma_authorization", "offline_access" ],
+  "defaultRoles" : [ "uma_authorization", "USER", "offline_access" ],
   "requiredCredentials" : [ "password" ],
   "otpPolicyType" : "totp",
   "otpPolicyAlgorithm" : "HmacSHA1",
@@ -451,6 +451,31 @@
     "realmRoles" : [ "uma_authorization", "offline_access" ],
     "clientRoles" : {
       "realm-management" : [ "uma_protection" ],
+      "account" : [ "manage-account", "view-profile" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "a83b98f2-2c52-40f3-a3a3-2276caeacd3b",
+    "createdTimestamp" : 1586532916117,
+    "username" : "support@octoperf.com",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "Kraken",
+    "lastName" : "User",
+    "email" : "support@octoperf.com",
+    "credentials" : [ {
+      "id" : "4906697b-9bf7-4e8c-b375-d7b5aa4508b7",
+      "type" : "password",
+      "createdDate" : 1586532916206,
+      "secretData" : "{\"value\":\"saBO5jJlXoKSqQ/x4zYeexfEImNotOTjxWz0/HKlGe8lqyEkM5Za+p3wi2gguySV4xDBymo4z3GzgBUsXyZz1Q==\",\"salt\":\"FYUQAK30KX9fiunuk4py9g==\"}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "USER", "offline_access" ],
+    "clientRoles" : {
       "account" : [ "manage-account", "view-profile" ]
     },
     "notBefore" : 0,
