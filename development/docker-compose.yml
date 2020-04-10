@@ -29,7 +29,7 @@ services:
 
   kraken-grafana-dev:
     user: ${KRAKEN_HOST_UID}:${KRAKEN_HOST_GID}
-    image: grafana/grafana:5.4.3
+    image: grafana/grafana:6.7.1
     container_name: kraken-grafana-dev
     network_mode: host
     ports:

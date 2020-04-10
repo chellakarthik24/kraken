@@ -56,7 +56,7 @@ Available at [http://127.0.0.1:3000](http://127.0.0.1:3000) admin/kraken
 To generate a configuration file:
 
 ```
-docker run -d -p 3000:3000 --rm --name=grafana grafana/grafana
+docker run -d -p 3000:3000 --rm --name=grafana grafana/grafana:6.7.1
 docker cp grafana:/etc/grafana/grafana.ini grafana.ini
 docker stop grafana
 ```

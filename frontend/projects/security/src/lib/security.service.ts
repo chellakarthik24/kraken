@@ -37,6 +37,7 @@ export class SecurityService {
 
   public get token(): Observable<string> {
     return from(this._kcInstance.updateToken(30)).pipe(
+      // tap(() => console.log(this._kcInstance.token)),
       map(() => this._kcInstance.token)
     );
   }
