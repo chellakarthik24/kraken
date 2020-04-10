@@ -12,10 +12,12 @@ dependencies {
 
     // Analysis client (debug entries upload)
     implementation project(':commons:analysis:analysis-client-container-configuration')
+    implementation project(':commons:analysis:analysis-client-web')
     implementation project(':commons:config:config-analysis-client-spring')
 
     // Storage client (Har download)
     implementation project(':commons:storage:storage-client-container-configuration')
+    implementation project(':commons:storage:storage-client-web')
     implementation project(':commons:config:config-storage-client-spring')
 
     // Security

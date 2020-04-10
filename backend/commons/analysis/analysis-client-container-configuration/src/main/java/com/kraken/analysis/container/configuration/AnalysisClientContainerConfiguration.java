@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-final class AnalysisClientContainerConfiguration {
+class AnalysisClientContainerConfiguration {
 
   @Bean
   public AnalysisClient analysisClient(@NonNull final AnalysisClientFactory factory) {

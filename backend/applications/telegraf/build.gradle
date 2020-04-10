@@ -3,6 +3,7 @@ dependencies {
     implementation project(':commons:analysis:container:telegraf')
     implementation project(':commons:runtime:runtime-command-zt')
     implementation project(':commons:config:config-telegraf-spring')
+    implementation project(':commons:config:config-influxdb-spring')
 
     // Container
     implementation project(':commons:runtime:runtime-container-spring')
@@ -10,12 +11,9 @@ dependencies {
     implementation project(':commons:config:config-runtime-client-spring')
     implementation project(':commons:config:config-runtime-container-spring')
 
-    // InfluxDB client
-    implementation project(':commons:analysis:influxdb-client-web')
-    implementation project(':commons:config:config-influxdb-spring')
-
     // Storage client
     implementation project(':commons:storage:storage-client-container-configuration')
+    implementation project(':commons:storage:storage-client-web')
     implementation project(':commons:config:config-storage-client-spring')
 
     // Security
