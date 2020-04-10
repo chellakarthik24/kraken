@@ -6,6 +6,7 @@ dependencies {
     implementation project(':commons:config:config-analysis-server-api')
     implementation project(':commons:analysis:grafana-client-api')
     implementation project(':commons:analysis:influxdb-client-api')
+    implementation project(':commons:storage:storage-client-api')
 
     testImplementation project(path: ':commons:analysis:analysis-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:storage:storage-entity', configuration: 'testArtifacts')
