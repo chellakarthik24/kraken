@@ -7,10 +7,12 @@ import com.kraken.security.entity.owner.ApplicationOwner;
 import com.kraken.security.entity.owner.Owner;
 import com.kraken.security.entity.owner.OwnerType;
 import com.kraken.security.entity.owner.UserOwner;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-public class SpringOwnerToUserId implements OwnerToUserId {
+@Component
+final class SpringOwnerToUserId implements OwnerToUserId {
 
   private static final Map<OwnerType, OwnerToUserId> MAPPERS = ImmutableMap.of(
       OwnerType.USER, (Owner owner) -> ((UserOwner) owner).getUserId()

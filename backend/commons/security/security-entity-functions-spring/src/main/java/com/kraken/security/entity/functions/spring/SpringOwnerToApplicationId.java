@@ -6,10 +6,12 @@ import com.kraken.security.entity.owner.ApplicationOwner;
 import com.kraken.security.entity.owner.Owner;
 import com.kraken.security.entity.owner.OwnerType;
 import com.kraken.security.entity.owner.UserOwner;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-public class SpringOwnerToApplicationId implements OwnerToApplicationId {
+@Component
+final class SpringOwnerToApplicationId implements OwnerToApplicationId {
 
   private static final Map<OwnerType, OwnerToApplicationId> MAPPERS = ImmutableMap.of(
       OwnerType.APPLICATION, (Owner owner) -> ((ApplicationOwner) owner).getApplicationId(),
