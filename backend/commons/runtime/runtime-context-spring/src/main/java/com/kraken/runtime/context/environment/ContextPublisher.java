@@ -31,7 +31,8 @@ final class ContextPublisher implements EnvironmentPublisher {
     return Mono.just(ImmutableList.of(
         ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_TASKID.name()).value(context.getTaskId()).build(),
         ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_DESCRIPTION.name()).value(context.getDescription()).build(),
-        ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_APPLICATION_ID.name()).value(context.getApplicationId()).build(),
+// TODO do this in the security context
+//        ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_APPLICATION_ID.name()).value(context.getApplicationId()).build(),
         ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_TASKTYPE.name()).value(context.getTaskType().toString()).build(),
         ExecutionEnvironmentEntry.builder().from(BACKEND).scope("").key(KRAKEN_EXPECTED_COUNT.name()).value(context.getContainersCount().toString()).build()
     ));

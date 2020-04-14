@@ -3,6 +3,7 @@ package com.kraken.runtime.server.rest;
 import com.kraken.runtime.entity.log.Log;
 import com.kraken.runtime.logs.LogsService;
 import com.kraken.runtime.server.service.TaskListService;
+import com.kraken.security.authentication.api.UserProvider;
 import com.kraken.tools.sse.SSEService;
 import com.kraken.tools.sse.SSEWrapper;
 import lombok.AccessLevel;
@@ -29,12 +30,13 @@ import static java.util.Optional.of;
 public class LogsController {
 
   @NonNull LogsService logsService;
+  @NonNull UserProvider userProvider;
 
   @NonNull
   SSEService sse;
 
   @GetMapping(value = "/watch")
   public Flux<ServerSentEvent<Log>> watch(@RequestHeader("ApplicationId") @Pattern(regexp = "[a-z0-9]*") final String applicationId) {
-    return sse.keepAlive(logsService.listen(applicationId));
+    return sse.keepAlive(userProvider.getOwner(applicationId).flatMapMany(logsService::listen));
   }
 }
