@@ -130,6 +130,8 @@ include ':commons:security:security-client-keycloak'
 include ':commons:security:security-decoder-api'
 include ':commons:security:security-decoder-spring'
 include ':commons:security:security-entity'
+include ':commons:security:security-entity-functions-api'
+include ':commons:security:security-entity-functions-spring'
 include ':commons:security:security-context-spring'
 
 include ':commons:dependencies:dependencies-security-server'

@@ -3,7 +3,7 @@ package com.kraken.tests.security;
 import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.KrakenUserTest;
+import com.kraken.security.entity.user.KrakenUserTest;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.kraken.security.entity.KrakenRole.ADMIN;
-import static com.kraken.security.entity.KrakenRole.USER;
+import static com.kraken.security.entity.user.KrakenRole.ADMIN;
+import static com.kraken.security.entity.user.KrakenRole.USER;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)

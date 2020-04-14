@@ -1,16 +1,13 @@
 package com.kraken.security.decoder.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Preconditions;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.KrakenToken;
-import com.kraken.security.entity.KrakenUser;
+import com.kraken.security.entity.user.KrakenUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Base64;

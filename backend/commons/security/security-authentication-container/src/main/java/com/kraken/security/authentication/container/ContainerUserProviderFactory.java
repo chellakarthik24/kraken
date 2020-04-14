@@ -4,17 +4,14 @@ import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.config.security.container.api.SecurityContainerProperties;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.authentication.api.UserProviderFactory;
-import com.kraken.security.authentication.utils.AtomicUserProvider;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.KrakenToken;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import static com.kraken.security.authentication.api.AuthenticationMode.CONTAINER;
 import static java.util.Objects.requireNonNull;

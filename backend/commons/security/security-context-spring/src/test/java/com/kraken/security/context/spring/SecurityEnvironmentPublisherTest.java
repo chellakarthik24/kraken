@@ -7,7 +7,7 @@ import com.kraken.runtime.entity.environment.ExecutionEnvironmentEntry;
 import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.security.authentication.api.UserProvider;
 import com.kraken.security.client.api.SecurityClient;
-import com.kraken.security.entity.KrakenTokenTest;
+import com.kraken.security.entity.user.KrakenTokenTest;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

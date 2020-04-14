@@ -4,7 +4,7 @@ import com.kraken.config.security.client.api.SecurityClientCredentialsProperties
 import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.KrakenTokenTest;
+import com.kraken.security.entity.user.KrakenTokenTest;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;

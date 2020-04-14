@@ -1,4 +1,4 @@
-package com.kraken.security.entity;
+package com.kraken.security.entity.user;
 
 public enum KrakenRole {
   USER,

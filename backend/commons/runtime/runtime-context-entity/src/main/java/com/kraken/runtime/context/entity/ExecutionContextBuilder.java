@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.kraken.runtime.entity.environment.ExecutionEnvironmentEntry;
 import com.kraken.runtime.entity.environment.ExecutionEnvironmentEntrySource;
 import com.kraken.runtime.entity.task.TaskType;
+import com.kraken.security.entity.owner.Owned;
+import com.kraken.security.entity.owner.Owner;
 import lombok.*;
 
 import java.util.Comparator;
@@ -13,8 +15,8 @@ import java.util.stream.Collectors;
 @Value
 @Builder
 @AllArgsConstructor
-public class ExecutionContextBuilder {
-  @NonNull String applicationId;
+public class ExecutionContextBuilder  implements Owned {
+  @NonNull Owner owner;
   @NonNull String taskId;
   @NonNull TaskType taskType;
   @NonNull String description;

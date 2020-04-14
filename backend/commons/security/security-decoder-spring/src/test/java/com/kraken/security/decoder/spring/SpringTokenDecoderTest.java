@@ -3,8 +3,8 @@ package com.kraken.security.decoder.spring;
 import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.KrakenRole;
-import com.kraken.security.entity.KrakenUser;
+import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.user.KrakenUser;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.time.Instant;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)

@@ -2,8 +2,8 @@ package com.kraken.security.authentication.session;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.KrakenRole;
-import com.kraken.security.entity.KrakenUserTest;
+import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.user.KrakenUserTest;
 import com.kraken.tests.security.JwtTestFactory;
 import org.junit.Before;
 import org.junit.Test;

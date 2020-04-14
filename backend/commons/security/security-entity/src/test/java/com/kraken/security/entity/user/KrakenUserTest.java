@@ -1,15 +1,12 @@
-package com.kraken.security.entity;
+package com.kraken.security.entity.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
+import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.user.KrakenUser;
 import com.kraken.tests.utils.TestUtils;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;

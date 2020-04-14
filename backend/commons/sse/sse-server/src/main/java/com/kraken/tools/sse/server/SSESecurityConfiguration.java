@@ -1,6 +1,6 @@
 package com.kraken.tools.sse.server;
 
-import com.kraken.security.entity.KrakenRole;
+import com.kraken.security.entity.user.KrakenRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
@@ -10,8 +10,6 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
-
-import static com.kraken.security.entity.KrakenRole.ADMIN;
 
 @EnableWebFluxSecurity
 public class SSESecurityConfiguration {

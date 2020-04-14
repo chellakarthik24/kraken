@@ -2,7 +2,7 @@ package com.kraken.security.authentication.session;
 
 
 import com.kraken.security.authentication.api.UserProvider;
-import com.kraken.security.entity.KrakenUser;
+import com.kraken.security.entity.user.KrakenUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;

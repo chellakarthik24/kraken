@@ -1,7 +1,7 @@
 package com.kraken.security.client.api;
 
 import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
-import com.kraken.security.entity.KrakenToken;
+import com.kraken.security.entity.user.KrakenToken;
 import com.kraken.tools.webclient.Client;
 import reactor.core.publisher.Mono;
 

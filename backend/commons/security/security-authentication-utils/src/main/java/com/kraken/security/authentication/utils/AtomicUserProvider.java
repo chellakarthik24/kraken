@@ -1,10 +1,9 @@
 package com.kraken.security.authentication.utils;
 
-import com.kraken.security.authentication.api.ExchangeFilter;
 import com.kraken.security.authentication.api.UserProvider;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.KrakenToken;
-import com.kraken.security.entity.KrakenUser;
+import com.kraken.security.entity.user.KrakenToken;
+import com.kraken.security.entity.user.KrakenUser;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import reactor.core.publisher.Mono;

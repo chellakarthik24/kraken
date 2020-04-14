@@ -1,7 +1,7 @@
 package com.kraken.security.authentication.noop;
 
 import com.kraken.security.authentication.api.UserProvider;
-import com.kraken.security.entity.KrakenUser;
+import com.kraken.security.entity.user.KrakenUser;
 import reactor.core.publisher.Mono;
 
 class NoopUserProvider implements UserProvider {

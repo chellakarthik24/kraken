@@ -1,19 +1,15 @@
 package com.kraken.security.authentication.impersonate;
 
 import com.kraken.config.security.client.api.SecurityClientProperties;
-import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.authentication.utils.AtomicUserProvider;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.KrakenToken;
+import com.kraken.security.entity.user.KrakenToken;
 import lombok.AccessLevel;
-import lombok.With;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import static com.kraken.security.authentication.api.AuthenticationMode.SERVICE_ACCOUNT;
 import static java.util.Objects.requireNonNull;
 
 @Slf4j

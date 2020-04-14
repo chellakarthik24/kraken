@@ -1,6 +1,6 @@
 package com.kraken.security.decoder.api;
 
-import com.kraken.security.entity.KrakenUser;
+import com.kraken.security.entity.user.KrakenUser;
 
 import java.io.IOException;
 

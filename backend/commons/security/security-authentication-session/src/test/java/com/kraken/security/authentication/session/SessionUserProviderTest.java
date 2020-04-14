@@ -1,7 +1,7 @@
 package com.kraken.security.authentication.session;
 
 
-import com.kraken.security.entity.KrakenUserTest;
+import com.kraken.security.entity.user.KrakenUserTest;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;

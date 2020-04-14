@@ -1,4 +1,4 @@
-package com.kraken.security.entity;
+package com.kraken.security.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

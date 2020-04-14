@@ -3,16 +3,13 @@ package com.kraken.security.client.keycloak;
 import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
 import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.security.client.api.SecurityClient;
-import com.kraken.security.entity.KrakenToken;
+import com.kraken.security.entity.user.KrakenToken;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
-
-import java.time.Duration;
 
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
