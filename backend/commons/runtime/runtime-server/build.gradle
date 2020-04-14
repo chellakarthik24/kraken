@@ -9,6 +9,7 @@ dependencies {
     implementation project(':commons:storage:storage-entity')
 
     testImplementation project(path: ':commons:runtime:runtime-entity', configuration: 'testArtifacts')
+    testImplementation project(path: ':commons:security:security-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:runtime:runtime-event-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:runtime:runtime-context-api', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:runtime:runtime-context-entity', configuration: 'testArtifacts')

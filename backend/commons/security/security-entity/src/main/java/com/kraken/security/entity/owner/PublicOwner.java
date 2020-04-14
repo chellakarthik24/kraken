@@ -5,8 +5,9 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder
 public class PublicOwner implements Owner {
+
+  public final static PublicOwner INSTANCE = new PublicOwner();
 
   @JsonCreator
   PublicOwner() {

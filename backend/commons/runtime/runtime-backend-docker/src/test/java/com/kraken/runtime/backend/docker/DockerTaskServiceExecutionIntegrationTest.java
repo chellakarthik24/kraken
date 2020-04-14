@@ -10,6 +10,7 @@ import com.kraken.runtime.entity.log.Log;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.runtime.logs.LogsService;
+import com.kraken.security.entity.owner.UserOwner;
 import com.kraken.tests.utils.ResourceUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,17 +54,19 @@ public class DockerTaskServiceExecutionIntegrationTest {
   public void shouldExecuteAndCancelStatus() throws InterruptedException, IOException {
     final var taskId = "taskId";
     final var appId = "test";
+    final var userId = "userId";
+    final var owner = UserOwner.builder().applicationId(appId).userId(userId).build();
     final var taskType = TaskType.GATLING_RECORD;
     final var template = ResourceUtils.getResourceContent("docker-compose.yml");
     final var logs = new ArrayList<Log>();
-    final var disposable = logsService.listen(appId)
+    final var disposable = logsService.listen(owner)
         .subscribeOn(Schedulers.elastic())
         .subscribe(logs::add);
 
     final var context = ExecutionContext.builder()
         .taskType(taskType)
         .taskId(taskId)
-        .applicationId(appId)
+        .owner(owner)
         .templates(ImmutableMap.of("local", template))
         .description("description")
         .build();
@@ -72,7 +74,7 @@ public class DockerTaskServiceExecutionIntegrationTest {
     taskService.execute(context).block();
 
     Thread.sleep(5000);
-    final var flatContainers = taskService.list(Optional.of(appId)).collectList().block();
+    final var flatContainers = taskService.list(owner).collectList().block();
     assertThat(flatContainers).isNotNull();
     assertThat(flatContainers.size()).isEqualTo(2);
 
@@ -84,7 +86,7 @@ public class DockerTaskServiceExecutionIntegrationTest {
     assertThat(flatContainer.getStatus()).isEqualTo(ContainerStatus.STARTING);
     assertThat(flatContainer.getDescription()).isEqualTo("description");
 
-    taskService.cancel(CancelContext.builder().applicationId(appId).taskId(taskId).taskType(taskType).build()).block();
+    taskService.cancel(CancelContext.builder().owner(owner).taskId(taskId).taskType(taskType).build()).block();
     Thread.sleep(10000);
     disposable.dispose();
     final var logsString = logs.stream().map(Log::getText).reduce((s, s2) -> s + s2).orElse("");

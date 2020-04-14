@@ -9,13 +9,14 @@ import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
+import com.kraken.security.entity.functions.api.OwnerToApplicationId;
+import com.kraken.security.entity.owner.ApplicationOwner;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
@@ -41,6 +43,8 @@ public class WebRuntimeClientTest {
   List<ExchangeFilterFactory> filterFactories;
   @MockBean
   RuntimeClientProperties properties;
+  @MockBean
+  OwnerToApplicationId toApplicationId;
 
   @Before
   public void setUp() {
@@ -48,7 +52,7 @@ public class WebRuntimeClientTest {
     mapper = new ObjectMapper();
     final String url = server.url("/").toString();
     given(properties.getUrl()).willReturn(url);
-    client = new WebRuntimeClientFactory(filterFactories, properties).create();
+    client = new WebRuntimeClientFactory(filterFactories, properties, toApplicationId).create();
   }
 
   @After
@@ -78,9 +82,11 @@ public class WebRuntimeClientTest {
 
   @Test
   public void shouldWaitForStatus() throws InterruptedException, IOException {
+    given(toApplicationId.apply(any())).willReturn("app");
     final var expectedStatus = ContainerStatus.READY;
     final var flatContainer = FlatContainerTest.CONTAINER;
     final var taskId = flatContainer.getTaskId();
+    final var appOwner = ApplicationOwner.builder().applicationId("app").build();
     final var task = Task.builder()
         .id(taskId)
         .startDate(42L)
@@ -88,8 +94,7 @@ public class WebRuntimeClientTest {
         .type(TaskType.GATLING_RUN)
         .containers(ImmutableList.of())
         .description("description")
-        .expectedCount(2)
-        .applicationId("app")
+        .owner(appOwner)
         .build();
 
     final var empty = ImmutableList.<Task>of();
@@ -102,7 +107,7 @@ public class WebRuntimeClientTest {
         .containers(ImmutableList.of())
         .description("description")
         .expectedCount(2)
-        .applicationId("app")
+        .owner(appOwner)
         .build());
     final var ready = ImmutableList.of(TaskTest.TASK, task);
 

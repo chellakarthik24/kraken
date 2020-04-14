@@ -9,21 +9,20 @@ import com.kraken.security.entity.owner.UserOwner;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 final class SpringOwnerToApplicationId implements OwnerToApplicationId {
 
   private static final Map<OwnerType, OwnerToApplicationId> MAPPERS = ImmutableMap.of(
-      OwnerType.APPLICATION, (Owner owner) -> ((ApplicationOwner) owner).getApplicationId(),
-      OwnerType.USER, (Owner owner) -> ((UserOwner) owner).getApplicationId()
+      OwnerType.APPLICATION, (Owner owner) -> Optional.of(((ApplicationOwner) owner).getApplicationId()),
+      OwnerType.USER, (Owner owner) -> Optional.of(((UserOwner) owner).getApplicationId())
   );
 
-  private static final OwnerToApplicationId UNKNOWN = (Owner owner) -> {
-    throw new IllegalArgumentException("Given owner has no application id");
-  };
+  private static final OwnerToApplicationId EMPTY = (Owner owner) -> Optional.empty();
 
   @Override
-  public String apply(final Owner owner) {
-    return MAPPERS.getOrDefault(owner.getType(), UNKNOWN).apply(owner);
+  public Optional<String> apply(final Owner owner) {
+    return MAPPERS.getOrDefault(owner.getType(), EMPTY).apply(owner);
   }
 }

@@ -7,6 +7,7 @@ dependencies {
     testImplementation project(path: ':commons:tools:tools-application')
     testImplementation project(path: ':commons:runtime:runtime-event-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:runtime:runtime-entity', configuration: 'testArtifacts')
+    testImplementation project(path: ':commons:security:security-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:security:security-authentication-noop')
     testImplementation project(path: ':tests:tests-web-client')
 }

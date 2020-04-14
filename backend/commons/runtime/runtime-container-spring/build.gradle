@@ -6,5 +6,6 @@ dependencies {
 
     testImplementation project(path: ':commons:tools:tools-application', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:runtime:runtime-entity', configuration: 'testArtifacts')
+    testImplementation project(path: ':commons:security:security-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:config:config-runtime-container-spring', configuration: 'testArtifacts')
 }

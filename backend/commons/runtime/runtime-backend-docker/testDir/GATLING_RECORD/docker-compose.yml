@@ -15,6 +15,7 @@ services:
       com.kraken/description: ${KRAKEN_DESCRIPTION}
       com.kraken/expectedCount: ${KRAKEN_EXPECTED_COUNT}
       com.kraken/applicationId: ${KRAKEN_APPLICATION_ID}
+      com.kraken/userId: ${KRAKEN_USER_ID}
     container_name: ${KRAKEN_TASKID}-container-one_STARTING
     image: ${KRAKEN_IMAGE}
     networks:
@@ -30,6 +31,7 @@ services:
       com.kraken/description: ${KRAKEN_DESCRIPTION}
       com.kraken/expectedCount: ${KRAKEN_EXPECTED_COUNT}
       com.kraken/applicationId: ${KRAKEN_APPLICATION_ID}
+      com.kraken/userId: ${KRAKEN_USER_ID}
     container_name: ${KRAKEN_TASKID}-container-two_STARTING
     image: ${KRAKEN_IMAGE}
     networks:

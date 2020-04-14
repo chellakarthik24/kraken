@@ -5,6 +5,8 @@ import com.kraken.runtime.entity.log.Log;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.Task;
+import com.kraken.security.entity.functions.api.OwnerToApplicationId;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,16 +30,21 @@ import static lombok.AccessLevel.PRIVATE;
 final class WebRuntimeClient implements RuntimeClient {
 
   WebClient webClient;
+  OwnerToApplicationId toApplicationId;
   AtomicReference<ContainerStatus> lastStatus;
 
-  WebRuntimeClient(final WebClient webClient) {
-    this.webClient = requireNonNull(webClient);
+
+  WebRuntimeClient(@NonNull final WebClient webClient,
+                   @NonNull final OwnerToApplicationId toApplicationId) {
+    this.webClient = webClient;
+    this.toApplicationId = toApplicationId;
     this.lastStatus = new AtomicReference<>(STARTING);
   }
 
   @Override
   public Mono<Task> waitForPredicate(final FlatContainer container, final Predicate<Task> predicate) {
-    final Flux<List<Task>> flux = this.watchTasks(container.getApplicationId());
+    final var applicationId = this.toApplicationId.apply(container.getOwner()).orElseThrow();
+    final Flux<List<Task>> flux = this.watchTasks(applicationId);
     return flux
         .map((List<Task> tasks) -> {
           log.info(String.format("Tasks found: %s", tasks.toString()));

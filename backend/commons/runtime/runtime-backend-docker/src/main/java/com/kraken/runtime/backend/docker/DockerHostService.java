@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.kraken.runtime.backend.api.HostService;
 import com.kraken.runtime.entity.host.Host;
 import com.kraken.runtime.entity.host.HostCapacity;
+import com.kraken.security.entity.owner.PublicOwner;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,6 +29,7 @@ final class DockerHostService implements HostService {
         .capacity(HostCapacity.builder().cpu(EMPTY).memory(EMPTY).build())
         .allocatable(HostCapacity.builder().cpu(EMPTY).memory(EMPTY).build())
         .addresses(ImmutableList.of())
+        .owner(PublicOwner.INSTANCE)
         .build());
   }
 
