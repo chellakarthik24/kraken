@@ -6,7 +6,6 @@ import reactor.core.publisher.Flux;
 
 public interface StorageWatcherService {
 
-  Flux<StorageWatcherEvent> watch(Owner owner);
-
   Flux<StorageWatcherEvent> watch(Owner owner, String root);
+
 }
