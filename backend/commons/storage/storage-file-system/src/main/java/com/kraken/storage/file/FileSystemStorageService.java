@@ -1,5 +1,6 @@
 package com.kraken.storage.file;
 
+import com.kraken.security.entity.owner.Owner;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.config.api.ApplicationProperties;
 import lombok.AllArgsConstructor;
@@ -45,14 +46,14 @@ import static reactor.core.publisher.Mono.just;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 final class FileSystemStorageService implements StorageService {
   @NonNull
-  ApplicationProperties kraken;
+  OwnerToPath toPath;
   @NonNull
   Function<Path, StorageNode> toStorageNode;
 
   @Override
-  public Flux<StorageNode> list() {
+  public Flux<StorageNode> list(final Owner owner) {
     try {
-      final var data = Paths.get(kraken.getData());
+      final var data = toPath.apply(owner, "");
       return fromStream(Files.walk(data).map(toStorageNode)).filter(StorageNode::notRoot);
     } catch (Exception e) {
       return error(e);
@@ -60,23 +61,23 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Mono<StorageNode> get(final String path) {
-    return fromCallable(() -> this.toStorageNode.apply(this.stringToPath(path)));
+  public Mono<StorageNode> get(final Owner owner, final String path) {
+    return fromCallable(() -> this.toStorageNode.apply(this.toPath.apply(owner, path)));
   }
 
   @Override
-  public Flux<Boolean> delete(final List<String> paths) {
+  public Flux<Boolean> delete(final Owner owner, final List<String> paths) {
     return Flux.fromStream(
         paths.stream()
             .sorted(Comparator.comparing(paths::indexOf).reversed())
-            .map(path -> Mono.fromCallable(() -> deleteRecursively(this.stringToPath(path))))
+            .map(path -> Mono.fromCallable(() -> deleteRecursively(this.toPath.apply(owner, path))))
             .map(Mono::block));
   }
 
   @Override
-  public Mono<StorageNode> setDirectory(String path) {
+  public Mono<StorageNode> setDirectory(final Owner owner, final String path) {
     return fromCallable(() -> {
-      final var completePath = this.stringToPath(path);
+      final var completePath = this.toPath.apply(owner, path);
       final var file = completePath.toFile();
       if (!file.exists() && !file.mkdirs()) {
         throw new IOException("Failed to create directory " + path);
@@ -86,13 +87,13 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Mono<StorageNode> setFile(final String path, final Mono<FilePart> file) {
-    return this.setDirectory(path)
+  public Mono<StorageNode> setFile(final Owner owner, final String path, final Mono<FilePart> file) {
+    return this.setDirectory(owner, path)
         .then(file.map((part) -> {
           final var filename = part.filename();
           checkArgument(!filename.contains(".."), "Cannot store file with relative path outside current directory "
               + filename);
-          final var currentPath = this.stringToPath(path);
+          final var currentPath = this.toPath.apply(owner, path);
           final var filePath = currentPath.resolve(filename);
           part.transferTo(filePath).block();
           return toStorageNode.apply(filePath);
@@ -100,14 +101,14 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Mono<StorageNode> setZip(final String path, final Mono<FilePart> file) {
-    return this.setDirectory(path)
+  public Mono<StorageNode> setZip(final Owner owner, final String path, final Mono<FilePart> file) {
+    return this.setDirectory(owner, path)
         .then(file.flatMap((part) -> {
           try {
             final var filename = part.filename();
             checkArgument(!filename.contains(".."), "Cannot store file with relative path outside current directory "
                 + filename);
-            final var currentPath = this.stringToPath(path);
+            final var currentPath = this.toPath.apply(owner, path);
             final var tmp = Files.createTempDirectory(UUID.randomUUID().toString());
             final var zipPath = tmp.resolve(filename);
             part.transferTo(zipPath).block();
@@ -121,9 +122,9 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Mono<InputStream> getFile(final String path) {
+  public Mono<InputStream> getFile(final Owner owner, final String path) {
     try {
-      final var currentPath = this.stringToPath(path);
+      final var currentPath = this.toPath.apply(owner, path);
       return just(currentPath.toFile().isDirectory() ? this.downloadFolderZip(currentPath) : this.downloadFile(currentPath));
     } catch (IOException e) {
       return Mono.error(e);
@@ -131,15 +132,15 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public String getFileName(final String path) {
-    final var file = this.stringToPath(path).toFile();
+  public String getFileName(final Owner owner, final String path) {
+    final var file = this.toPath.apply(owner, path).toFile();
     return file.isDirectory() ? file.getName() + ".zip" : file.getName();
   }
 
   @Override
-  public Mono<StorageNode> setContent(final String path, final String content) {
+  public Mono<StorageNode> setContent(final Owner owner, final String path, final String content) {
     return fromCallable(() -> {
-      final var completePath = this.stringToPath(path);
+      final var completePath = this.toPath.apply(owner, path);
       final var parent = completePath.getParent().toFile();
       if (!parent.exists() && !parent.mkdirs()) {
         throw new IOException("Failed to create directory " + parent.getPath());
@@ -150,26 +151,26 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Mono<StorageNode> rename(final String directoryPath, final String oldName, final String newName) {
+  public Mono<StorageNode> rename(final Owner owner, final String directoryPath, final String oldName, final String newName) {
     return fromCallable(() -> {
-      final var currentPath = this.stringToPath(directoryPath);
+      final var currentPath = this.toPath.apply(owner, directoryPath);
       return this.toStorageNode.apply(Files.move(currentPath.resolve(oldName), currentPath.resolve(newName)));
     });
   }
 
   @Override
-  public Mono<String> getContent(String path) {
-    return fromCallable(() -> Files.readString(this.stringToPath(path), UTF_8));
+  public Mono<String> getContent(final Owner owner, String path) {
+    return fromCallable(() -> Files.readString(this.toPath.apply(owner, path), UTF_8));
   }
 
   @Override
-  public Flux<String> getContent(List<String> paths) {
-    return Flux.fromStream(paths.stream()).flatMap(this::getContent);
+  public Flux<String> getContent(final Owner owner, List<String> paths) {
+    return Flux.fromStream(paths.stream()).flatMap(path -> this.getContent(owner, path));
   }
 
   @Override
-  public Flux<StorageNode> find(final String rootPath, final Integer maxDepth, final String matcher) {
-    final var completePath = this.stringToPath(rootPath);
+  public Flux<StorageNode> find(final Owner owner, final String rootPath, final Integer maxDepth, final String matcher) {
+    final var completePath = this.toPath.apply(owner, rootPath);
     try {
       final var stream = Files.find(completePath,
           maxDepth,
@@ -182,16 +183,16 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Flux<StorageNode> filterExisting(List<StorageNode> nodes) {
+  public Flux<StorageNode> filterExisting(final Owner owner, final List<StorageNode> nodes) {
     return Flux.fromStream(nodes.stream().filter(storageNode -> {
-      final var path = this.stringToPath(storageNode.getPath());
+      final var path = this.toPath.apply(owner, storageNode.getPath());
       return path.toFile().exists();
     }));
   }
 
   @Override
-  public Mono<StorageNode> extractZip(String path) {
-    final var zipPath = this.stringToPath(path);
+  public Mono<StorageNode> extractZip(final Owner owner, final String path) {
+    final var zipPath = this.toPath.apply(owner, path);
     return Mono.fromCallable(() -> {
       unpack(zipPath.toFile(), zipPath.getParent().toFile());
       return toStorageNode.apply(zipPath);
@@ -199,8 +200,9 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Flux<StorageNode> move(List<String> paths, String destination) {
+  public Flux<StorageNode> move(final Owner owner, final List<String> paths, final String destination) {
     return paste(
+        owner,
         paths,
         destination,
         (path, dest) -> Mono.fromCallable(() -> Files.move(path, dest, StandardCopyOption.REPLACE_EXISTING))
@@ -208,10 +210,10 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Flux<StorageNode> copy(final List<String> paths, final String destination) {
+  public Flux<StorageNode> copy(final Owner owner, final List<String> paths, final String destination) {
     if (paths.size() == 1) {
-      final var destPath = this.stringToPath(destination);
-      final var path = this.stringToPath(paths.get(0));
+      final var destPath = this.toPath.apply(owner, destination);
+      final var path = this.toPath.apply(owner, paths.get(0));
       if (destPath.equals(path.getParent())) {
         try {
           final var fileName = "" + path.getFileName();
@@ -225,7 +227,7 @@ final class FileSystemStorageService implements StorageService {
       }
     }
 
-    return paste(
+    return paste(owner,
         paths,
         destination,
         (path, dest) -> Mono.fromCallable(() -> {
@@ -243,9 +245,9 @@ final class FileSystemStorageService implements StorageService {
     );
   }
 
-  private Flux<StorageNode> paste(final List<String> pathsStr, final String destination, BiFunction<Path, Path, Mono<Path>> operation) {
-    final var destPath = this.stringToPath(destination);
-    final var paths = pathsStr.stream().map(this::stringToPath).collect(Collectors.toList());
+  private Flux<StorageNode> paste(final Owner owner, final List<String> pathsStr, final String destination, final BiFunction<Path, Path, Mono<Path>> operation) {
+    final var destPath = this.toPath.apply(owner, destination);
+    final var paths = pathsStr.stream().map(p -> this.toPath.apply(owner, p)).collect(Collectors.toList());
     return Flux.fromStream(
         paths.stream()
             .filter((current) -> paths.stream().noneMatch((path) -> current.getParent().equals(path)))
@@ -278,12 +280,6 @@ final class FileSystemStorageService implements StorageService {
 
   private InputStream downloadFile(final Path path) throws IOException {
     return Files.newInputStream(path);
-  }
-
-  private Path stringToPath(final String path) throws IllegalArgumentException {
-    checkArgument(!path.contains(".."), "Cannot store file with relative path outside current directory "
-        + path);
-    return Paths.get(kraken.getData()).resolve(path);
   }
 
 }
