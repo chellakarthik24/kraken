@@ -4,22 +4,64 @@ import com.kraken.analysis.client.api.AnalysisClient;
 import com.kraken.analysis.entity.DebugEntry;
 import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
+import com.kraken.config.analysis.client.api.AnalysisClientProperties;
+import com.kraken.config.api.UrlProperty;
+import com.kraken.security.authentication.api.AuthenticationMode;
+import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import com.kraken.storage.entity.StorageNode;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
-@AllArgsConstructor
+@Component
+@AllArgsConstructor(access = PRIVATE)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 final class WebAnalysisClient implements AnalysisClient {
-  @NonNull WebClient webClient;
+
+  List<ExchangeFilterFactory> exchangeFilterFactories;
+  AnalysisClientProperties properties;
+  WebClient webClient;
+
+  public WebAnalysisClient(@NonNull final List<ExchangeFilterFactory> exchangeFilterFactories,
+                           @NonNull final AnalysisClientProperties properties) {
+    this.exchangeFilterFactories = exchangeFilterFactories;
+    this.properties = properties;
+    final var filter = exchangeFilterFactories.stream()
+        .filter(exchangeFilter -> exchangeFilter.getMode().equals(AuthenticationMode.NOOP))
+        .findFirst()
+        .orElseThrow()
+        .create("");
+    this.webClient = WebClient.builder()
+        .filter(filter)
+        .baseUrl(properties.getUrl())
+        .build();
+  }
+
+  public WebAnalysisClient withAuthenticationMode(final AuthenticationMode mode, final String userId) {
+    final var filter = exchangeFilterFactories.stream()
+        .filter(exchangeFilter -> exchangeFilter.getMode().equals(mode))
+        .findFirst()
+        .orElseThrow()
+        .create(userId);
+    return new WebAnalysisClient(exchangeFilterFactories, properties, WebClient.builder()
+        .filter(filter)
+        .baseUrl(properties.getUrl())
+        .build());
+  }
+
+  public WebAnalysisClient withApplicationId(final String applicationId) {
+    return new WebAnalysisClient(exchangeFilterFactories, properties, this.webClient.mutate().defaultHeader("ApplicationId", applicationId).build());
+  }
 
   @Override
   public Mono<StorageNode> create(final Result result) {

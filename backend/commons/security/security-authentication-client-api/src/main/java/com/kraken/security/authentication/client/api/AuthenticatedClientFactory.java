@@ -8,5 +8,7 @@ public interface AuthenticatedClientFactory<T extends AuthenticatedClient> {
 
     T create(AuthenticationMode mode);
 
-    T create(AuthenticationMode mode, String userId);
+    T create(AuthenticationMode mode, String applicationId);
+
+    T create(AuthenticationMode mode, String applicationId, String userId);
 }

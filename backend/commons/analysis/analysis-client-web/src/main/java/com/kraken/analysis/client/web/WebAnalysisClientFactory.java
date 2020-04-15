@@ -26,6 +26,6 @@ final class WebAnalysisClientFactory extends AbstractAuthenticatedClientFactory<
 
   @Override
   protected AnalysisClient create(WebClient.Builder webClientBuilder) {
-    return new WebAnalysisClient(webClientBuilder.build());
+    return null;// new WebAnalysisClient(webClientBuilder.build());
   }
 }

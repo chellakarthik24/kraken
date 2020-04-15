@@ -37,7 +37,12 @@ public abstract class AbstractAuthenticatedClientFactory<T extends Authenticated
   }
 
   @Override
-  public T create(AuthenticationMode mode, String userId) {
+  public T create(AuthenticationMode mode, String applicationId) {
+    return this.create(mode, applicationId, "");
+  }
+
+  @Override
+  public T create(AuthenticationMode mode, String applicationId, String userId) {
     final var filter = exchangeFilterFactories.stream()
         .filter(exchangeFilter -> exchangeFilter.getMode().equals(mode))
         .findFirst()
@@ -45,6 +50,7 @@ public abstract class AbstractAuthenticatedClientFactory<T extends Authenticated
         .create(userId);
     return this.create(WebClient.builder()
         .filter(filter)
+        .defaultHeader("ApplicationId", applicationId)
         .baseUrl(property.getUrl()));
   }
 
