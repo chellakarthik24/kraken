@@ -50,7 +50,8 @@ public class SpringContainerExecutorTest {
     tearDown = Mockito.mock(ContainerExecutorStep.class);
     given(properties.getTaskId()).willReturn("taskId");
     given(properties.getName()).willReturn("name");
-    given(client.find("taskId", "name")).willReturn(Mono.just(me));
+    given(properties.getApplicationId()).willReturn("applicationId");
+    given(client.find("applicationId", "taskId", "name")).willReturn(Mono.just(me));
     given(client.setStatus(Mockito.same(me), Mockito.any())).willReturn(Mono.empty());
     given(client.waitForStatus(Mockito.same(me), Mockito.any())).willReturn(Mono.just(TaskTest.TASK));
   }

@@ -10,6 +10,8 @@ public class SpringContainerPropertiesTest {
       .taskType(TaskType.GATLING_RUN)
       .name("containerName")
       .hostId("hostId")
+      .userId("userId")
+      .applicationId("applicationId")
       .build();
 
   @Test

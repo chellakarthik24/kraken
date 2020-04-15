@@ -4,3 +4,5 @@ kraken:
     task-id: taskId
     task-type: GATLING_DEBUG
     host-id: hostId
+    user-id: userId
+    application-id: applicationId

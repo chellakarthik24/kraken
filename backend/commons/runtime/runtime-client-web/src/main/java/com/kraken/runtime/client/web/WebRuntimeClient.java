@@ -5,6 +5,7 @@ import com.kraken.runtime.entity.log.Log;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.Task;
+import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +28,19 @@ import static lombok.AccessLevel.PRIVATE;
 final class WebRuntimeClient implements RuntimeClient {
 
   WebClient webClient;
+  OwnerToApplicationId toApplicationId;
   AtomicReference<ContainerStatus> lastStatus;
 
-
-  WebRuntimeClient(@NonNull final WebClient webClient) {
+  WebRuntimeClient(@NonNull final WebClient webClient,
+                   @NonNull final OwnerToApplicationId toApplicationId) {
     this.webClient = webClient;
+    this.toApplicationId = toApplicationId;
     this.lastStatus = new AtomicReference<>(STARTING);
   }
 
   @Override
   public Mono<Task> waitForPredicate(final FlatContainer container, final Predicate<Task> predicate) {
-    final var applicationId = "TODO";
+    final var applicationId = toApplicationId.apply(container.getOwner()).orElseThrow();
     final Flux<List<Task>> flux = this.watchTasks(applicationId);
     return flux
         .map((List<Task> tasks) -> {
@@ -59,6 +62,7 @@ final class WebRuntimeClient implements RuntimeClient {
 
   @Override
   public Mono<Void> setStatus(final FlatContainer container, final ContainerStatus status) {
+    final var applicationId = toApplicationId.apply(container.getOwner()).orElseThrow();
     return Mono.fromCallable(() -> this.lastStatus.get().isTerminal())
         .flatMap(terminal -> terminal ? Mono.empty() : retry(webClient
                 .post()
@@ -67,6 +71,7 @@ final class WebRuntimeClient implements RuntimeClient {
                     .queryParam("taskId", container.getTaskId())
                     .queryParam("containerId", container.getId())
                     .queryParam("containerName", container.getName()).build())
+                .header("ApplicationId", applicationId)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .doOnError(t -> log.error("Failed to set status " + status, t))
@@ -80,13 +85,14 @@ final class WebRuntimeClient implements RuntimeClient {
   }
 
   @Override
-  public Mono<FlatContainer> find(final String taskId, final String containerName) {
+  public Mono<FlatContainer> find(final String applicationId, final String taskId, final String containerName) {
     return retry(webClient
         .get()
         .uri(uriBuilder -> uriBuilder.path("/container/find")
             .queryParam("taskId", taskId)
             .queryParam("containerName", containerName)
             .build())
+        .header("ApplicationId", applicationId)
         .retrieve()
         .bodyToMono(FlatContainer.class)
         .doOnSubscribe(subscription -> log.info(String.format("Find container %s", containerName))), log);

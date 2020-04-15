@@ -1,6 +1,5 @@
 package com.kraken.security.entity.owner;
 
-import com.kraken.security.entity.owner.UserOwner;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 

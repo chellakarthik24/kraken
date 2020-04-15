@@ -28,7 +28,7 @@ final class SpringContainerExecutor implements ContainerExecutor {
   public void execute(Optional<ContainerExecutorStep> setUp,
                       ContainerExecutorStep execute,
                       Optional<ContainerExecutorStep> tearDown) {
-    final var findMe = client.find(container.getTaskId(), container.getName());
+    final var findMe = client.find(container.getApplicationId(), container.getTaskId(), container.getName());
     final var me = findMe.block();
     try {
       setUp.ifPresent(consumer -> {

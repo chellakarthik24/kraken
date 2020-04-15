@@ -9,6 +9,7 @@ import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
+import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.owner.ApplicationOwner;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -42,6 +43,8 @@ public class WebRuntimeClientTest {
   List<ExchangeFilterFactory> filterFactories;
   @MockBean
   RuntimeClientProperties properties;
+  @MockBean
+  OwnerToApplicationId toApplicationId;
 
   @Before
   public void setUp() {
@@ -49,7 +52,7 @@ public class WebRuntimeClientTest {
     mapper = new ObjectMapper();
     final String url = server.url("/").toString();
     given(properties.getUrl()).willReturn(url);
-    client = new WebRuntimeClientFactory(filterFactories, properties).create();
+    client = new WebRuntimeClientFactory(filterFactories, properties, toApplicationId).create();
   }
 
   @After
@@ -147,7 +150,7 @@ public class WebRuntimeClientTest {
             .setBody(mapper.writeValueAsString(container))
     );
 
-    final var result = client.find("taskId", "containerName").block();
+    final var result = client.find("applicationId", "taskId", "containerName").block();
 
     final var request = server.takeRequest();
     assertThat(request.getMethod()).isEqualTo("GET");
