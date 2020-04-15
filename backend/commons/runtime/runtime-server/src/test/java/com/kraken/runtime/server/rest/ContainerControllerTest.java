@@ -3,6 +3,8 @@ package com.kraken.runtime.server.rest;
 import com.kraken.runtime.entity.task.ContainerTest;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.FlatContainerTest;
+import com.kraken.security.entity.owner.UserOwner;
+import com.kraken.security.entity.user.KrakenUserTest;
 import org.junit.Test;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
@@ -21,10 +23,11 @@ public class ContainerControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldAttachLogs() {
     final var applicationId = "test";
+    final var owner = UserOwner.builder().applicationId(applicationId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
     final var containerId = "containerId";
     final var containerName = "containerName";
     final var taskId = "taskId";
-    given(service.attachLogs(applicationId, taskId, containerId, containerName))
+    given(service.attachLogs(owner, taskId, containerId, containerName))
         .willReturn(Mono.fromCallable(() -> null));
 
     webTestClient.post()
@@ -38,7 +41,7 @@ public class ContainerControllerTest extends RuntimeControllerTest {
         .exchange()
         .expectStatus().isOk();
 
-    verify(service).attachLogs(applicationId, taskId, containerId, containerName);
+    verify(service).attachLogs(owner, taskId, containerId, containerName);
   }
 
   @Test
@@ -60,8 +63,9 @@ public class ContainerControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldDetachLogs() {
     final var appId = "appid";
+    final var owner = UserOwner.builder().applicationId(appId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
     final var id = "id";
-    given(service.detachLogs(appId, id))
+    given(service.detachLogs(owner, id))
         .willReturn(Mono.fromCallable(() -> null));
 
     webTestClient.delete()
@@ -73,16 +77,18 @@ public class ContainerControllerTest extends RuntimeControllerTest {
         .exchange()
         .expectStatus().isOk();
 
-    verify(service).detachLogs(appId, id);
+    verify(service).detachLogs(owner, id);
   }
 
   @Test
   public void shouldSetStatus() {
+    final var appId = "appid";
+    final var owner = UserOwner.builder().applicationId(appId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
     final var containerId = "containerId";
     final var containerName = "containerName";
     final var taskId = "taskId";
     final var container = ContainerTest.CONTAINER;
-    given(service.setStatus(taskId, containerId, containerName, container.getStatus()))
+    given(service.setStatus(owner, taskId, containerId, containerName, container.getStatus()))
         .willReturn(Mono.fromCallable(() -> null));
 
     webTestClient.post()
@@ -92,19 +98,22 @@ public class ContainerControllerTest extends RuntimeControllerTest {
             .queryParam("containerName", containerName)
             .queryParam("containerId", containerId)
             .build())
+        .header("ApplicationId", appId)
         .header("Authorization", "Bearer user-token")
         .exchange()
         .expectStatus().isOk();
 
-    verify(service).setStatus(taskId, containerId, containerName, container.getStatus());
+    verify(service).setStatus(owner, taskId, containerId, containerName, container.getStatus());
   }
 
   @Test
   public void shouldFind() {
+    final var appId = "appid";
+    final var owner = UserOwner.builder().applicationId(appId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
     final var containerName = "containerName";
     final var taskId = "taskId";
     final var container = FlatContainerTest.CONTAINER;
-    given(service.find(taskId, containerName))
+    given(service.find(owner, taskId, containerName))
         .willReturn(Mono.just(container));
 
     webTestClient.get()
@@ -112,12 +121,13 @@ public class ContainerControllerTest extends RuntimeControllerTest {
             .queryParam("taskId", taskId)
             .queryParam("containerName", containerName)
             .build())
+        .header("ApplicationId", appId)
         .header("Authorization", "Bearer user-token")
         .exchange()
         .expectStatus().isOk()
         .expectBody(FlatContainer.class)
         .isEqualTo(container);
 
-    verify(service).find(taskId, containerName);
+    verify(service).find(owner, taskId, containerName);
   }
 }

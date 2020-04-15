@@ -14,10 +14,10 @@ import java.util.Optional;
 final class SpringOwnerToUserId implements OwnerToUserId {
 
   private static final Map<OwnerType, OwnerToUserId> MAPPERS = ImmutableMap.of(
-      OwnerType.USER, (Owner owner) -> Optional.of(((UserOwner) owner).getUserId())
+      OwnerType.USER, (final Owner owner) -> Optional.of(((UserOwner) owner).getUserId())
   );
 
-  private static final OwnerToUserId EMPTY = (Owner owner) -> Optional.empty();
+  private static final OwnerToUserId EMPTY = (final Owner owner) -> Optional.empty();
 
   @Override
   public Optional<String> apply(final Owner owner) {

@@ -12,6 +12,8 @@ import com.kraken.runtime.entity.task.Task;
 import com.kraken.runtime.entity.task.TaskTest;
 import com.kraken.runtime.event.*;
 import com.kraken.runtime.server.service.TaskListService;
+import com.kraken.security.entity.owner.ApplicationOwner;
+import com.kraken.security.entity.owner.UserOwner;
 import com.kraken.tests.security.AuthControllerTest;
 import com.kraken.tests.utils.TestUtils;
 import com.kraken.tools.event.bus.EventBus;
@@ -52,10 +54,10 @@ public class TaskControllerTest extends RuntimeControllerTest {
   public void shouldRun() {
     final var env = ExecutionEnvironmentTest.EXECUTION_ENVIRONMENT;
     final var context = ExecutionContextTest.EXECUTION_CONTEXT;
-    final var applicationId = context.getApplicationId();
+    final var owner = context.getOwner();
     final var taskId = context.getTaskId();
 
-    given(contextService.newExecuteContext(applicationId, env)).willReturn(Mono.just(context));
+    given(contextService.newExecuteContext(owner, env)).willReturn(Mono.just(context));
     given(taskService.execute(context))
         .willReturn(Mono.just(context));
 
@@ -63,7 +65,7 @@ public class TaskControllerTest extends RuntimeControllerTest {
         .uri(uriBuilder -> uriBuilder.path("/task")
             .build())
         .header("Authorization", "Bearer user-token")
-        .header("ApplicationId", applicationId)
+        .header("ApplicationId", ((UserOwner) owner).getApplicationId())
         .body(BodyInserters.fromValue(env))
         .exchange()
         .expectStatus().isOk()
@@ -92,11 +94,11 @@ public class TaskControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldCancel() {
     final var context = CancelContextTest.CANCEL_CONTEXT;
-    final var applicationId = context.getApplicationId();
+    final var owner = context.getOwner();
     final var taskId = context.getTaskId();
     final var taskType = context.getTaskType();
 
-    given(contextService.newCancelContext(applicationId, taskId, taskType)).willReturn(Mono.just(context));
+    given(contextService.newCancelContext(owner, taskId, taskType)).willReturn(Mono.just(context));
 
     given(taskService.cancel(context))
         .willReturn(Mono.just(context));
@@ -107,7 +109,7 @@ public class TaskControllerTest extends RuntimeControllerTest {
             .queryParam("taskId", taskId)
             .build())
         .header("Authorization", "Bearer user-token")
-        .header("ApplicationId", applicationId)
+        .header("ApplicationId", ((UserOwner) owner).getApplicationId())
         .exchange()
         .expectStatus().isOk();
 
@@ -119,11 +121,11 @@ public class TaskControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldRemove() {
     final var context = CancelContextTest.CANCEL_CONTEXT;
-    final var applicationId = context.getApplicationId();
+    final var owner = context.getOwner();
     final var taskId = context.getTaskId();
     final var taskType = context.getTaskType();
 
-    given(contextService.newCancelContext(applicationId, taskId, taskType)).willReturn(Mono.just(context));
+    given(contextService.newCancelContext(owner, taskId, taskType)).willReturn(Mono.just(context));
 
     given(taskService.remove(context))
         .willReturn(Mono.just(context));
@@ -134,7 +136,7 @@ public class TaskControllerTest extends RuntimeControllerTest {
             .queryParam("taskId", taskId)
             .build())
         .header("Authorization", "Bearer user-token")
-        .header("ApplicationId", applicationId)
+        .header("ApplicationId", ((UserOwner) owner).getApplicationId())
         .exchange()
         .expectStatus().isOk();
 
@@ -158,7 +160,7 @@ public class TaskControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldList() {
     final var tasksFlux = Flux.just(TaskTest.TASK);
-    given(taskListService.list(Optional.of("app")))
+    given(taskListService.list(ApplicationOwner.builder().applicationId("app").build()))
         .willReturn(tasksFlux);
 
     webTestClient.get()
@@ -176,7 +178,7 @@ public class TaskControllerTest extends RuntimeControllerTest {
     final List<Task> list = ImmutableList.of(TaskTest.TASK, TaskTest.TASK);
     final Flux<List<Task>> tasksFlux = Flux.just(list, list);
     final Flux<ServerSentEvent<List<Task>>> eventsFlux = Flux.just(ServerSentEvent.builder(list).build(), ServerSentEvent.builder(list).build());
-    given(taskListService.watch(Optional.of("app"))).willReturn(tasksFlux);
+    given(taskListService.watch(ApplicationOwner.builder().applicationId("app").build())).willReturn(tasksFlux);
     given(sse.keepAlive(tasksFlux)).willReturn(eventsFlux);
 
     final var result = webTestClient.get()

@@ -9,7 +9,6 @@ import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
-import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.owner.ApplicationOwner;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -43,8 +42,6 @@ public class WebRuntimeClientTest {
   List<ExchangeFilterFactory> filterFactories;
   @MockBean
   RuntimeClientProperties properties;
-  @MockBean
-  OwnerToApplicationId toApplicationId;
 
   @Before
   public void setUp() {
@@ -52,7 +49,7 @@ public class WebRuntimeClientTest {
     mapper = new ObjectMapper();
     final String url = server.url("/").toString();
     given(properties.getUrl()).willReturn(url);
-    client = new WebRuntimeClientFactory(filterFactories, properties, toApplicationId).create();
+    client = new WebRuntimeClientFactory(filterFactories, properties).create();
   }
 
   @After
@@ -82,7 +79,6 @@ public class WebRuntimeClientTest {
 
   @Test
   public void shouldWaitForStatus() throws InterruptedException, IOException {
-    given(toApplicationId.apply(any())).willReturn("app");
     final var expectedStatus = ContainerStatus.READY;
     final var flatContainer = FlatContainerTest.CONTAINER;
     final var taskId = flatContainer.getTaskId();

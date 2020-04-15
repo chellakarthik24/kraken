@@ -18,7 +18,7 @@ public class HostTest {
       .capacity(HostCapacityTest.HOST_CAPACITY)
       .allocatable(HostCapacityTest.HOST_CAPACITY)
       .addresses(ImmutableList.of())
-      .owner(PublicOwner.builder().build())
+      .owner(PublicOwner.INSTANCE)
       .build();
 
 

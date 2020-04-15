@@ -7,6 +7,8 @@ import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.runtime.event.TaskCreatedEvent;
 import com.kraken.runtime.event.TaskRemovedEvent;
 import com.kraken.runtime.event.TaskStatusUpdatedEvent;
+import com.kraken.security.entity.owner.ApplicationOwnerTest;
+import com.kraken.security.entity.owner.PublicOwner;
 import com.kraken.tools.event.bus.EventBus;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +49,7 @@ public class SpringTaskUpdateHandlerTest {
         .containers(ImmutableList.of())
         .description("description")
         .expectedCount(2)
-        .applicationId("app")
+        .owner(ApplicationOwnerTest.APPLICATION_OWNER)
         .build());
     final var tasksStep2 = ImmutableList.of(Task.builder()
         .id("taskId")
@@ -57,11 +59,11 @@ public class SpringTaskUpdateHandlerTest {
         .containers(ImmutableList.of())
         .description("description")
         .expectedCount(2)
-        .applicationId("app")
+        .owner(ApplicationOwnerTest.APPLICATION_OWNER)
         .build());
     final var tasksStep3 = ImmutableList.<Task>of();
 
-    given(taskListService.watch(Optional.empty())).willReturn(Flux.just(tasksStep0, tasksStep1, tasksStep2, tasksStep3));
+    given(taskListService.watch(PublicOwner.INSTANCE)).willReturn(Flux.just(tasksStep0, tasksStep1, tasksStep2, tasksStep3));
 
     updater.start();
 

@@ -8,6 +8,7 @@ import com.kraken.runtime.entity.task.Container;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.Task;
 import com.kraken.runtime.entity.task.TaskTest;
+import com.kraken.security.entity.owner.PublicOwner;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +72,7 @@ public class OtherContainersStoppingPredicateTest {
                 .status(ContainerStatus.STOPPING)
                 .build()
         ))
-        .applicationId("app")
+        .owner(PublicOwner.INSTANCE)
         .build())).isTrue();
   }
 
@@ -85,7 +86,7 @@ public class OtherContainersStoppingPredicateTest {
         .type(GATLING_RUN)
         .containers(ImmutableList.of())
         .expectedCount(2)
-        .applicationId("app")
+        .owner(PublicOwner.INSTANCE)
         .build())).isFalse();
   }
 
@@ -124,7 +125,7 @@ public class OtherContainersStoppingPredicateTest {
                 .status(ContainerStatus.STOPPING)
                 .build()
         ))
-        .applicationId("app")
+        .owner(PublicOwner.INSTANCE)
         .build())).isFalse();
   }
 
@@ -173,7 +174,7 @@ public class OtherContainersStoppingPredicateTest {
                 .status(ContainerStatus.RUNNING)
                 .build()
         ))
-        .applicationId("app")
+        .owner(PublicOwner.INSTANCE)
         .build())).isTrue();
   }
 

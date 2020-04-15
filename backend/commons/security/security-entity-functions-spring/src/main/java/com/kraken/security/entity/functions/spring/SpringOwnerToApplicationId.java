@@ -15,11 +15,11 @@ import java.util.Optional;
 final class SpringOwnerToApplicationId implements OwnerToApplicationId {
 
   private static final Map<OwnerType, OwnerToApplicationId> MAPPERS = ImmutableMap.of(
-      OwnerType.APPLICATION, (Owner owner) -> Optional.of(((ApplicationOwner) owner).getApplicationId()),
-      OwnerType.USER, (Owner owner) -> Optional.of(((UserOwner) owner).getApplicationId())
+      OwnerType.APPLICATION, (final Owner owner) -> Optional.of(((ApplicationOwner) owner).getApplicationId()),
+      OwnerType.USER, (final Owner owner) -> Optional.of(((UserOwner) owner).getApplicationId())
   );
 
-  private static final OwnerToApplicationId EMPTY = (Owner owner) -> Optional.empty();
+  private static final OwnerToApplicationId EMPTY = (final Owner owner) -> Optional.empty();
 
   @Override
   public Optional<String> apply(final Owner owner) {

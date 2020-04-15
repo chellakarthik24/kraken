@@ -5,6 +5,7 @@ public interface EnvironmentLabels {
   String COM_KRAKEN_TASKID = "com.kraken/taskId";
   String COM_KRAKEN_HOSTID = "com.kraken/hostId";
   String COM_KRAKEN_TASKTYPE = "com.kraken/taskType";
+  String COM_KRAKEN_ACCESS = "com.kraken/access";
   String COM_KRAKEN_APPLICATION_ID = "com.kraken/applicationId";
   String COM_KRAKEN_USER_ID = "com.kraken/userId";
   String COM_KRAKEN_DESCRIPTION = "com.kraken/description";

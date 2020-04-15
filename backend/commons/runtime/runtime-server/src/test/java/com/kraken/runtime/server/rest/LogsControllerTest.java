@@ -3,6 +3,9 @@ package com.kraken.runtime.server.rest;
 import com.google.common.base.Charsets;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.logs.LogsService;
+import com.kraken.security.entity.owner.ApplicationOwner;
+import com.kraken.security.entity.owner.UserOwner;
+import com.kraken.security.entity.user.KrakenUserTest;
 import com.kraken.tests.security.AuthControllerTest;
 import com.kraken.tools.sse.SSEService;
 import org.assertj.core.api.Assertions;
@@ -35,9 +38,10 @@ public class LogsControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldWatch() {
     final var applicationId = "test";
+    final var owner = UserOwner.builder().applicationId(applicationId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
     final var logFlux = Flux.just(LogTest.LOG);
     final var eventsFlux = Flux.just(ServerSentEvent.builder(LogTest.LOG).build(), ServerSentEvent.builder(LogTest.LOG).build());
-    given(logsService.listen(applicationId)).willReturn(logFlux);
+    given(logsService.listen(owner)).willReturn(logFlux);
     given(sse.keepAlive(logFlux)).willReturn(eventsFlux);
 
     final var result = webTestClient.get()

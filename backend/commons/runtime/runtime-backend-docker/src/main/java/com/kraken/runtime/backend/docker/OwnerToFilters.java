@@ -24,7 +24,7 @@ final class OwnerToFilters implements Function<Owner, List<String>> {
   @NonNull OwnerToUserId toUserId;
 
   @Override
-  public List<String> apply(Owner owner) {
+  public List<String> apply(final Owner owner) {
     final var listBuilder = ImmutableList.<String>builder();
     final var applicationId = toApplicationId.apply(owner);
     final var userId = toUserId.apply(owner);

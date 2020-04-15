@@ -13,6 +13,7 @@ import com.kraken.runtime.entity.task.TaskType;
 import com.kraken.runtime.tasks.configuration.TaskConfigurationService;
 import com.kraken.runtime.tasks.configuration.entity.TaskConfigurationTest;
 import com.kraken.runtime.tasks.configuration.entity.TaskConfiguration;
+import com.kraken.security.entity.owner.PublicOwner;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.template.api.TemplateService;
 import com.kraken.tools.unique.id.IdGenerator;
@@ -86,9 +87,9 @@ public class SpringExecutionContextServiceTest {
 
   @Test
   public void shouldCreateExecutionContext() {
-    final var context = this.service.newExecuteContext("application", executionEnvironment).block();
+    final var context = this.service.newExecuteContext(PublicOwner.INSTANCE, executionEnvironment).block();
     assertThat(context).isEqualTo(ExecutionContext.builder()
-        .applicationId("application")
+        .owner(PublicOwner.INSTANCE)
         .taskType(TaskType.GATLING_RUN)
         .taskId("taskId")
         .templates(ImmutableMap.of("hostId", "replaced", "other", "replaced"))
@@ -96,7 +97,7 @@ public class SpringExecutionContextServiceTest {
         .build());
     verify(publisher).apply(ExecutionContextBuilder.builder()
         .hostIds(executionEnvironment.getHostIds())
-        .applicationId("application")
+        .owner(PublicOwner.INSTANCE)
         .containersCount(taskConfiguration.getContainersCount() * executionEnvironment.getHostIds().size())
         .taskId("taskId")
         .taskType(executionEnvironment.getTaskType())
@@ -121,9 +122,9 @@ public class SpringExecutionContextServiceTest {
 
   @Test
   public void shouldCreateCancelContext() {
-    final var context = this.service.newCancelContext("application", "taskId", TaskType.GATLING_RUN).block();
+    final var context = this.service.newCancelContext(PublicOwner.INSTANCE, "taskId", TaskType.GATLING_RUN).block();
     assertThat(context).isEqualTo(CancelContext.builder()
-        .applicationId("application")
+        .owner(PublicOwner.INSTANCE)
         .taskType(TaskType.GATLING_RUN)
         .taskId("taskId")
         .build());

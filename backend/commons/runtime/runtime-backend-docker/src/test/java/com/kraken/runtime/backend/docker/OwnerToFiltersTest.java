@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.functions.api.OwnerToUserId;
 import com.kraken.security.entity.owner.*;
+import com.kraken.tests.utils.TestUtils;
 import lombok.NonNull;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -62,4 +63,8 @@ public class OwnerToFiltersTest {
     ));
   }
 
+  @Test
+  public void shouldPassNPE(){
+    TestUtils.shouldPassNPE(OwnerToFilters.class);
+  }
 }
