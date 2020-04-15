@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.kraken.runtime.entity.environment.ExecutionEnvironmentEntrySource.USER;
-import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_GATLING_JAVAOPTS;
+import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_GATLING_JAVA_OPTS;
 
 @Component
 @AllArgsConstructor
@@ -67,7 +67,7 @@ final class JavaOptsPublisher implements EnvironmentPublisher {
     return ExecutionEnvironmentEntry.builder()
         .from(USER)
         .scope(hostId)
-        .key(KRAKEN_GATLING_JAVAOPTS.name())
+        .key(KRAKEN_GATLING_JAVA_OPTS.name())
         .value(entries
             .stream()
             .map(entry -> String.format("-D%s=%s", entry.getKey(), entry.getValue()))

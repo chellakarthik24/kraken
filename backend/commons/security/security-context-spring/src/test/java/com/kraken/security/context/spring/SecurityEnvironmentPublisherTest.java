@@ -66,8 +66,8 @@ public class SecurityEnvironmentPublisherTest {
         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_CONTAINER_SECRET.name()).value("containerSecret").build(),
         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_WEB_ID.name()).value("webId").build(),
         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REALM.name()).value("realm").build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_ACCESSTOKEN.name()).value("accessToken").build(),
-        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REFRESHTOKEN.name()).value("refreshToken").build()
+        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_ACCESS_TOKEN.name()).value("accessToken").build(),
+        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REFRESH_TOKEN.name()).value("refreshToken").build()
     ));
   }
 

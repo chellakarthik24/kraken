@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.kraken.runtime.context.entity.ExecutionContextBuilderTest.WITH_ENTRIES;
 import static com.kraken.runtime.entity.environment.ExecutionEnvironmentEntrySource.USER;
-import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_GATLING_JAVAOPTS;
+import static com.kraken.tools.environment.KrakenEnvironmentKeys.KRAKEN_GATLING_JAVA_OPTS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -49,13 +49,13 @@ public class JavaOptsPublisherTest {
         ExecutionEnvironmentEntry.builder().scope("other").from(USER).key("KRAKEN_VERSION").value("1.3.0").build()))).block();
     assertThat(result).isNotNull();
     final var hostIdJavaOpts = result
-        .stream().filter(entry -> entry.getScope().equals("hostId") && entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))
+        .stream().filter(entry -> entry.getScope().equals("hostId") && entry.getKey().equals(KRAKEN_GATLING_JAVA_OPTS.name()))
         .findFirst();
     final var otherJavaOpts = result
-        .stream().filter(entry -> entry.getScope().equals("other") && entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))
+        .stream().filter(entry -> entry.getScope().equals("other") && entry.getKey().equals(KRAKEN_GATLING_JAVA_OPTS.name()))
         .findFirst();
 
-    assertThat(result.stream().anyMatch(entry -> entry.getScope().equals("") && entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))).isFalse();
+    assertThat(result.stream().anyMatch(entry -> entry.getScope().equals("") && entry.getKey().equals(KRAKEN_GATLING_JAVA_OPTS.name()))).isFalse();
     assertThat(hostIdJavaOpts.isPresent()).isTrue();
     assertThat(hostIdJavaOpts.get().getValue()).isEqualTo("-Dtest=someValue -Dfoo=bar");
     assertThat(otherJavaOpts.isPresent()).isTrue();
@@ -68,7 +68,7 @@ public class JavaOptsPublisherTest {
     ))).block();
     assertThat(entries).isNotNull();
     final var javaOptsEntry = entries
-        .stream().filter(entry -> entry.getKey().equals(KRAKEN_GATLING_JAVAOPTS.name()))
+        .stream().filter(entry -> entry.getKey().equals(KRAKEN_GATLING_JAVA_OPTS.name()))
         .findFirst();
 
     assertThat(javaOptsEntry.isPresent()).isTrue();

@@ -40,8 +40,8 @@ public class SecurityEnvironmentCheckerTest {
         .put(KRAKEN_SECURITY_CONTAINER_SECRET.name(), "value")
         .put(KRAKEN_SECURITY_WEB_ID.name(), "value")
         .put(KRAKEN_SECURITY_REALM.name(), "value")
-        .put(KRAKEN_SECURITY_ACCESSTOKEN.name(), "value")
-        .put(KRAKEN_SECURITY_REFRESHTOKEN.name(), "value")
+        .put(KRAKEN_SECURITY_ACCESS_TOKEN.name(), "value")
+        .put(KRAKEN_SECURITY_REFRESH_TOKEN.name(), "value")
         .build();
     checker.accept(env);
   }

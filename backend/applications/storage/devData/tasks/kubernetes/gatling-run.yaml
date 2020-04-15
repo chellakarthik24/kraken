@@ -5,16 +5,16 @@ metadata:
     com.kraken/description: "${KRAKEN_DESCRIPTION}"
     com.kraken/expectedCount: "${KRAKEN_EXPECTED_COUNT}"
   labels:
-    com.kraken/taskType: "${KRAKEN_TASKTYPE}"
-    com.kraken/hostId: "${KRAKEN_HOSTID}"
-    com.kraken/taskId: "${KRAKEN_TASKID}"
+    com.kraken/taskType: "${KRAKEN_TASK_TYPE}"
+    com.kraken/hostId: "${KRAKEN_HOST_ID}"
+    com.kraken/taskId: "${KRAKEN_TASK_ID}"
     com.kraken/applicationId: "${KRAKEN_APPLICATION_ID}"
-  name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASKID}-${KRAKEN_HOSTID}"
+  name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASK_ID}-${KRAKEN_HOST_ID}"
 spec:
   containers:
     -
       image: "octoperf/kraken-gatling-runner:${KRAKEN_VERSION}"
-      name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASKID}-${KRAKEN_HOSTID}-${KRAKEN_GATLING_CONTAINER_NAME}"
+      name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASK_ID}-${KRAKEN_HOST_ID}-${KRAKEN_GATLING_CONTAINER_NAME}"
       resources:
         limits:
           cpu: "${KRAKEN_GATLING_CPU_LIMIT}"
@@ -26,17 +26,21 @@ spec:
         - name: JAVA_OPTS
           value: "-Dspring.profiles.active=kubernetes -Xmx${KRAKEN_GATLING_XMX}"
         - name: KRAKEN_CONTAINER_TASKID
-          value: "${KRAKEN_TASKID}"
+          value: "${KRAKEN_TASK_ID}"
         - name: KRAKEN_CONTAINER_TASKTYPE
-          value: "${KRAKEN_TASKTYPE}"
+          value: "${KRAKEN_TASK_TYPE}"
         - name: KRAKEN_CONTAINER_HOSTID
-          value: "${KRAKEN_HOSTID}"
+          value: "${KRAKEN_HOST_ID}"
+        - name: KRAKEN_CONTAINER_USERID
+          value: "${KRAKEN_USER_ID}"
+        - name: KRAKEN_CONTAINER_APPLICATIONID
+          value: "${KRAKEN_APPLICATION_ID}"
         - name: KRAKEN_CONTAINER_NAME
-          value: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASKID}-${KRAKEN_HOSTID}-${KRAKEN_GATLING_CONTAINER_NAME}"
+          value: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASK_ID}-${KRAKEN_HOST_ID}-${KRAKEN_GATLING_CONTAINER_NAME}"
         - name: KRAKEN_CONTAINER_LABEL
           value: "${KRAKEN_GATLING_CONTAINER_LABEL}"
         - name: KRAKEN_GATLING_JAVAOPTS
-          value: "${KRAKEN_GATLING_JAVAOPTS} -Xmx${KRAKEN_GATLING_XMX}"
+          value: "${KRAKEN_GATLING_JAVA_OPTS} -Xmx${KRAKEN_GATLING_XMX}"
         - name: KRAKEN_STORAGE_URL
           value: "${KRAKEN_STORAGE_URL}"
         - name: KRAKEN_RUNTIME_URL
@@ -56,12 +60,12 @@ spec:
         - name: KRAKEN_SECURITY_REALM
           value: "${KRAKEN_SECURITY_REALM}"
         - name: KRAKEN_SECURITY_ACCESSTOKEN
-          value: "${KRAKEN_SECURITY_ACCESSTOKEN}"
+          value: "${KRAKEN_SECURITY_ACCESS_TOKEN}"
         - name: KRAKEN_SECURITY_REFRESHTOKEN
-          value: "${KRAKEN_SECURITY_REFRESHTOKEN}"
+          value: "${KRAKEN_SECURITY_REFRESH_TOKEN}"
     -
       image: "octoperf/kraken-telegraf:${KRAKEN_VERSION}"
-      name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASKID}-${KRAKEN_HOSTID}-${KRAKEN_GATLING_SIDEKICK_NAME}"
+      name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASK_ID}-${KRAKEN_HOST_ID}-${KRAKEN_GATLING_SIDEKICK_NAME}"
       resources:
         limits:
           cpu: "${KRAKEN_SIDEKICK_CPU_LIMIT}"
@@ -73,13 +77,17 @@ spec:
         - name: JAVA_OPTS
           value: "-Dspring.profiles.active=kubernetes"
         - name: KRAKEN_CONTAINER_TASKID
-          value: "${KRAKEN_TASKID}"
+          value: "${KRAKEN_TASK_ID}"
         - name: KRAKEN_CONTAINER_TASKTYPE
-          value: "${KRAKEN_TASKTYPE}"
+          value: "${KRAKEN_TASK_TYPE}"
         - name: KRAKEN_CONTAINER_HOSTID
-          value: "${KRAKEN_HOSTID}"
+          value: "${KRAKEN_HOST_ID}"
+        - name: KRAKEN_CONTAINER_USERID
+          value: "${KRAKEN_USER_ID}"
+        - name: KRAKEN_CONTAINER_APPLICATIONID
+          value: "${KRAKEN_APPLICATION_ID}"
         - name: KRAKEN_CONTAINER_NAME
-          value: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASKID}-${KRAKEN_HOSTID}-${KRAKEN_GATLING_SIDEKICK_NAME}"
+          value: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASK_ID}-${KRAKEN_HOST_ID}-${KRAKEN_GATLING_SIDEKICK_NAME}"
         - name: KRAKEN_CONTAINER_LABEL
           value: "${KRAKEN_GATLING_SIDEKICK_LABEL}"
         - name: KRAKEN_INFLUXDB_URL
@@ -105,14 +113,14 @@ spec:
         - name: KRAKEN_SECURITY_REALM
           value: "${KRAKEN_SECURITY_REALM}"
         - name: KRAKEN_SECURITY_ACCESSTOKEN
-          value: "${KRAKEN_SECURITY_ACCESSTOKEN}"
+          value: "${KRAKEN_SECURITY_ACCESS_TOKEN}"
         - name: KRAKEN_SECURITY_REFRESHTOKEN
-          value: "${KRAKEN_SECURITY_REFRESHTOKEN}"
+          value: "${KRAKEN_SECURITY_REFRESH_TOKEN}"
   hostAliases:
     - hostnames:
         - kraken-gatling-telegraf
       ip: 127.0.0.1
   nodeSelector:
-    com.kraken/hostId: "${KRAKEN_HOSTID}"
+    com.kraken/hostId: "${KRAKEN_HOST_ID}"
   restartPolicy: Never
   terminationGracePeriodSeconds: 5

@@ -39,8 +39,8 @@ final class SecurityEnvironmentPublisher implements EnvironmentPublisher {
                         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_CONTAINER_SECRET.name()).value(clientProperties.getContainer().getSecret()).build(),
                         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_WEB_ID.name()).value(clientProperties.getWeb().getId()).build(),
                         ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REALM.name()).value(clientProperties.getRealm()).build(),
-                        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_ACCESSTOKEN.name()).value(krakenToken.getAccessToken()).build(),
-                        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REFRESHTOKEN.name()).value(krakenToken.getRefreshToken()).build()
+                        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_ACCESS_TOKEN.name()).value(krakenToken.getAccessToken()).build(),
+                        ExecutionEnvironmentEntry.builder().from(SECURITY).scope("").key(KRAKEN_SECURITY_REFRESH_TOKEN.name()).value(krakenToken.getRefreshToken()).build()
                 ));
     }
 

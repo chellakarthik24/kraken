@@ -35,9 +35,9 @@ public class RecordCheckerTest {
   @Test
   public void shouldSucceed() {
     final var env = ImmutableMap.<String, String>builder()
-        .put(KRAKEN_GATLING_SIMULATION_CLASSNAME.name(), "value")
-        .put(KRAKEN_GATLING_SIMULATION_PACKAGENAME.name(), "value")
-        .put(KRAKEN_GATLING_HARPATH_REMOTE.name(), "value")
+        .put(KRAKEN_GATLING_SIMULATION_CLASS_NAME.name(), "value")
+        .put(KRAKEN_GATLING_SIMULATION_PACKAGE_NAME.name(), "value")
+        .put(KRAKEN_GATLING_HAR_PATH_REMOTE.name(), "value")
         .put(KRAKEN_ANALYSIS_URL.name(), "value")
         .put(KRAKEN_STORAGE_URL.name(), "value")
         .build();
