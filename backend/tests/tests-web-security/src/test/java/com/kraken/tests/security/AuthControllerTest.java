@@ -33,8 +33,8 @@ public abstract class AuthControllerTest {
   @MockBean
   protected TokenDecoder tokenDecoder;
 
-  protected UserOwner userOwner = UserOwner.builder().applicationId("app").userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
-  protected UserOwner adminOwner = UserOwner.builder().applicationId("app").userId(KrakenUserTest.KRAKEN_ADMIN.getUserId()).build();
+  protected UserOwner userOwner = UserOwner.builder().applicationId("app").userId(KrakenUserTest.KRAKEN_USER.getUserId()).roles(ImmutableList.of(USER)).build();
+  protected UserOwner adminOwner = UserOwner.builder().applicationId("app").userId(KrakenUserTest.KRAKEN_ADMIN.getUserId()).roles(ImmutableList.of(ADMIN)).build();
 
   @Before
   public void setUp() throws IOException {

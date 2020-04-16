@@ -23,7 +23,7 @@ public class ContainerControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldAttachLogs() {
     final var applicationId = "test";
-    final var owner = UserOwner.builder().applicationId(applicationId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
+    final var owner = userOwner.withApplicationId(applicationId);
     final var containerId = "containerId";
     final var containerName = "containerName";
     final var taskId = "taskId";
@@ -63,7 +63,7 @@ public class ContainerControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldDetachLogs() {
     final var appId = "appid";
-    final var owner = UserOwner.builder().applicationId(appId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
+    final var owner = userOwner.withApplicationId(appId);
     final var id = "id";
     given(service.detachLogs(owner, id))
         .willReturn(Mono.fromCallable(() -> null));
@@ -83,7 +83,7 @@ public class ContainerControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldSetStatus() {
     final var appId = "appid";
-    final var owner = UserOwner.builder().applicationId(appId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
+    final var owner = userOwner.withApplicationId(appId);
     final var containerId = "containerId";
     final var containerName = "containerName";
     final var taskId = "taskId";
@@ -109,7 +109,7 @@ public class ContainerControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldFind() {
     final var appId = "appid";
-    final var owner = UserOwner.builder().applicationId(appId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
+    final var owner = userOwner.withApplicationId(appId);
     final var containerName = "containerName";
     final var taskId = "taskId";
     final var container = FlatContainerTest.CONTAINER;

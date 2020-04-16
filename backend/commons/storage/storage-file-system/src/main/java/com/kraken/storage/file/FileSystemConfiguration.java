@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 @Slf4j
 @Configuration
-public class FileSystemConfiguration {
+class FileSystemConfiguration {
 
   @Bean
   Flux<StorageWatcherEvent> watcherEventFlux(

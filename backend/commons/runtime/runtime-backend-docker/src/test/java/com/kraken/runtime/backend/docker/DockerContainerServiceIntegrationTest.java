@@ -1,5 +1,6 @@
 package com.kraken.runtime.backend.docker;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.kraken.Application;
 import com.kraken.runtime.command.Command;
@@ -22,6 +23,7 @@ import reactor.core.scheduler.Schedulers;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.kraken.security.entity.user.KrakenRole.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -61,7 +63,7 @@ public class DockerContainerServiceIntegrationTest {
   public void shouldDisplayLogs() throws InterruptedException {
     final var appId = "app";
     final var userId = "user";
-    final var owner = UserOwner.builder().applicationId(appId).userId(userId).build();
+    final var owner = UserOwner.builder().applicationId(appId).userId(userId).roles(ImmutableList.of(USER)).build();
     final var taskId = "taskIdBis";
     final var containerName = "containerThreeId";
     final var logs = new ArrayList<Log>();

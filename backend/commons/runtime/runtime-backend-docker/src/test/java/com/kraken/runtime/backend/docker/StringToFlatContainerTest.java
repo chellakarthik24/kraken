@@ -1,5 +1,6 @@
 package com.kraken.runtime.backend.docker;
 
+import com.google.common.collect.ImmutableList;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.TaskType;
@@ -8,6 +9,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import static com.kraken.security.entity.user.KrakenRole.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StringToFlatContainerTest {
@@ -29,7 +31,7 @@ public class StringToFlatContainerTest {
         .status(ContainerStatus.READY)
         .taskType(TaskType.GATLING_RUN)
         .expectedCount(2)
-        .owner(UserOwner.builder().applicationId("app").userId("userId").build())
+        .owner(UserOwner.builder().applicationId("app").userId("userId").roles(ImmutableList.of(USER)).build())
         .build());
   }
 
@@ -44,7 +46,7 @@ public class StringToFlatContainerTest {
     assertThat(container.getHostId()).isEqualTo("hostId");
     assertThat(container.getLabel()).isEqualTo("name");
     assertThat(container.getExpectedCount()).isEqualTo(42);
-    assertThat(container.getOwner()).isEqualTo(UserOwner.builder().applicationId("app").userId("userId").build());
+    assertThat(container.getOwner()).isEqualTo(UserOwner.builder().applicationId("app").userId("userId").roles(ImmutableList.of(USER)).build());
     assertThat(container.getStatus()).isEqualTo(ContainerStatus.STARTING);
     assertThat(container.getStartDate()).isGreaterThanOrEqualTo(currentDate);
   }

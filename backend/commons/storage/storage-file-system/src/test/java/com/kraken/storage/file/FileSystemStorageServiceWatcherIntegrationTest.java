@@ -28,15 +28,16 @@ import static org.springframework.util.FileSystemUtils.deleteRecursively;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class FileSystemStorageWatcherServiceIntegrationTest {
+public class FileSystemStorageServiceWatcherIntegrationTest {
   @Autowired
-  StorageWatcherService service;
+  StorageServiceBuilder serviceBuilder;
   @Autowired
   ApplicationProperties krakenProperties;
 
   @Test
   public void shouldWatchTestDir() throws IOException, InterruptedException {
-    final var watch = service.watch(PublicOwner.INSTANCE, "");
+    final var service = serviceBuilder.build(PublicOwner.INSTANCE);
+    final var watch = service.watch("");
     final var events = new ArrayList<StorageWatcherEvent>();
     final var subscription = watch.subscribe(events::add);
     final var data = Paths.get(krakenProperties.getData());
@@ -109,11 +110,12 @@ public class FileSystemStorageWatcherServiceIntegrationTest {
 
   @Test
   public void shouldWatchSubDir() throws IOException, InterruptedException {
+    final var service = serviceBuilder.build(PublicOwner.INSTANCE);
     final var data = Paths.get(krakenProperties.getData());
     final var root = data.resolve("test2");
     final var otherPath = root.resolve("other");
     final var currentPath = root.resolve("toto");
-    final var watch = service.watch(PublicOwner.INSTANCE, "test2/toto");
+    final var watch = service.watch("test2/toto");
     final var events = new ArrayList<StorageWatcherEvent>();
     final var subscription = watch.subscribe(events::add);
     final var file = currentPath.toFile();

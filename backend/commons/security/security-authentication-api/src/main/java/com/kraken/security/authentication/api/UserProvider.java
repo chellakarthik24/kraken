@@ -10,7 +10,8 @@ public interface UserProvider {
   default Mono<Owner> getOwner(final String applicationId) {
     return this.getAuthenticatedUser().map(user -> UserOwner.builder()
         .applicationId(applicationId)
-        .userId(user.getUserId()).build());
+        .userId(user.getUserId())
+        .roles(user.getRoles()).build());
   }
 
   Mono<KrakenUser> getAuthenticatedUser();

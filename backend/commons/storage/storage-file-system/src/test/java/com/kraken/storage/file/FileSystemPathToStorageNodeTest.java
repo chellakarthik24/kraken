@@ -20,7 +20,7 @@ import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class PathToStorageNodeTest {
+public class FileSystemPathToStorageNodeTest {
 
   @Autowired
   Function<Path, StorageNode> service;
@@ -30,7 +30,7 @@ public class PathToStorageNodeTest {
 
   @Test
   public void shouldPassTestUtils() {
-    shouldPassNPE(PathToStorageNode.class);
+    shouldPassNPE(FileSystemPathToStorageNode.class);
   }
 
   @Test

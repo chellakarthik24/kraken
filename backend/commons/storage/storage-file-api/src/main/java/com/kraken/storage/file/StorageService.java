@@ -1,7 +1,7 @@
 package com.kraken.storage.file;
 
-import com.kraken.security.entity.owner.Owner;
 import com.kraken.storage.entity.StorageNode;
+import com.kraken.storage.entity.StorageWatcherEvent;
 import org.springframework.http.codec.multipart.FilePart;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -11,38 +11,40 @@ import java.util.List;
 
 public interface StorageService {
 
-  Flux<StorageNode> list(Owner owner);
+  Flux<StorageNode> list();
 
-  Mono<StorageNode> get(Owner owner, String path);
+  Mono<StorageNode> get(String path);
 
-  Flux<StorageNode> find(Owner owner, String rootPath, Integer maxDepth, String matcher);
+  Flux<StorageNode> find(String rootPath, Integer maxDepth, String matcher);
 
-  Flux<Boolean> delete(Owner owner, List<String> paths);
+  Flux<Boolean> delete(List<String> paths);
 
-  Mono<StorageNode> setDirectory(Owner owner, String path);
+  Mono<StorageNode> setDirectory(String path);
 
-  Mono<StorageNode> setFile(Owner owner, String path, Mono<FilePart> file);
+  Mono<StorageNode> setFile(String path, Mono<FilePart> file);
 
-  Mono<StorageNode> setZip(Owner owner, String path, Mono<FilePart> file);
+  Mono<StorageNode> setZip(String path, Mono<FilePart> file);
 
-  Mono<InputStream> getFile(Owner owner, String path);
+  Mono<InputStream> getFile(String path);
 
-  String getFileName(Owner owner, String path);
+  String getFileName(String path);
 
-  Mono<StorageNode> setContent(Owner owner, String path, String content);
+  Mono<StorageNode> setContent(String path, String content);
 
-  Mono<String> getContent(Owner owner, String path);
+  Mono<String> getContent(String path);
 
-  Flux<String> getContent(Owner owner, List<String> paths);
+  Flux<String> getContent(List<String> paths);
 
-  Mono<StorageNode> rename(Owner owner, String directoryPath, String oldName, String newName);
+  Mono<StorageNode> rename(String directoryPath, String oldName, String newName);
 
-  Flux<StorageNode> move(Owner owner, List<String> paths, String destination);
+  Flux<StorageNode> move(List<String> paths, String destination);
 
-  Flux<StorageNode> copy(Owner owner, List<String> paths, String destination);
+  Flux<StorageNode> copy(List<String> paths, String destination);
 
-  Flux<StorageNode> filterExisting(Owner owner, List<StorageNode> nodes);
+  Flux<StorageNode> filterExisting(List<StorageNode> nodes);
 
-  Mono<StorageNode> extractZip(Owner owner, String path);
+  Mono<StorageNode> extractZip(String path);
+
+  Flux<StorageWatcherEvent> watch(String root);
 
 }

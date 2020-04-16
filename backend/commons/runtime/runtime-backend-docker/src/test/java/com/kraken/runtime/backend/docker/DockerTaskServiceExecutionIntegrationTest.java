@@ -1,5 +1,6 @@
 package com.kraken.runtime.backend.docker;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.kraken.Application;
 import com.kraken.runtime.command.Command;
@@ -25,6 +26,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.kraken.security.entity.user.KrakenRole.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -55,7 +57,7 @@ public class DockerTaskServiceExecutionIntegrationTest {
     final var taskId = "taskId";
     final var appId = "test";
     final var userId = "userId";
-    final var owner = UserOwner.builder().applicationId(appId).userId(userId).build();
+    final var owner = UserOwner.builder().applicationId(appId).userId(userId).roles(ImmutableList.of(USER)).build();
     final var taskType = TaskType.GATLING_RECORD;
     final var template = ResourceUtils.getResourceContent("docker-compose.yml");
     final var logs = new ArrayList<Log>();

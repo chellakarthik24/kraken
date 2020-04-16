@@ -38,7 +38,7 @@ public class LogsControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldWatch() {
     final var applicationId = "test";
-    final var owner = UserOwner.builder().applicationId(applicationId).userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
+    final var owner = userOwner.withApplicationId(applicationId);
     final var logFlux = Flux.just(LogTest.LOG);
     final var eventsFlux = Flux.just(ServerSentEvent.builder(LogTest.LOG).build(), ServerSentEvent.builder(LogTest.LOG).build());
     given(logsService.listen(owner)).willReturn(logFlux);

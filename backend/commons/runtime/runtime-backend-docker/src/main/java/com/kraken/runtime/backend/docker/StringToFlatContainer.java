@@ -1,5 +1,6 @@
 package com.kraken.runtime.backend.docker;
 
+import com.google.common.collect.ImmutableList;
 import com.kraken.runtime.backend.api.EnvironmentLabels;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.FlatContainer;
@@ -12,6 +13,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Function;
+
+import static com.kraken.security.entity.user.KrakenRole.USER;
 
 @Component
 @Slf4j
@@ -63,7 +66,7 @@ final class StringToFlatContainer implements Function<String, FlatContainer> {
         .startDate(date)
         .status(ContainerStatus.parse(status))
         .expectedCount(Integer.valueOf(expectedCount))
-        .owner(UserOwner.builder().userId(userId).applicationId(applicationId).build())
+        .owner(UserOwner.builder().userId(userId).applicationId(applicationId).roles(ImmutableList.of(USER)).build())
         .build();
   }
 }
