@@ -7,7 +7,7 @@ import com.kraken.grafana.client.api.GrafanaClient;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.storage.client.api.StorageClient;
-import com.kraken.storage.client.api.StorageClientFactory;
+import com.kraken.storage.client.api.StorageClientBuilder;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageNodeTest;
 import org.junit.Before;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 public class SpringAnalysisServiceTest {
 
   @Mock
-  StorageClientFactory storageClientFactory;
+  StorageClientBuilder storageClientFactory;
   @Mock
   StorageClient storageClientSession;
   @Mock

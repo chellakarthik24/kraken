@@ -26,7 +26,6 @@ final class WebRuntimeEventClient implements RuntimeEventClient {
   ObjectMapper mapper;
   Map<String, Class<? extends TaskEvent>> eventClasses;
 
-
   WebRuntimeEventClient(final WebClient webClient,
                         final ObjectMapper mapper) {
     this.webClient = requireNonNull(webClient);

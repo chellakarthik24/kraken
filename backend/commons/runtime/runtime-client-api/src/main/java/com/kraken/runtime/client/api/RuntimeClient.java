@@ -19,10 +19,10 @@ public interface RuntimeClient extends AuthenticatedClient {
 
   Mono<Void> setStatus(FlatContainer container, ContainerStatus status);
 
-  Mono<FlatContainer> find(String applicationId, String taskId, String containerName);
+  Mono<FlatContainer> find(String taskId, String containerName);
 
-  Flux<Log> watchLogs(String applicationId);
+  Flux<Log> watchLogs();
 
-  Flux<List<Task>> watchTasks(String applicationId);
+  Flux<List<Task>> watchTasks();
 
 }

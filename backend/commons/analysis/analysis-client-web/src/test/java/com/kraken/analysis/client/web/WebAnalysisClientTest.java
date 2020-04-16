@@ -9,7 +9,7 @@ import com.kraken.analysis.entity.DebugEntryTest;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
 import com.kraken.config.analysis.client.api.AnalysisClientProperties;
-import com.kraken.security.authentication.api.ExchangeFilter;
+import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import com.kraken.storage.entity.StorageNodeTest;
 import okhttp3.mockwebserver.MockResponse;
@@ -19,8 +19,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -54,7 +52,7 @@ public class WebAnalysisClientTest {
 
     final String url = server.url("/").toString();
     when(properties.getUrl()).thenReturn(url);
-    client = new WebAnalysisClientFactory(filterFactories, properties).create();
+    client = new WebAnalysisClientBuilder(filterFactories, properties).mode(AuthenticationMode.NOOP).build();
   }
 
   @After

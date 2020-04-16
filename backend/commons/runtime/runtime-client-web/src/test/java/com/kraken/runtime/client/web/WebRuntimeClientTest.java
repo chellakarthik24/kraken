@@ -52,7 +52,7 @@ public class WebRuntimeClientTest {
     mapper = new ObjectMapper();
     final String url = server.url("/").toString();
     given(properties.getUrl()).willReturn(url);
-    client = new WebRuntimeClientFactory(filterFactories, properties, toApplicationId).create();
+    client = new WebRuntimeClientBuilder(filterFactories, properties, toApplicationId).create();
   }
 
   @After

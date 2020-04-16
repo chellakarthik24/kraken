@@ -11,7 +11,6 @@ dependencies {
     implementation project(':commons:config:config-runtime-container-spring')
 
     // Storage client (HAR download and simulation upload)
-    implementation project(':commons:storage:storage-client-configuration-container')
     implementation project(':commons:storage:storage-client-web')
     implementation project(':commons:config:config-storage-client-spring')
 

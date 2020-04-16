@@ -69,7 +69,7 @@ public class WebStorageClientTest {
     server = new MockWebServer();
     final String baseUrl = server.url("/").toString();
     when(properties.getUrl()).thenReturn(baseUrl);
-    client = new WebStorageClientFactory(filterFactories, properties, jsonMapper, yamlMapper).create();
+    client = new WebStorageClientBuilder(filterFactories, properties, jsonMapper, yamlMapper).create();
   }
 
   @After

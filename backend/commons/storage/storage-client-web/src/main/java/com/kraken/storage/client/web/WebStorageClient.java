@@ -47,10 +47,9 @@ class WebStorageClient implements StorageClient {
   ObjectMapper yamlMapper;
 
   @Override
-  public Flux<StorageWatcherEvent> watch(final String applicationId) {
+  public Flux<StorageWatcherEvent> watch() {
     return webClient.get()
         .uri(uriBuilder -> uriBuilder.path("/files/watch").build())
-        .header("ApplicationId", applicationId)
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .retrieve()
         .bodyToFlux(StorageWatcherEvent.class)
@@ -59,11 +58,10 @@ class WebStorageClient implements StorageClient {
   }
 
   @Override
-  public Mono<StorageNode> createFolder(final String applicationId, final String path) {
+  public Mono<StorageNode> createFolder( final String path) {
     return retry(webClient
         .post()
         .uri(uriBuilder -> uriBuilder.path("/files/set/directory").queryParam("path", path).build())
-        .header("ApplicationId", applicationId)
         .retrieve()
         .bodyToMono(StorageNode.class)
         .doOnError(t -> log.error("Failed to create folder " + path, t))
@@ -71,11 +69,10 @@ class WebStorageClient implements StorageClient {
   }
 
   @Override
-  public Mono<Boolean> delete(final String applicationId, final String path) {
+  public Mono<Boolean> delete( final String path) {
     return retry(webClient.post()
         .uri("/files/delete")
-        .body(BodyInserters.fromValue(Collections.singletonList(path)))
-        .header("ApplicationId", applicationId)
+
         .retrieve()
         .bodyToMono(new ParameterizedTypeReference<List<Boolean>>() {
         })
@@ -85,16 +82,15 @@ class WebStorageClient implements StorageClient {
   }
 
   @Override
-  public <T> Mono<StorageNode> setJsonContent(final String applicationId, final String path, final T object) {
-    return this.setContent(applicationId, path, this.objectToContent(object));
+  public <T> Mono<StorageNode> setJsonContent( final String path, final T object) {
+    return this.setContent(path, this.objectToContent(object));
   }
 
   @Override
-  public <T> Mono<T> getJsonContent(final String applicationId, final String path, final Class<T> clazz) {
+  public <T> Mono<T> getJsonContent( final String path, final Class<T> clazz) {
     return retry(webClient.get()
         .uri(uriBuilder -> uriBuilder.path("/files/get/json")
             .queryParam("path", path).build())
-        .header("ApplicationId", applicationId)
         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
         .retrieve()
         .bodyToMono(clazz)
@@ -103,18 +99,17 @@ class WebStorageClient implements StorageClient {
   }
 
   @Override
-  public <T> Mono<T> getYamlContent(final String applicationId, final String path, final Class<T> clazz) {
-    return this.getContent(applicationId, path)
+  public <T> Mono<T> getYamlContent( final String path, final Class<T> clazz) {
+    return this.getContent(path)
         .flatMap(s -> Mono.fromCallable(() -> yamlMapper.readValue(s, clazz)));
   }
 
   @Override
-  public Mono<StorageNode> setContent(final String applicationId, final String path, final String content) {
+  public Mono<StorageNode> setContent( final String path, final String content) {
     return retry(webClient.post()
         .uri(uriBuilder -> uriBuilder.path("/files/set/content")
             .queryParam("path", path)
             .build())
-        .header("ApplicationId", applicationId)
         .body(BodyInserters.fromValue(content))
         .retrieve()
         .bodyToMono(StorageNode.class)
@@ -123,11 +118,10 @@ class WebStorageClient implements StorageClient {
   }
 
   @Override
-  public Mono<String> getContent(final String applicationId, final String path) {
+  public Mono<String> getContent( final String path) {
     return retry(webClient.get()
         .uri(uriBuilder -> uriBuilder.path("/files/get/content")
             .queryParam("path", path).build())
-        .header("ApplicationId", applicationId)
         .retrieve()
         .bodyToMono(String.class)
         .doOnError(t -> log.error("Failed to get file content " + path, t))
@@ -135,8 +129,8 @@ class WebStorageClient implements StorageClient {
   }
 
   @Override
-  public Mono<Void> downloadFile(final String applicationId, final Path localFilePath, final String remotePath) {
-    final Flux<DataBuffer> flux = this.getFile(applicationId, remotePath);
+  public Mono<Void> downloadFile( final Path localFilePath, final String remotePath) {
+    final Flux<DataBuffer> flux = this.getFile(remotePath);
     try {
       return retry(DataBufferUtils.write(flux, new FileOutputStream(localFilePath.toFile(), false).getChannel())
           .map(DataBufferUtils::release)
@@ -150,11 +144,10 @@ class WebStorageClient implements StorageClient {
   }
 
   @Override
-  public Mono<Void> downloadFolder(final String applicationId, final Path localParentFolderPath, final String path) {
+  public Mono<Void> downloadFolder( final Path localParentFolderPath, final String path) {
     final var zipName = UUID.randomUUID().toString() + ".zip";
     final var zipPath = localParentFolderPath.resolve(zipName);
-
-    final Flux<DataBuffer> flux = this.getFile(applicationId, path);
+    final Flux<DataBuffer> flux = this.getFile(path);
     try {
       return retry(DataBufferUtils.write(flux, new FileOutputStream(zipPath.toFile()).getChannel())
               .map(DataBufferUtils::release)
@@ -178,19 +171,18 @@ class WebStorageClient implements StorageClient {
   }
 
   @Override
-  public Mono<StorageNode> uploadFile(final String applicationId, final Path localFilePath, final String remotePath) {
+  public Mono<StorageNode> uploadFile( final Path localFilePath, final String remotePath) {
     return retry(this.zipLocalFile(localFilePath)
-        .flatMap(path -> this.setZip(applicationId, path, remotePath))
+        .flatMap(path -> this.setZip(path, remotePath))
         .doOnError(t -> log.error("Failed to upload file " + localFilePath, t))
         .doOnSubscribe(subscription -> log.info(String.format("Uploading local: %s - remote: %s", localFilePath, remotePath))), log);
   }
 
-  private Mono<StorageNode> setZip(final String applicationId, final Path localZipFile, final String path) {
+  private Mono<StorageNode> setZip( final Path localZipFile, final String path) {
     try {
       return retry(webClient.post()
           .uri(uri -> uri.path("/files/set/zip").queryParam("path", path).build())
           .body(BodyInserters.fromMultipartData("file", new UrlResource("file", localZipFile.toString())))
-          .header("ApplicationId", applicationId)
           .retrieve()
           .bodyToMono(StorageNode.class)
           .doOnError(t -> log.error("Failed to upload zip " + localZipFile, t))
@@ -201,10 +193,9 @@ class WebStorageClient implements StorageClient {
     }
   }
 
-  private Flux<DataBuffer> getFile(final String applicationId, final String path) {
+  private Flux<DataBuffer> getFile( final String path) {
     return retry(webClient.get()
         .uri(uri -> uri.path("/files/get/file").queryParam("path", path).build())
-        .header("ApplicationId", applicationId)
         .retrieve()
         .bodyToFlux(DataBuffer.class), log);
   }

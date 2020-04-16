@@ -11,7 +11,6 @@ dependencies {
     implementation project(':commons:config:config-runtime-container-spring')
 
     // Analysis client (to send debug entries)
-    implementation project(':commons:analysis:analysis-client-configuration-container')
     implementation project(':commons:analysis:analysis-client-web')
     implementation project(':commons:config:config-analysis-client-spring')
 

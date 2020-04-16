@@ -1,3 +1,14 @@
 kraken:
   analysis:
     url: http://localhost:8081
+  security:
+    url: http://localhost:9080
+    realm: kraken
+    web:
+      id: kraken-web
+    api:
+      id: kraken-api
+      secret: api-secret
+    container:
+      id: kraken-container
+      secret: container-secret

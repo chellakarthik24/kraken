@@ -11,26 +11,26 @@ import java.util.Optional;
 
 public interface StorageClient extends AuthenticatedClient {
 
-  Mono<StorageNode> createFolder(String applicationId, String path);
+  Mono<StorageNode> createFolder(String path);
 
-  Mono<Boolean> delete(String applicationId, String path);
+  Mono<Boolean> delete(String path);
 
-  <T> Mono<StorageNode> setJsonContent(String applicationId, String path, T object);
+  <T> Mono<StorageNode> setJsonContent(String path, T object);
 
-  <T> Mono<T> getJsonContent(String applicationId, String path, Class<T> clazz);
+  <T> Mono<T> getJsonContent(String path, Class<T> clazz);
 
-  <T> Mono<T> getYamlContent(String applicationId, String path, Class<T> clazz);
+  <T> Mono<T> getYamlContent(String path, Class<T> clazz);
 
-  Mono<StorageNode> setContent(String applicationId, String path, String content);
+  Mono<StorageNode> setContent(String path, String content);
 
-  Mono<String> getContent(String applicationId, String path);
+  Mono<String> getContent(String path);
 
-  Mono<Void> downloadFile(String applicationId, Path localFolderPath, String path);
+  Mono<Void> downloadFile(Path localFolderPath, String path);
 
-  Mono<Void> downloadFolder(String applicationId, Path localFolderPath, String path);
+  Mono<Void> downloadFolder(Path localFolderPath, String path);
 
-  Mono<StorageNode> uploadFile(String applicationId, Path localFilePath, String remotePath);
+  Mono<StorageNode> uploadFile(Path localFilePath, String remotePath);
 
-  Flux<StorageWatcherEvent> watch(String applicationId);
+  Flux<StorageWatcherEvent> watch();
 
 }

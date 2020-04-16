@@ -2,7 +2,7 @@ package com.kraken.analysis.task.events.watcher;
 
 import com.kraken.runtime.event.TaskCreatedEventTest;
 import com.kraken.runtime.event.client.api.RuntimeEventClient;
-import com.kraken.runtime.event.client.api.RuntimeEventClientFactory;
+import com.kraken.runtime.event.client.api.RuntimeEventClientBuilder;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.tools.event.bus.EventBus;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 public class TaskEventsWatcherTest {
 
   @Mock
-  RuntimeEventClientFactory clientFactory;
+  RuntimeEventClientBuilder clientFactory;
 
   @Mock
   RuntimeEventClient client;

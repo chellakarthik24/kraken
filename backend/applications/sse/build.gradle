@@ -6,12 +6,10 @@ dependencies {
     // Runtime Client
     implementation project(':commons:runtime:runtime-client-web')
     implementation project(':commons:config:config-runtime-client-spring')
-    implementation project(':commons:runtime:runtime-client-configuration-session')
 
     // Storage Client
     implementation project(':commons:storage:storage-client-web')
     implementation project(':commons:config:config-storage-client-spring')
-    implementation project(':commons:storage:storage-client-configuration-session')
 
     // Security
     implementation project(':commons:dependencies:dependencies-security-server')

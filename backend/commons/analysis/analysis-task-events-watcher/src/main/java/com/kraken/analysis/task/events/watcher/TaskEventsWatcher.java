@@ -1,6 +1,6 @@
 package com.kraken.analysis.task.events.watcher;
 
-import com.kraken.runtime.event.client.api.RuntimeEventClientFactory;
+import com.kraken.runtime.event.client.api.RuntimeEventClientBuilder;
 import com.kraken.tools.event.bus.EventBus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ import static com.kraken.security.authentication.api.AuthenticationMode.SERVICE_
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 final class TaskEventsWatcher {
 
-  @NonNull RuntimeEventClientFactory clientFactory;
+  @NonNull RuntimeEventClientBuilder clientFactory;
   @NonNull EventBus eventBus;
 
   @PostConstruct

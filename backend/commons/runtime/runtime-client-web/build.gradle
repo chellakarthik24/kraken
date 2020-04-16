@@ -1,6 +1,5 @@
 dependencies {
     implementation project(':commons:runtime:runtime-client-api')
-    implementation project(':commons:security:security-entity-functions-api')
     implementation project(':commons:security:security-authentication-client-spring')
 
     testImplementation project(path: ':commons:tools:tools-application', configuration: 'testArtifacts')

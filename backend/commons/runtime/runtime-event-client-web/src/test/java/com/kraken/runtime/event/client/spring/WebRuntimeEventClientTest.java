@@ -51,7 +51,7 @@ public class WebRuntimeEventClientTest {
     server = new MockWebServer();
     final String baseUrl = server.url("/").toString();
     when(properties.getUrl()).thenReturn(baseUrl);
-    client = new WebRuntimeEventClientFactory(filterFactories, properties, objectMapper).create();
+    client = new WebRuntimeEventClientBuilder(filterFactories, properties, objectMapper).create();
   }
 
   @After

@@ -28,20 +28,16 @@ import static lombok.AccessLevel.PRIVATE;
 final class WebRuntimeClient implements RuntimeClient {
 
   WebClient webClient;
-  OwnerToApplicationId toApplicationId;
   AtomicReference<ContainerStatus> lastStatus;
 
-  WebRuntimeClient(@NonNull final WebClient webClient,
-                   @NonNull final OwnerToApplicationId toApplicationId) {
+  WebRuntimeClient(@NonNull final WebClient webClient) {
     this.webClient = webClient;
-    this.toApplicationId = toApplicationId;
     this.lastStatus = new AtomicReference<>(STARTING);
   }
 
   @Override
   public Mono<Task> waitForPredicate(final FlatContainer container, final Predicate<Task> predicate) {
-    final var applicationId = toApplicationId.apply(container.getOwner()).orElseThrow();
-    final Flux<List<Task>> flux = this.watchTasks(applicationId);
+    final Flux<List<Task>> flux = this.watchTasks();
     return flux
         .map((List<Task> tasks) -> {
           log.info(String.format("Tasks found: %s", tasks.toString()));
@@ -62,7 +58,6 @@ final class WebRuntimeClient implements RuntimeClient {
 
   @Override
   public Mono<Void> setStatus(final FlatContainer container, final ContainerStatus status) {
-    final var applicationId = toApplicationId.apply(container.getOwner()).orElseThrow();
     return Mono.fromCallable(() -> this.lastStatus.get().isTerminal())
         .flatMap(terminal -> terminal ? Mono.empty() : retry(webClient
                 .post()
@@ -71,7 +66,6 @@ final class WebRuntimeClient implements RuntimeClient {
                     .queryParam("taskId", container.getTaskId())
                     .queryParam("containerId", container.getId())
                     .queryParam("containerName", container.getName()).build())
-                .header("ApplicationId", applicationId)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .doOnError(t -> log.error("Failed to set status " + status, t))
@@ -85,25 +79,23 @@ final class WebRuntimeClient implements RuntimeClient {
   }
 
   @Override
-  public Mono<FlatContainer> find(final String applicationId, final String taskId, final String containerName) {
+  public Mono<FlatContainer> find(final String taskId, final String containerName) {
     return retry(webClient
         .get()
         .uri(uriBuilder -> uriBuilder.path("/container/find")
             .queryParam("taskId", taskId)
             .queryParam("containerName", containerName)
             .build())
-        .header("ApplicationId", applicationId)
         .retrieve()
         .bodyToMono(FlatContainer.class)
         .doOnSubscribe(subscription -> log.info(String.format("Find container %s", containerName))), log);
   }
 
   @Override
-  public Flux<Log> watchLogs(String applicationId) {
+  public Flux<Log> watchLogs() {
     return webClient
         .get()
         .uri(uriBuilder -> uriBuilder.path("/logs/watch").build())
-        .header("ApplicationId", applicationId)
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .retrieve()
         .bodyToFlux(Log.class)
@@ -112,11 +104,10 @@ final class WebRuntimeClient implements RuntimeClient {
   }
 
   @Override
-  public Flux<List<Task>> watchTasks(String applicationId) {
+  public Flux<List<Task>> watchTasks() {
     return webClient
         .get()
         .uri(uriBuilder -> uriBuilder.path("/task/watch").build())
-        .header("ApplicationId", applicationId)
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .retrieve()
         .bodyToFlux(new ParameterizedTypeReference<List<Task>>() {

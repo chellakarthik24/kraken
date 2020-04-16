@@ -10,7 +10,7 @@ import com.kraken.grafana.client.api.GrafanaClient;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.storage.client.api.StorageClient;
-import com.kraken.storage.client.api.StorageClientFactory;
+import com.kraken.storage.client.api.StorageClientBuilder;
 import com.kraken.storage.entity.StorageNode;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
@@ -45,7 +45,7 @@ final class SpringAnalysisService implements AnalysisService {
 
   SpringAnalysisService(@NonNull AnalysisResultsProperties properties,
                         @NonNull GrafanaProperties grafana,
-                        @NonNull StorageClientFactory storageClientFactory,
+                        @NonNull StorageClientBuilder storageClientFactory,
                         @NonNull GrafanaClient grafanaClient,
                         @NonNull InfluxDBClient influxdbClient,
                         @NonNull Function<List<HttpHeader>, String> headersToExtension,
