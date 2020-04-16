@@ -2,8 +2,11 @@ package com.kraken.grafana.client.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import com.kraken.Application;
 import com.kraken.config.grafana.api.GrafanaProperties;
 import com.kraken.grafana.client.api.GrafanaClient;
+import com.kraken.security.authentication.api.AuthenticationMode;
+import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import com.kraken.tests.utils.ResourceUtils;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -14,23 +17,31 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class)
 public class WebGrafanaClientTest {
 
   private ObjectMapper mapper;
   private MockWebServer server;
   private GrafanaClient client;
 
-  @Mock
+  @Autowired
+  List<ExchangeFilterFactory> filterFactories;
+  @MockBean
   GrafanaProperties properties;
 
   @Before
@@ -39,7 +50,7 @@ public class WebGrafanaClientTest {
     server = new MockWebServer();
     final String url = server.url("/").toString();
     when(properties.getUrl()).thenReturn(url);
-    client = new WebGrafanaClient(properties, mapper);
+    client = new WebGrafanaClientBuilder(filterFactories, properties, mapper).mode(AuthenticationMode.NOOP).build();
   }
 
   @After

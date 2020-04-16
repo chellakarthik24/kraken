@@ -2,6 +2,7 @@ package com.kraken.storage.file;
 
 import com.google.common.base.Charsets;
 import com.kraken.Application;
+import com.kraken.security.entity.owner.PublicOwner;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageWatcherEvent;
 import com.kraken.config.api.ApplicationProperties;
@@ -35,7 +36,7 @@ public class FileSystemStorageWatcherServiceIntegrationTest {
 
   @Test
   public void shouldWatchTestDir() throws IOException, InterruptedException {
-    final var watch = service.watch();
+    final var watch = service.watch(PublicOwner.INSTANCE, "");
     final var events = new ArrayList<StorageWatcherEvent>();
     final var subscription = watch.subscribe(events::add);
     final var data = Paths.get(krakenProperties.getData());
@@ -112,7 +113,7 @@ public class FileSystemStorageWatcherServiceIntegrationTest {
     final var root = data.resolve("test2");
     final var otherPath = root.resolve("other");
     final var currentPath = root.resolve("toto");
-    final var watch = service.watch("test2/toto");
+    final var watch = service.watch(PublicOwner.INSTANCE, "test2/toto");
     final var events = new ArrayList<StorageWatcherEvent>();
     final var subscription = watch.subscribe(events::add);
     final var file = currentPath.toFile();

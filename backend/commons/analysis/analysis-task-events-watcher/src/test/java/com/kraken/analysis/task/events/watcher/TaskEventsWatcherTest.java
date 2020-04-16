@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 public class TaskEventsWatcherTest {
 
   @Mock
-  RuntimeEventClientBuilder clientFactory;
+  RuntimeEventClientBuilder clientBuilder;
 
   @Mock
   RuntimeEventClient client;
@@ -30,12 +30,13 @@ public class TaskEventsWatcherTest {
 
   @Before
   public void setUp() {
-    watcher = new TaskEventsWatcher(clientFactory, eventBus);
+    watcher = new TaskEventsWatcher(clientBuilder, eventBus);
   }
 
   @Test
   public void shouldWatch(){
-    given(clientFactory.create(AuthenticationMode.SERVICE_ACCOUNT)).willReturn(client);
+    given(clientBuilder.mode(AuthenticationMode.SERVICE_ACCOUNT)).willReturn(clientBuilder);
+    given(clientBuilder.build()).willReturn(client);
     given(client.events()).willReturn(Flux.just(TaskCreatedEventTest.TASK_CREATED_EVENT));
     watcher.watch();
     verify(eventBus).publish(TaskCreatedEventTest.TASK_CREATED_EVENT);

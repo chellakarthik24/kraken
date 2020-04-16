@@ -46,9 +46,9 @@ public class UpdateResultOnTaskStatusUpdatedTest {
     final var event = TaskStatusUpdatedEventTest.TASK_STATUS_UPDATED_EVENT;
     final var task = event.getTask();
     given(taskStatusToResultStatus.apply(task.getStatus())).willReturn(ResultStatus.STARTING);
-    given(analysisService.setStatus(any(), any())).willReturn(Mono.empty());
+    given(analysisService.setStatus(any(), any(), any())).willReturn(Mono.empty());
     listener.handleEvent(event);
-    verify(analysisService).setStatus(task.getId(), ResultStatus.STARTING);
+    verify(analysisService).setStatus(task.getOwner(), task.getId(), ResultStatus.STARTING);
   }
 
 }

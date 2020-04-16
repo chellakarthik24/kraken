@@ -53,8 +53,9 @@ public class GatlingParserTest extends AbstractContainerExecutorTest {
     when(gatling.getHome()).thenReturn(".");
     when(gatling.getLogs()).thenReturn(log);
     when(log.getDebug()).thenReturn(".");
-    parser = new GatlingParser(logParser,
+    parser = new GatlingParser(
         runtimeClient,
+        logParser,
         writer,
         gatling,
         taskPredicate,

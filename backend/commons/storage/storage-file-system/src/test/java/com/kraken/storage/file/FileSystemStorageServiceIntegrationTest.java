@@ -2,6 +2,8 @@ package com.kraken.storage.file;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
+import com.kraken.security.entity.owner.Owner;
+import com.kraken.security.entity.owner.UserOwner;
 import com.kraken.storage.entity.StorageNode;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,6 +38,8 @@ import static reactor.test.StepVerifier.create;
 @SpringBootTest(classes = Application.class)
 public class FileSystemStorageServiceIntegrationTest {
 
+  private static final Owner OWNER = UserOwner.builder().userId("userId").applicationId("gatling").build();
+
   @Autowired
   StorageService service;
 
@@ -52,7 +56,7 @@ public class FileSystemStorageServiceIntegrationTest {
 
   @Test
   public void shouldList() {
-    create(service.list())
+    create(service.list(OWNER))
         .expectNextCount(25)
         .expectComplete()
         .verify();
@@ -61,21 +65,21 @@ public class FileSystemStorageServiceIntegrationTest {
   @Test
   public void shouldGet() {
     final var filename = "README.md";
-    create(service.get(filename))
+    create(service.get(OWNER, filename))
         .expectNextMatches(next -> next.getPath().equals(filename))
         .expectComplete().verify();
   }
 
   @Test
   public void shouldGetContent() {
-    create(service.getContent("README.md"))
+    create(service.getContent(OWNER, "README.md"))
         .expectNext("Hello!")
         .expectComplete().verify();
   }
 
   @Test
   public void shouldGetContents() {
-    create(service.getContent(ImmutableList.of("visitorTest/dir1/file1.md", "visitorTest/dir1/file2.md")))
+    create(service.getContent(OWNER, ImmutableList.of("visitorTest/dir1/file1.md", "visitorTest/dir1/file2.md")))
         .expectNext("File1")
         .expectNext("File2")
         .expectComplete().verify();
@@ -84,12 +88,12 @@ public class FileSystemStorageServiceIntegrationTest {
   @Test
   public void shouldSetContentAndDelete() {
     final var filename = "README2.md";
-    create(service.setContent(filename, "Some Content"))
+    create(service.setContent(OWNER, filename, "Some Content"))
         .expectNextMatches(next -> next.getPath().equals(filename))
         .expectComplete()
         .verify();
 
-    create(service.delete(of(filename)))
+    create(service.delete(OWNER, of(filename)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -99,17 +103,17 @@ public class FileSystemStorageServiceIntegrationTest {
   public void shouldSetContentRenameAndDelete() {
     final var oldName = "oldName.txt";
     final var newName = "newName.txt";
-    create(service.setContent(oldName, "Some Content"))
+    create(service.setContent(OWNER, oldName, "Some Content"))
         .expectNextMatches(next -> next.getPath().equals(oldName))
         .expectComplete()
         .verify();
 
-    create(service.rename("", oldName, newName))
+    create(service.rename(OWNER, "", oldName, newName))
         .expectNextMatches(next -> next.getPath().equals(newName))
         .expectComplete()
         .verify();
 
-    create(service.delete(of(newName)))
+    create(service.delete(OWNER, of(newName)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -118,12 +122,12 @@ public class FileSystemStorageServiceIntegrationTest {
   @Test
   public void shouldSetDirectoryAndDelete() {
     final var path = "some/directory";
-    create(service.setDirectory(path))
+    create(service.setDirectory(OWNER, path))
         .expectNextMatches(next -> next.getPath().equals(path))
         .expectComplete()
         .verify();
 
-    create(service.delete(of("some")))
+    create(service.delete(OWNER, of("some")))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -134,12 +138,12 @@ public class FileSystemStorageServiceIntegrationTest {
     final var filename = "myFile.txt";
     given(part.filename()).willReturn(filename);
 
-    create(service.setFile("", just(part)))
+    create(service.setFile(OWNER, "", just(part)))
         .expectNextMatches(next -> next.getPath().equals(filename))
         .expectComplete()
         .verify();
 
-    create(service.delete(of(filename)))
+    create(service.delete(OWNER, of(filename)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -154,15 +158,15 @@ public class FileSystemStorageServiceIntegrationTest {
       Files.copy(Path.of("testDir/zipDir/kraken.zip"), (Path) invocation.getArgument(0));
       return empty();
     });
-    create(service.setZip(destPath, Mono.just(part)))
+    create(service.setZip(OWNER, destPath, Mono.just(part)))
         .expectNextMatches(next -> next.getPath().equals(destPath))
         .expectComplete()
         .verify();
 
-    final var files = service.find(destPath, 1, ".*").map(StorageNode::getPath).collect(Collectors.toList()).block();
+    final var files = service.find(OWNER, destPath, 1, ".*").map(StorageNode::getPath).collect(Collectors.toList()).block();
     assertThat(files).isNotNull();
     assertThat(files.size()).isEqualTo(4);
-    service.delete(Collections.singletonList(destPath)).blockLast();
+    service.delete(OWNER, Collections.singletonList(destPath)).blockLast();
   }
 
   @Test
@@ -170,7 +174,7 @@ public class FileSystemStorageServiceIntegrationTest {
     final var filename = "myFile.txt";
     given(part.filename()).willReturn(filename);
 
-    create(service.setFile("../", just(part)))
+    create(service.setFile(OWNER, "../", just(part)))
         .expectError(IllegalArgumentException.class)
         .verify();
   }
@@ -181,12 +185,12 @@ public class FileSystemStorageServiceIntegrationTest {
     final var createdPath = "visitorTest/myFile.txt";
     given(part.filename()).willReturn(filename);
 
-    create(service.setFile("visitorTest", just(part)))
+    create(service.setFile(OWNER, "visitorTest", just(part)))
         .expectNextMatches(next -> next.getPath().equals(createdPath) && next.getDepth() == 1)
         .expectComplete()
         .verify();
 
-    create(service.delete(of(createdPath)))
+    create(service.delete(OWNER, of(createdPath)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -198,12 +202,12 @@ public class FileSystemStorageServiceIntegrationTest {
     final var createdPath = "visitorTest/someOther/myFile.txt";
     given(part.filename()).willReturn(filename);
 
-    create(service.setFile("visitorTest/someOther", just(part)))
+    create(service.setFile(OWNER, "visitorTest/someOther", just(part)))
         .expectNextMatches(next -> next.getPath().equals(createdPath) && next.getDepth() == 2)
         .expectComplete()
         .verify();
 
-    create(service.delete(of(createdPath)))
+    create(service.delete(OWNER, of(createdPath)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -215,7 +219,7 @@ public class FileSystemStorageServiceIntegrationTest {
     final var filename = "../myFile.txt";
     given(part.filename()).willReturn(filename);
 
-    create(service.setFile("visitorTest", just(part)))
+    create(service.setFile(OWNER, "visitorTest", just(part)))
         .expectError(IllegalArgumentException.class)
         .verify();
   }
@@ -223,7 +227,7 @@ public class FileSystemStorageServiceIntegrationTest {
   @Test
   public void shouldGetFolder() {
     final var filename = "getFile.zip";
-    service.getFile("").subscribe(inputStream -> {
+    service.getFile(OWNER, "").subscribe(inputStream -> {
       try {
         Files.copy(inputStream, Paths.get(filename), StandardCopyOption.REPLACE_EXISTING);
       } catch (IOException e) {
@@ -239,7 +243,7 @@ public class FileSystemStorageServiceIntegrationTest {
   @Test
   public void shouldGetFile() {
     final var filename = "getFile.md";
-    service.getFile("visitorTest/dir1/file1.md").subscribe(inputStream -> {
+    service.getFile(OWNER, "visitorTest/dir1/file1.md").subscribe(inputStream -> {
       try {
         Files.copy(inputStream, Paths.get(filename), StandardCopyOption.REPLACE_EXISTING);
       } catch (IOException e) {
@@ -254,48 +258,48 @@ public class FileSystemStorageServiceIntegrationTest {
 
   @Test
   public void shouldGetRootFileName() {
-    final var filename = service.getFileName("");
+    final var filename = service.getFileName(OWNER, "");
     assertThat(filename).isEqualTo("testDir.zip");
   }
 
   @Test
   public void shouldGetFileName() {
-    final var filename = service.getFileName("README.md");
+    final var filename = service.getFileName(OWNER, "README.md");
     assertThat(filename).isEqualTo("README.md");
   }
 
   @Test
   public void shouldGetDirectoryName() {
-    final var filename = service.getFileName("visitorTest");
+    final var filename = service.getFileName(OWNER, "visitorTest");
     assertThat(filename).isEqualTo("visitorTest.zip");
   }
 
   @Test
   public void shouldMove() {
     final var testFolder = "moveDest";
-    create(service.setDirectory(testFolder))
+    create(service.setDirectory(OWNER, testFolder))
         .expectNextMatches(next -> next.getPath().equals(testFolder))
         .expectComplete()
         .verify();
 
-    create(service.move(ImmutableList.of("moveTest/dir1", "moveTest/dir1/file1.md", "moveTest/dir1/file2.md", "moveTest/dir2/file1.md"), testFolder))
+    create(service.move(OWNER, ImmutableList.of("moveTest/dir1", "moveTest/dir1/file1.md", "moveTest/dir1/file2.md", "moveTest/dir2/file1.md"), testFolder))
         .expectNextMatches(next -> next.getPath().equals("moveDest/dir1"))
         .expectNextMatches(next -> next.getPath().equals("moveDest/file1.md"))
         .expectComplete()
         .verify();
 
     // Revert move
-    create(service.move(ImmutableList.of("moveDest/dir1"), "moveTest"))
+    create(service.move(OWNER, ImmutableList.of("moveDest/dir1"), "moveTest"))
         .expectNextMatches(next -> next.getPath().equals("moveTest/dir1"))
         .expectComplete()
         .verify();
 
-    create(service.move(ImmutableList.of("moveDest/file1.md"), "moveTest/dir2"))
+    create(service.move(OWNER, ImmutableList.of("moveDest/file1.md"), "moveTest/dir2"))
         .expectNextMatches(next -> next.getPath().equals("moveTest/dir2/file1.md"))
         .expectComplete()
         .verify();
 
-    create(service.delete(of(testFolder)))
+    create(service.delete(OWNER, of(testFolder)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -304,18 +308,18 @@ public class FileSystemStorageServiceIntegrationTest {
   @Test
   public void shouldCopy() {
     final var testFolder = "copyDest";
-    create(service.setDirectory(testFolder))
+    create(service.setDirectory(OWNER, testFolder))
         .expectNextMatches(next -> next.getPath().equals(testFolder))
         .expectComplete()
         .verify();
 
-    create(service.copy(ImmutableList.of("copyTest/dir1", "copyTest/dir1/file1.md", "copyTest/dir1/file2.md", "copyTest/dir2/file1.md"), testFolder))
+    create(service.copy(OWNER, ImmutableList.of("copyTest/dir1", "copyTest/dir1/file1.md", "copyTest/dir1/file2.md", "copyTest/dir2/file1.md"), testFolder))
         .expectNextMatches(next -> next.getPath().equals("copyDest/dir1"))
         .expectNextMatches(next -> next.getPath().equals("copyDest/file1.md"))
         .expectComplete()
         .verify();
 
-    create(service.delete(of(testFolder)))
+    create(service.delete(OWNER, of(testFolder)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -324,22 +328,22 @@ public class FileSystemStorageServiceIntegrationTest {
   @Test
   public void shouldCopySameFolder() {
     final var testFolder = "copyDest";
-    create(service.setDirectory(testFolder))
+    create(service.setDirectory(OWNER, testFolder))
         .expectNextMatches(next -> next.getPath().equals(testFolder))
         .expectComplete()
         .verify();
 
-    create(service.copy(ImmutableList.of("copyTest/dir1/file1.md"), testFolder))
+    create(service.copy(OWNER, ImmutableList.of("copyTest/dir1/file1.md"), testFolder))
         .expectNextMatches(next -> next.getPath().equals("copyDest/file1.md"))
         .expectComplete()
         .verify();
 
-    create(service.copy(ImmutableList.of("copyDest/file1.md"), testFolder))
+    create(service.copy(OWNER, ImmutableList.of("copyDest/file1.md"), testFolder))
         .expectNextMatches(next -> next.getPath().equals("copyDest/file1_copy.md"))
         .expectComplete()
         .verify();
 
-    create(service.delete(of(testFolder)))
+    create(service.delete(OWNER, of(testFolder)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -348,22 +352,22 @@ public class FileSystemStorageServiceIntegrationTest {
   @Test
   public void shouldCopySameFolderDot() {
     final var testFolder = "copyDest";
-    create(service.setDirectory(testFolder))
+    create(service.setDirectory(OWNER, testFolder))
         .expectNextMatches(next -> next.getPath().equals(testFolder))
         .expectComplete()
         .verify();
 
-    create(service.copy(ImmutableList.of("copyTest/.someFile"), testFolder))
+    create(service.copy(OWNER, ImmutableList.of("copyTest/.someFile"), testFolder))
         .expectNextMatches(next -> next.getPath().equals("copyDest/.someFile"))
         .expectComplete()
         .verify();
 
-    create(service.copy(ImmutableList.of("copyDest/.someFile"), testFolder))
+    create(service.copy(OWNER, ImmutableList.of("copyDest/.someFile"), testFolder))
         .expectNextMatches(next -> next.getPath().equals("copyDest/_copy.someFile"))
         .expectComplete()
         .verify();
 
-    create(service.delete(of(testFolder)))
+    create(service.delete(OWNER, of(testFolder)))
         .expectNext(true)
         .expectComplete()
         .verify();
@@ -371,7 +375,7 @@ public class FileSystemStorageServiceIntegrationTest {
 
   @Test
   public void shouldFindFile() {
-    create(service.find("visitorTest/dir1", Integer.MAX_VALUE, "file1\\.md"))
+    create(service.find(OWNER, "visitorTest/dir1", Integer.MAX_VALUE, "file1\\.md"))
         .expectNextMatches(next -> next.getPath().equals("visitorTest/dir1/file1.md"))
         .expectComplete()
         .verify();
@@ -379,7 +383,7 @@ public class FileSystemStorageServiceIntegrationTest {
 
   @Test
   public void shouldFindSubDirectories() {
-    create(service.find("visitorTest/", 1, ".*"))
+    create(service.find(OWNER, "visitorTest/", 1, ".*"))
         .expectNextCount(2)
         .expectComplete()
         .verify();
@@ -387,7 +391,7 @@ public class FileSystemStorageServiceIntegrationTest {
 
   @Test
   public void shouldFindSubDirectoriesBis() {
-    create(service.find("visitorTest/dir1", 1, ".*1\\.md"))
+    create(service.find(OWNER, "visitorTest/dir1", 1, ".*1\\.md"))
         .expectNextMatches(next -> next.getPath().equals("visitorTest/dir1/file1.md"))
         .expectComplete()
         .verify();
@@ -419,7 +423,7 @@ public class FileSystemStorageServiceIntegrationTest {
             .build()
     );
 
-    create(service.filterExisting(nodes))
+    create(service.filterExisting(OWNER, nodes))
         .expectNextMatches(next -> next.getPath().equals("visitorTest/dir1"))
         .expectNextMatches(next -> next.getPath().equals("visitorTest/dir2"))
         .expectComplete()
@@ -428,13 +432,13 @@ public class FileSystemStorageServiceIntegrationTest {
 
   @Test
   public void shouldExtractZip() {
-    create(service.extractZip("zipDir/kraken.zip"))
+    create(service.extractZip(OWNER, "zipDir/kraken.zip"))
         .expectNextMatches(next -> next.getPath().equals("zipDir/kraken.zip"))
         .expectComplete()
         .verify();
-    final var files = service.find("zipDir", 1, "^((?!kraken\\.zip).)*$").map(StorageNode::getPath).collect(Collectors.toList()).block();
+    final var files = service.find(OWNER, "zipDir", 1, "^((?!kraken\\.zip).)*$").map(StorageNode::getPath).collect(Collectors.toList()).block();
     assertThat(files).isNotNull();
     assertThat(files.size()).isEqualTo(4);
-    assertThat(service.delete(files).blockLast()).isTrue();
+    assertThat(service.delete(OWNER, files).blockLast()).isTrue();
   }
 }

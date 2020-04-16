@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 import java.util.function.Function;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -54,9 +55,9 @@ public class CreateResultOnTaskExecutedTest {
     final var event = TaskExecutedEventTest.TASK_EXECUTED_EVENT;
     final var context = event.getContext();
     given(taskTypeToResultType.apply(context.getTaskType())).willReturn(ResultType.RUN);
-    given(analysisService.create(any())).willReturn(Mono.empty());
+    given(analysisService.create(any(), any())).willReturn(Mono.empty());
     listener.handleEvent(event);
-    verify(analysisService).create(resultArgumentCaptor.capture());
+    verify(analysisService).create(eq(context.getOwner()), resultArgumentCaptor.capture());
     final var result = resultArgumentCaptor.getValue();
     Assertions.assertThat(result.getId()).isEqualTo(context.getTaskId());
     Assertions.assertThat(result.getEndDate()).isEqualTo(0L);

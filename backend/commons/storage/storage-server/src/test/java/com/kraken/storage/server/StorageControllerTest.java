@@ -2,6 +2,8 @@ package com.kraken.storage.server;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
+import com.kraken.security.entity.owner.PublicOwner;
+import com.kraken.security.entity.owner.UserOwnerTest;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageNodeTest;
 import com.kraken.storage.entity.StorageWatcherEvent;
@@ -36,6 +38,7 @@ import static com.kraken.storage.entity.StorageNodeType.DIRECTORY;
 import static com.kraken.storage.entity.StorageWatcherEventTest.STORAGE_WATCHER_EVENT;
 import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 public class StorageControllerTest extends AuthControllerTest {
@@ -57,7 +60,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldListNodes() {
     final var path = "path";
-    given(service.list())
+    given(service.list(userOwner))
         .willReturn(Flux.just(StorageNode.builder().path(path).depth(0).length(0L).lastModified(0L).type(DIRECTORY).build()));
 
     webTestClient.get()
@@ -82,7 +85,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldGetNode() {
     final var filename = "file.txt";
-    given(service.get(filename))
+    given(service.get(userOwner, filename))
         .willReturn(Mono.just(StorageNode.builder().path(filename).depth(0).length(0L).lastModified(0L).type(DIRECTORY).build()));
 
     webTestClient.get()
@@ -100,7 +103,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldDelete() {
     final var paths = Arrays.asList("toto/file.txt");
-    given(service.delete(paths))
+    given(service.delete(userOwner, paths))
         .willReturn(Flux.just(true));
 
     webTestClient.post()
@@ -114,7 +117,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldDeleteFail() {
     final var paths = Arrays.asList("toto/file.txt");
-    given(service.delete(paths))
+    given(service.delete(userOwner, paths))
         .willReturn(Flux.error(new IllegalArgumentException("Failed to delete")));
 
     webTestClient.post()
@@ -128,7 +131,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldSetFile() throws IOException {
     final var path = "toto";
-    given(service.setFile(any(), any()))
+    given(service.setFile(eq(userOwner), any(), any()))
         .willReturn(Mono.just(StorageNodeTest.STORAGE_NODE));
 
     webTestClient.post()
@@ -147,7 +150,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldSetZip() throws IOException {
     final var path = "toto";
-    given(service.setZip(any(), any()))
+    given(service.setZip(eq(userOwner), any(), any()))
         .willReturn(Mono.just(StorageNodeTest.STORAGE_NODE));
 
     webTestClient.post()
@@ -166,7 +169,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldSetDirectory() {
     final var path = "someDir";
-    given(service.setDirectory(path))
+    given(service.setDirectory(userOwner, path))
         .willReturn(Mono.just(StorageNodeTest.STORAGE_NODE));
 
     webTestClient.post()
@@ -184,9 +187,9 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldGetFile() {
     final var content = "File getContent";
-    given(service.getFile(""))
+    given(service.getFile(userOwner, ""))
         .willReturn(Mono.just(new ByteArrayInputStream(content.getBytes(Charsets.UTF_8))));
-    given(service.getFileName(""))
+    given(service.getFileName(userOwner, ""))
         .willReturn("test.txt");
 
     webTestClient.get()
@@ -204,7 +207,7 @@ public class StorageControllerTest extends AuthControllerTest {
     final var oldName = "oldName.txt";
     final var newName = "newName.txt";
     final var node = StorageNode.builder().path(newName).depth(0).length(0L).lastModified(0L).type(DIRECTORY).build();
-    given(service.rename("", oldName, newName))
+    given(service.rename(userOwner, "", oldName, newName))
         .willReturn(Mono.just(node));
 
     webTestClient.post()
@@ -223,9 +226,9 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldGetDirectory() {
     final var content = "File getContent";
-    given(service.getFile(""))
+    given(service.getFile(userOwner, ""))
         .willReturn(Mono.just(new ByteArrayInputStream(content.getBytes(Charsets.UTF_8))));
-    given(service.getFileName(""))
+    given(service.getFileName(userOwner, ""))
         .willReturn("test.zip");
 
     webTestClient.get()
@@ -242,7 +245,7 @@ public class StorageControllerTest extends AuthControllerTest {
   public void shouldSetContent() {
     final var path = "toto/file.txt";
     final var content = "Test content";
-    given(service.setContent(path, content))
+    given(service.setContent(userOwner, path, content))
         .willReturn(Mono.just(StorageNodeTest.STORAGE_NODE));
 
     webTestClient.post()
@@ -261,7 +264,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldGetContent() {
     final var path = "toto/file.txt";
-    given(service.getContent(path))
+    given(service.getContent(userOwner, path))
         .willReturn(Mono.just("some getContent"));
 
     webTestClient.get()
@@ -282,7 +285,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldGetJson() {
     final var path = "toto/file.json";
-    given(service.getContent(path))
+    given(service.getContent(userOwner, path))
         .willReturn(Mono.just("{}"));
 
     webTestClient.get()
@@ -302,7 +305,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldGetContents() {
     final var paths = ImmutableList.of("toto/file1.txt", "toto/file2.txt");
-    given(service.getContent(paths))
+    given(service.getContent(userOwner, paths))
         .willReturn(Flux.just("{\"key1\": \"value1\"}", "{\"key2\": \"value2\"}"));
 
     webTestClient.post()
@@ -324,7 +327,7 @@ public class StorageControllerTest extends AuthControllerTest {
     final var flux = Flux.just(STORAGE_WATCHER_EVENT, STORAGE_WATCHER_EVENT);
     final var sseFlux = Flux.just(ServerSentEvent.builder(STORAGE_WATCHER_EVENT).build(), ServerSentEvent.<StorageWatcherEvent>builder().comment("keep alive").build(), ServerSentEvent.builder(STORAGE_WATCHER_EVENT).build());
 
-    given(watcher.watch())
+    given(watcher.watch(userOwner, ""))
         .willReturn(flux);
 
     given(sse.keepAlive(flux)).willReturn(sseFlux);
@@ -349,7 +352,7 @@ public class StorageControllerTest extends AuthControllerTest {
 
   @Test
   public void shouldFindFiles() {
-    given(service.find("", Integer.MAX_VALUE, ".*"))
+    given(service.find(userOwner, "", Integer.MAX_VALUE, ".*"))
         .willReturn(Flux.just(StorageNodeTest.STORAGE_NODE));
 
     webTestClient.get()
@@ -367,7 +370,7 @@ public class StorageControllerTest extends AuthControllerTest {
   public void shouldCopyFiles() {
     final var paths = Arrays.asList("path1", "path2");
     final var destination = "destination";
-    given(service.copy(paths, destination))
+    given(service.copy(userOwner, paths, destination))
         .willReturn(Flux.just(StorageNodeTest.STORAGE_NODE));
 
     webTestClient.post()
@@ -387,7 +390,7 @@ public class StorageControllerTest extends AuthControllerTest {
   public void shouldMoveFiles() {
     final var paths = Arrays.asList("path1", "path2");
     final var destination = "destination";
-    given(service.move(paths, destination))
+    given(service.move(userOwner, paths, destination))
         .willReturn(Flux.just(StorageNodeTest.STORAGE_NODE));
 
     webTestClient.post()
@@ -422,7 +425,7 @@ public class StorageControllerTest extends AuthControllerTest {
             .build()
     );
 
-    given(service.filterExisting(nodes))
+    given(service.filterExisting(userOwner, nodes))
         .willReturn(Flux.fromIterable(nodes));
 
     webTestClient.post()
@@ -442,7 +445,7 @@ public class StorageControllerTest extends AuthControllerTest {
   @Test
   public void shouldExtractZip() {
     final var path = "path/archive.zip";
-    given(service.extractZip(path))
+    given(service.extractZip(userOwner, path))
         .willReturn(Mono.just(StorageNodeTest.STORAGE_NODE));
 
     webTestClient.get()

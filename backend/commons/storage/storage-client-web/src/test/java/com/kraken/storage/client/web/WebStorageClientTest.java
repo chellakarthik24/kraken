@@ -8,6 +8,7 @@ import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
 import com.kraken.config.storage.client.api.StorageClientProperties;
+import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.entity.StorageNode;
@@ -69,7 +70,7 @@ public class WebStorageClientTest {
     server = new MockWebServer();
     final String baseUrl = server.url("/").toString();
     when(properties.getUrl()).thenReturn(baseUrl);
-    client = new WebStorageClientBuilder(filterFactories, properties, jsonMapper, yamlMapper).create();
+    client = new WebStorageClientBuilder(filterFactories, properties, jsonMapper, yamlMapper).mode(AuthenticationMode.NOOP).build();
   }
 
   @After

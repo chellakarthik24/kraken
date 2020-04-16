@@ -3,6 +3,7 @@ package com.kraken.tests.security;
 import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
 import com.kraken.security.decoder.api.TokenDecoder;
+import com.kraken.security.entity.owner.UserOwner;
 import com.kraken.security.entity.user.KrakenUserTest;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -31,6 +32,9 @@ public abstract class AuthControllerTest {
   protected ReactiveJwtDecoder jwtDecoder;
   @MockBean
   protected TokenDecoder tokenDecoder;
+
+  protected UserOwner userOwner = UserOwner.builder().applicationId("app").userId(KrakenUserTest.KRAKEN_USER.getUserId()).build();
+  protected UserOwner adminOwner = UserOwner.builder().applicationId("app").userId(KrakenUserTest.KRAKEN_ADMIN.getUserId()).build();
 
   @Before
   public void setUp() throws IOException {

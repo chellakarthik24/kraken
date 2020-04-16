@@ -34,6 +34,7 @@ import static lombok.AccessLevel.PACKAGE;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 final class TelegrafRunner {
 
+  @NonNull RuntimeClient client;
   @NonNull CommandService commands;
   @NonNull StorageClient storage;
   @NonNull TelegrafProperties telegraf;
@@ -43,7 +44,6 @@ final class TelegrafRunner {
 
   @PostConstruct
   public void init() {
-    final var client = executor.getRuntimeClient();
     executor.execute(of(me -> {
       // Download configuration file
       storage.downloadFile(get(telegraf.getLocal()), telegraf.getRemote()).block();

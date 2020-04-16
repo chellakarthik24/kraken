@@ -37,9 +37,9 @@ public class UpdateResultOnTaskCancelledTest {
   @Test
   public void shouldHandleEvent(){
     final var event = TaskCancelledEventTest.TASK_CANCELLED_EVENT;
-    given(analysisService.setStatus(any(),any())).willReturn(Mono.empty());
+    given(analysisService.setStatus(any(),any(),any())).willReturn(Mono.empty());
     listener.handleEvent(event);
-    verify(analysisService).setStatus(event.getContext().getTaskId(), ResultStatus.CANCELED);
+    verify(analysisService).setStatus(event.getContext().getOwner(), event.getContext().getTaskId(), ResultStatus.CANCELED);
   }
 
 }

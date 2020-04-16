@@ -33,6 +33,7 @@ import static java.util.Optional.empty;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 final class GatlingParser {
 
+  @NonNull RuntimeClient runtimeClient;
   @NonNull LogParser parser;
   @NonNull DebugEntryWriter writer;
   @NonNull GatlingProperties gatling;
@@ -58,7 +59,7 @@ final class GatlingParser {
       waitFor(parse.map(DebugEntry::getRequestName)
               .doOnNext(log::info)
               .onErrorContinue((throwable, o) -> log.error("Failed to parse debug entry " + o, throwable)),
-          executor.getRuntimeClient().waitForPredicate(me, taskPredicate), Duration.ofSeconds(15));
+          runtimeClient.waitForPredicate(me, taskPredicate), Duration.ofSeconds(15));
     }, empty());
   }
 

@@ -10,7 +10,6 @@ import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
-import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.owner.ApplicationOwner;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -29,7 +28,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
@@ -44,8 +42,6 @@ public class WebRuntimeClientTest {
   List<ExchangeFilterFactory> filterFactories;
   @MockBean
   RuntimeClientProperties properties;
-  @MockBean
-  OwnerToApplicationId toApplicationId;
 
   @Before
   public void setUp() {

@@ -4,6 +4,7 @@ import com.kraken.analysis.entity.DebugEntryTest;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.analysis.entity.ResultTest;
 import com.kraken.analysis.server.service.AnalysisService;
+import com.kraken.security.entity.owner.UserOwnerTest;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageNodeTest;
@@ -32,7 +33,7 @@ public class AnalysisControllerTest extends AuthControllerTest {
   public void shouldCreate() {
     final var result = ResultTest.RESULT;
     final var node = StorageNodeTest.STORAGE_NODE;
-    given(service.create(result))
+    given(service.create(UserOwnerTest.USER_OWNER, result))
         .willReturn(Mono.just(node));
 
     webTestClient.post()
@@ -61,7 +62,7 @@ public class AnalysisControllerTest extends AuthControllerTest {
   @Test
   public void shouldDelete() {
     final var resultId = "resultId";
-    given(service.delete(resultId))
+    given(service.delete(UserOwnerTest.USER_OWNER, resultId))
         .willReturn(Mono.just(resultId));
 
     webTestClient.delete()
@@ -99,7 +100,7 @@ public class AnalysisControllerTest extends AuthControllerTest {
         .lastModified(0L)
         .build();
 
-    given(service.setStatus(resultId, status))
+    given(service.setStatus(UserOwnerTest.USER_OWNER, resultId, status))
         .willReturn(Mono.just(resultNode));
 
     webTestClient.post()
@@ -129,7 +130,7 @@ public class AnalysisControllerTest extends AuthControllerTest {
   public void shouldAddDebug() {
     final var debug = DebugEntryTest.DEBUG_ENTRY;
 
-    given(service.addDebug(debug))
+    given(service.addDebug(UserOwnerTest.USER_OWNER, debug))
         .willReturn(Mono.fromCallable(() -> null));
 
     webTestClient.post()
