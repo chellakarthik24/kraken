@@ -39,6 +39,6 @@ final class UpdateResultOnTaskStatusUpdated extends EventBusListener<TaskStatusU
     final var resultId = task.getId();
     final var status = taskStatusToResultStatus.apply(task.getStatus());
     log.info(String.format("Set status %s for result %s", status.toString(), resultId));
-    analysisService.setStatus(resultId, status).subscribe();
+    analysisService.setStatus(event.getTask().getOwner(), resultId, status).subscribe();
   }
 }

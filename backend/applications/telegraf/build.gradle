@@ -14,6 +14,7 @@ dependencies {
     // Storage client
     implementation project(':commons:storage:storage-client-web')
     implementation project(':commons:config:config-storage-client-spring')
+    implementation project(':commons:storage:storage-client-container-builder')
 
     // Security
     implementation project(':commons:dependencies:dependencies-security-container')

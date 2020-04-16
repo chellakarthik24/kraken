@@ -14,6 +14,7 @@ import static com.kraken.security.entity.user.KrakenRole.USER;
 
 @EnableWebFluxSecurity
 public class AnalysisSecurityConfiguration {
+
   @Bean
   SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final Converter<Jwt, Mono<AbstractAuthenticationToken>> converter) {
     http

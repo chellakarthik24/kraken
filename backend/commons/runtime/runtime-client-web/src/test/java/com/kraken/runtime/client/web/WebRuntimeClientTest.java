@@ -8,6 +8,7 @@ import com.kraken.config.runtime.client.api.RuntimeClientProperties;
 import com.kraken.runtime.client.api.RuntimeClient;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.*;
+import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.authentication.api.ExchangeFilterFactory;
 import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.owner.ApplicationOwner;
@@ -52,7 +53,7 @@ public class WebRuntimeClientTest {
     mapper = new ObjectMapper();
     final String url = server.url("/").toString();
     given(properties.getUrl()).willReturn(url);
-    client = new WebRuntimeClientBuilder(filterFactories, properties, toApplicationId).create();
+    client = new WebRuntimeClientBuilder(filterFactories, properties).mode(AuthenticationMode.NOOP).build();
   }
 
   @After
@@ -150,7 +151,7 @@ public class WebRuntimeClientTest {
             .setBody(mapper.writeValueAsString(container))
     );
 
-    final var result = client.find("applicationId", "taskId", "containerName").block();
+    final var result = client.find("taskId", "containerName").block();
 
     final var request = server.takeRequest();
     assertThat(request.getMethod()).isEqualTo("GET");
@@ -181,7 +182,7 @@ public class WebRuntimeClientTest {
             .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_EVENT_STREAM_VALUE)
             .setBody(body));
 
-    final var response = client.watchLogs("app").collectList().block();
+    final var response = client.watchLogs().collectList().block();
     assertThat(response).isNotNull();
     assertThat(response.size()).isEqualTo(4);
 

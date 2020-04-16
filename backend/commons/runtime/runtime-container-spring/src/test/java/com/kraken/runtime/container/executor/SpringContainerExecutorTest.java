@@ -3,10 +3,12 @@ package com.kraken.runtime.container.executor;
 import com.kraken.Application;
 import com.kraken.config.runtime.container.api.ContainerProperties;
 import com.kraken.runtime.client.api.RuntimeClient;
+import com.kraken.runtime.client.api.RuntimeClientBuilder;
 import com.kraken.runtime.entity.task.ContainerStatus;
 import com.kraken.runtime.entity.task.FlatContainer;
 import com.kraken.runtime.entity.task.FlatContainerTest;
 import com.kraken.runtime.entity.task.TaskTest;
+import com.kraken.security.authentication.api.AuthenticationMode;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +31,8 @@ public class SpringContainerExecutorTest {
 
   @Autowired
   ContainerExecutor containerExecutor;
-
   @MockBean
   ContainerProperties properties;
-
   @MockBean
   RuntimeClient client;
 
@@ -51,7 +51,7 @@ public class SpringContainerExecutorTest {
     given(properties.getTaskId()).willReturn("taskId");
     given(properties.getName()).willReturn("name");
     given(properties.getApplicationId()).willReturn("applicationId");
-    given(client.find("applicationId", "taskId", "name")).willReturn(Mono.just(me));
+    given(client.find( "taskId", "name")).willReturn(Mono.just(me));
     given(client.setStatus(Mockito.same(me), Mockito.any())).willReturn(Mono.empty());
     given(client.waitForStatus(Mockito.same(me), Mockito.any())).willReturn(Mono.just(TaskTest.TASK));
   }

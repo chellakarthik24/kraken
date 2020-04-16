@@ -7,16 +7,23 @@ import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.config.grafana.api.AnalysisResultsProperties;
 import com.kraken.config.grafana.api.GrafanaProperties;
 import com.kraken.grafana.client.api.GrafanaClient;
+import com.kraken.grafana.client.api.GrafanaClientBuilder;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.security.authentication.api.AuthenticationMode;
+import com.kraken.security.entity.functions.api.OwnerToApplicationId;
+import com.kraken.security.entity.functions.api.OwnerToUserId;
+import com.kraken.security.entity.owner.Owner;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.client.api.StorageClientBuilder;
 import com.kraken.storage.entity.StorageNode;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.util.List;
 import java.util.function.Function;
@@ -25,45 +32,29 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 final class SpringAnalysisService implements AnalysisService {
 
-  // TODO
-  private static final String USER_ID = "2e44ffae-111c-4f59-ae2b-65000de6f7b7";
   private static final String RESULT_JSON = "result.json";
 
-  AnalysisResultsProperties properties;
-  GrafanaProperties grafana;
+  @NonNull AnalysisResultsProperties properties;
+  @NonNull GrafanaProperties grafana;
 
-  GrafanaClient grafanaClient;
-  InfluxDBClient influxdbClient;
-  StorageClient sessionStorageClient;
-  Function<String, StorageClient> impersonateStorageClient;
+  @NonNull InfluxDBClient influxdbClient;
+  @NonNull GrafanaClientBuilder grafanaClientBuilder;
+  @NonNull StorageClientBuilder storageClientBuilder;
 
-  Function<List<HttpHeader>, String> headersToExtension;
-  Function<ResultStatus, Long> statusToEndDate;
+  @NonNull OwnerToApplicationId toApplicationId;
+  @NonNull OwnerToUserId toUserId;
 
-  SpringAnalysisService(@NonNull AnalysisResultsProperties properties,
-                        @NonNull GrafanaProperties grafana,
-                        @NonNull StorageClientBuilder storageClientFactory,
-                        @NonNull GrafanaClient grafanaClient,
-                        @NonNull InfluxDBClient influxdbClient,
-                        @NonNull Function<List<HttpHeader>, String> headersToExtension,
-                        @NonNull Function<ResultStatus, Long> statusToEndDate) {
-    this.properties = properties;
-    this.grafana = grafana;
-    this.grafanaClient = grafanaClient;
-    this.influxdbClient = influxdbClient;
-    this.headersToExtension = headersToExtension;
-    this.statusToEndDate = statusToEndDate;
-    this.sessionStorageClient = storageClientFactory.create(AuthenticationMode.SESSION);
-    this.impersonateStorageClient = userId -> storageClientFactory.create(AuthenticationMode.IMPERSONATE, userId);
-  }
-
+  @NonNull Function<List<HttpHeader>, String> headersToExtension;
+  @NonNull Function<ResultStatus, Long> statusToEndDate;
 
   @Override
-  public Mono<StorageNode> create(final Result result) {
-    final var storageClient = impersonateStorageClient.apply(USER_ID);
+  public Mono<StorageNode> create(final Owner owner, final Result result) {
+    final var storageClient = this.impersonateStorage(owner);
+    final var grafanaClient = this.impersonateGrafana(owner);
     final var resultPath = properties.getResultPath(result.getId());
     final var resultJsonPath = resultPath.resolve(RESULT_JSON).toString();
 
@@ -78,8 +69,9 @@ final class SpringAnalysisService implements AnalysisService {
   }
 
   @Override
-  public Mono<String> delete(final String resultId) {
-    final var storageClient = impersonateStorageClient.apply(USER_ID);
+  public Mono<String> delete(final Owner owner, final String resultId) {
+    final var storageClient = this.impersonateStorage(owner);
+    final var grafanaClient = this.impersonateGrafana(owner);
     final var resultPath = properties.getResultPath(resultId);
     final var resultJsonPath = resultPath.resolve(RESULT_JSON).toString();
     final var deleteFolder = storageClient.delete(resultPath.toString());
@@ -89,8 +81,9 @@ final class SpringAnalysisService implements AnalysisService {
   }
 
   @Override
-  public Mono<StorageNode> setStatus(final String resultId, final ResultStatus status) {
-    final var storageClient = impersonateStorageClient.apply(USER_ID);
+  public Mono<StorageNode> setStatus(final Owner owner, final String resultId, final ResultStatus status) {
+    final var storageClient = this.impersonateStorage(owner);
+    final var grafanaClient = this.impersonateGrafana(owner);
     final var endDate = this.statusToEndDate.apply(status);
     final var resultPath = properties.getResultPath(resultId).resolve(RESULT_JSON).toString();
 
@@ -110,7 +103,8 @@ final class SpringAnalysisService implements AnalysisService {
   }
 
   @Override
-  public Mono<DebugEntry> addDebug(final DebugEntry debug) {
+  public Mono<DebugEntry> addDebug(final Owner owner, final DebugEntry debug) {
+    final var storageClient = this.sessionStorage(owner);
     final var outputFolder = properties.getResultPath(debug.getResultId()).resolve("debug");
 
     return Mono.just(debug)
@@ -118,7 +112,7 @@ final class SpringAnalysisService implements AnalysisService {
           if (!debug.getRequestBodyFile().isEmpty()) {
             final var body = debug.getRequestBodyFile();
             final var bodyFile = String.format("%s-request%s", debugEntry.getId(), this.headersToExtension.apply(debugEntry.getRequestHeaders()));
-            return sessionStorageClient.setContent(outputFolder.resolve(bodyFile).toString(), body).map(s -> debugEntry.withRequestBodyFile(bodyFile));
+            return storageClient.setContent(outputFolder.resolve(bodyFile).toString(), body).map(s -> debugEntry.withRequestBodyFile(bodyFile));
           }
           return Mono.just(debugEntry);
         })
@@ -126,12 +120,32 @@ final class SpringAnalysisService implements AnalysisService {
           if (!debug.getResponseBodyFile().isEmpty()) {
             final var body = debug.getResponseBodyFile();
             final var bodyFile = String.format("%s-response%s", debugEntry.getId(), this.headersToExtension.apply(debugEntry.getResponseHeaders()));
-            return sessionStorageClient.setContent(outputFolder.resolve(bodyFile).toString(), body).map(s -> debugEntry.withResponseBodyFile(bodyFile));
+            return storageClient.setContent(outputFolder.resolve(bodyFile).toString(), body).map(s -> debugEntry.withResponseBodyFile(bodyFile));
           }
           return Mono.just(debugEntry);
         })
-        .flatMap(debugEntry -> sessionStorageClient.setJsonContent(outputFolder.resolve(debugEntry.getId() + ".debug").toString(), debugEntry).map(storageNode -> debugEntry));
+        .flatMap(debugEntry -> storageClient.setJsonContent(outputFolder.resolve(debugEntry.getId() + ".debug").toString(), debugEntry).map(storageNode -> debugEntry));
   }
 
+  private StorageClient sessionStorage(final Owner owner) {
+    final var ids = ownerToIds(owner);
+    return storageClientBuilder.mode(AuthenticationMode.SESSION).applicationId(ids.getT1()).build();
+  }
+
+  private StorageClient impersonateStorage(final Owner owner) {
+    final var ids = ownerToIds(owner);
+    return storageClientBuilder.mode(AuthenticationMode.IMPERSONATE, ids.getT2()).applicationId(ids.getT1()).build();
+  }
+
+  private GrafanaClient impersonateGrafana(final Owner owner) {
+    final var ids = ownerToIds(owner);
+    return grafanaClientBuilder.mode(AuthenticationMode.IMPERSONATE, ids.getT2()).applicationId(ids.getT1()).build();
+  }
+
+  private Tuple2<String, String> ownerToIds(final Owner owner) {
+    final var applicationId = toApplicationId.apply(owner).orElseThrow();
+    final var userId = toUserId.apply(owner).orElseThrow();
+    return Tuples.of(applicationId, userId);
+  }
 }
 

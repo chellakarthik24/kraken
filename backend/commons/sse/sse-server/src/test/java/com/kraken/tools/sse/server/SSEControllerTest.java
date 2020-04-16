@@ -3,9 +3,12 @@ package com.kraken.tools.sse.server;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.kraken.runtime.client.api.RuntimeClient;
+import com.kraken.runtime.client.api.RuntimeClientBuilder;
 import com.kraken.runtime.entity.log.LogTest;
 import com.kraken.runtime.entity.task.TaskTest;
+import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.storage.client.api.StorageClient;
+import com.kraken.storage.client.api.StorageClientBuilder;
 import com.kraken.storage.entity.StorageWatcherEventTest;
 import com.kraken.tests.security.AuthControllerTest;
 import com.kraken.tests.utils.TestUtils;
@@ -13,6 +16,7 @@ import com.kraken.tools.sse.SSEService;
 import com.kraken.tools.sse.SSEWrapper;
 import com.kraken.tools.sse.SSEWrapperTest;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,6 +26,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
 
@@ -29,12 +34,24 @@ public class SSEControllerTest extends AuthControllerTest {
 
   @MockBean
   SSEService sse;
-
+  @MockBean
+  RuntimeClientBuilder runtimeClientBuilder;
   @MockBean
   RuntimeClient runtimeClient;
-
+  @MockBean
+  StorageClientBuilder storageClientBuilder;
   @MockBean
   StorageClient storageClient;
+
+  @Before
+  public void setUp(){
+    given(runtimeClientBuilder.mode(AuthenticationMode.SESSION)).willReturn(runtimeClientBuilder);
+    given(runtimeClientBuilder.applicationId(any())).willReturn(runtimeClientBuilder);
+    given(runtimeClientBuilder.build()).willReturn(runtimeClient);
+    given(storageClientBuilder.mode(AuthenticationMode.SESSION)).willReturn(storageClientBuilder);
+    given(storageClientBuilder.applicationId(any())).willReturn(storageClientBuilder);
+    given(storageClientBuilder.build()).willReturn(storageClient);
+  }
 
   @Test
   public void shouldPassTestUtils() {
@@ -46,8 +63,8 @@ public class SSEControllerTest extends AuthControllerTest {
     final var applicationId = "app";
     given(sse.merge(anyMap())).willReturn(Flux.just(SSEWrapperTest.WRAPPER_STRING, SSEWrapperTest.WRAPPER_INT));
     given(sse.keepAlive(Mockito.<Flux<SSEWrapper>>any())).willReturn(Flux.just(ServerSentEvent.builder(SSEWrapperTest.WRAPPER_STRING).build()));
-    given(runtimeClient.watchLogs(applicationId)).willReturn(Flux.just(LogTest.LOG));
-    given(runtimeClient.watchTasks(applicationId)).willReturn(Flux.just(ImmutableList.of(TaskTest.TASK)));
+    given(runtimeClient.watchLogs()).willReturn(Flux.just(LogTest.LOG));
+    given(runtimeClient.watchTasks()).willReturn(Flux.just(ImmutableList.of(TaskTest.TASK)));
     given(storageClient.watch()).willReturn(Flux.just(StorageWatcherEventTest.STORAGE_WATCHER_EVENT));
 
     final var result = webTestClient.get()

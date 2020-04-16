@@ -20,12 +20,12 @@ import static com.kraken.security.authentication.api.AuthenticationMode.SERVICE_
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 final class TaskEventsWatcher {
 
-  @NonNull RuntimeEventClientBuilder clientFactory;
+  @NonNull RuntimeEventClientBuilder clientBuilder;
   @NonNull EventBus eventBus;
 
   @PostConstruct
   public void watch() {
-    this.clientFactory.create(SERVICE_ACCOUNT).events()
+    this.clientBuilder.mode(SERVICE_ACCOUNT).build().events()
         .retryBackoff(Integer.MAX_VALUE, Duration.ofSeconds(5))
         .onErrorContinue((throwable, o) -> log.error("Failed to list task events " + o, throwable))
         .subscribe(eventBus::publish);

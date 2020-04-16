@@ -45,6 +45,6 @@ final class CreateResultOnTaskExecuted extends EventBusListener<TaskExecutedEven
         .description(context.getDescription())
         .type(taskTypeToResultType.apply(context.getTaskType()))
         .build();
-    analysisService.create(result).subscribe();
+    analysisService.create(event.getContext().getOwner(), result).subscribe();
   }
 }

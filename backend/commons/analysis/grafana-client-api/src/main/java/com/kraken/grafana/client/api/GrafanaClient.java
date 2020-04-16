@@ -1,8 +1,9 @@
 package com.kraken.grafana.client.api;
 
+import com.kraken.security.authentication.client.api.AuthenticatedClient;
 import reactor.core.publisher.Mono;
 
-public interface GrafanaClient {
+public interface GrafanaClient extends AuthenticatedClient {
 
   Mono<String> getDashboard(String testId);
 

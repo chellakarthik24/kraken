@@ -22,13 +22,13 @@ import static lombok.AccessLevel.PACKAGE;
 final class SpringContainerExecutor implements ContainerExecutor {
 
   @NonNull RuntimeClient client;
-  @NonNull ContainerProperties container;
+  @NonNull ContainerProperties properties;
 
   @Override
   public void execute(Optional<ContainerExecutorStep> setUp,
                       ContainerExecutorStep execute,
                       Optional<ContainerExecutorStep> tearDown) {
-    final var findMe = client.find(container.getApplicationId(), container.getTaskId(), container.getName());
+    final var findMe = client.find(properties.getTaskId(), properties.getName());
     final var me = findMe.block();
     try {
       setUp.ifPresent(consumer -> {

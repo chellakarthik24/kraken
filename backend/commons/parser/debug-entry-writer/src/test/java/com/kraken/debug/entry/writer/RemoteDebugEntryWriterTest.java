@@ -2,9 +2,15 @@ package com.kraken.debug.entry.writer;
 
 import com.kraken.Application;
 import com.kraken.analysis.client.api.AnalysisClient;
+import com.kraken.analysis.client.api.AnalysisClientBuilder;
 import com.kraken.analysis.entity.DebugEntry;
+import com.kraken.config.runtime.container.api.ContainerProperties;
+import com.kraken.security.authentication.api.AuthenticationMode;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,13 +24,26 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RemoteDebugEntryWriterTest {
-  @Autowired
-  DebugEntryWriter writer;
-  @MockBean
+
+  @Mock
+  AnalysisClientBuilder clientBuilder;
+  @Mock
   AnalysisClient client;
+  @Mock
+  ContainerProperties containerProperties;
+
+  DebugEntryWriter writer;
+
+  @Before
+  public void setUp() {
+    given(containerProperties.getApplicationId()).willReturn("app");
+    given(containerProperties.getTaskId()).willReturn("taskId");
+    given(clientBuilder.mode(AuthenticationMode.CONTAINER)).willReturn(clientBuilder);
+    given(clientBuilder.applicationId("app")).willReturn(clientBuilder);
+    given(clientBuilder.build()).willReturn(client);
+  }
 
   @Test
   public void shouldWriteEntry() {

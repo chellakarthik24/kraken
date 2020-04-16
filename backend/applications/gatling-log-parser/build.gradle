@@ -13,6 +13,7 @@ dependencies {
     // Analysis client (to send debug entries)
     implementation project(':commons:analysis:analysis-client-web')
     implementation project(':commons:config:config-analysis-client-spring')
+    implementation project(':commons:analysis:analysis-client-container-builder')
 
     // Security
     implementation project(':commons:dependencies:dependencies-security-container')

@@ -1,3 +1,4 @@
 dependencies {
     api project(':commons:config:config-grafana-api')
+    api project(':commons:security:security-authentication-client-api')
 }
