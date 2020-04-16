@@ -47,8 +47,22 @@ final class FileSystemStorageService implements StorageService {
   @NonNull Flux<StorageWatcherEvent> watcherEventFlux;
 
   public void init(final Path applicationPath) {
-    if (!root.toFile().exists()) {
-      // TODO copy the content of applicationPath into the root (create directories if necessary)
+    final var rootFile = root.toFile();
+    if (!rootFile.exists()) {
+      if (!rootFile.mkdirs()) {
+        throw new RuntimeException("Failed to create directory " + root);
+      }
+      try (final var stream = Files.walk(applicationPath)) {
+        stream.forEach(subFile -> {
+          try {
+            Files.copy(subFile, root.resolve(applicationPath.relativize(subFile)), StandardCopyOption.REPLACE_EXISTING);
+          } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+          }
+        });
+      } catch (IOException e) {
+        throw new RuntimeException(e.getMessage(), e);
+      }
     }
   }
 
@@ -238,14 +252,15 @@ final class FileSystemStorageService implements StorageService {
         destination,
         (path, dest) -> Mono.fromCallable(() -> {
           final var folder = Files.copy(path, dest, StandardCopyOption.REPLACE_EXISTING);
-          Files.walk(path)
-              .forEach(subFile -> {
-                try {
-                  Files.copy(subFile, dest.resolve(path.relativize(subFile)), StandardCopyOption.REPLACE_EXISTING);
-                } catch (Exception e) {
-                  throw new RuntimeException(e.getMessage(), e);
-                }
-              });
+          try (final var stream = Files.walk(path)) {
+            stream.forEach(subFile -> {
+              try {
+                Files.copy(subFile, dest.resolve(path.relativize(subFile)), StandardCopyOption.REPLACE_EXISTING);
+              } catch (Exception e) {
+                throw new RuntimeException(e.getMessage(), e);
+              }
+            });
+          }
           return folder;
         })
     );
