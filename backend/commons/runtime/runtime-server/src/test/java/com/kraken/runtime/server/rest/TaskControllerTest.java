@@ -54,10 +54,9 @@ public class TaskControllerTest extends RuntimeControllerTest {
   public void shouldRun() {
     final var env = ExecutionEnvironmentTest.EXECUTION_ENVIRONMENT;
     final var context = ExecutionContextTest.EXECUTION_CONTEXT;
-    final var owner = context.getOwner();
     final var taskId = context.getTaskId();
 
-    given(contextService.newExecuteContext(owner, env)).willReturn(Mono.just(context));
+    given(contextService.newExecuteContext(userOwner, env)).willReturn(Mono.just(context));
     given(taskService.execute(context))
         .willReturn(Mono.just(context));
 
@@ -65,7 +64,6 @@ public class TaskControllerTest extends RuntimeControllerTest {
         .uri(uriBuilder -> uriBuilder.path("/task")
             .build())
         .header("Authorization", "Bearer user-token")
-        .header("ApplicationId", ((UserOwner) owner).getApplicationId())
         .body(BodyInserters.fromValue(env))
         .exchange()
         .expectStatus().isOk()
@@ -94,11 +92,10 @@ public class TaskControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldCancel() {
     final var context = CancelContextTest.CANCEL_CONTEXT;
-    final var owner = context.getOwner();
     final var taskId = context.getTaskId();
     final var taskType = context.getTaskType();
 
-    given(contextService.newCancelContext(owner, taskId, taskType)).willReturn(Mono.just(context));
+    given(contextService.newCancelContext(userOwner, taskId, taskType)).willReturn(Mono.just(context));
 
     given(taskService.cancel(context))
         .willReturn(Mono.just(context));
@@ -109,7 +106,6 @@ public class TaskControllerTest extends RuntimeControllerTest {
             .queryParam("taskId", taskId)
             .build())
         .header("Authorization", "Bearer user-token")
-        .header("ApplicationId", ((UserOwner) owner).getApplicationId())
         .exchange()
         .expectStatus().isOk();
 
@@ -121,11 +117,10 @@ public class TaskControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldRemove() {
     final var context = CancelContextTest.CANCEL_CONTEXT;
-    final var owner = context.getOwner();
     final var taskId = context.getTaskId();
     final var taskType = context.getTaskType();
 
-    given(contextService.newCancelContext(owner, taskId, taskType)).willReturn(Mono.just(context));
+    given(contextService.newCancelContext(userOwner, taskId, taskType)).willReturn(Mono.just(context));
 
     given(taskService.remove(context))
         .willReturn(Mono.just(context));
@@ -136,7 +131,6 @@ public class TaskControllerTest extends RuntimeControllerTest {
             .queryParam("taskId", taskId)
             .build())
         .header("Authorization", "Bearer user-token")
-        .header("ApplicationId", ((UserOwner) owner).getApplicationId())
         .exchange()
         .expectStatus().isOk();
 
@@ -166,7 +160,6 @@ public class TaskControllerTest extends RuntimeControllerTest {
     webTestClient.get()
         .uri("/task/list")
         .header("Authorization", "Bearer user-token")
-        .header("ApplicationId", "app")
         .exchange()
         .expectStatus().isOk()
         .expectBodyList(Task.class)
@@ -183,7 +176,6 @@ public class TaskControllerTest extends RuntimeControllerTest {
 
     final var result = webTestClient.get()
         .uri("/task/watch")
-        .header("ApplicationId", "app")
         .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()

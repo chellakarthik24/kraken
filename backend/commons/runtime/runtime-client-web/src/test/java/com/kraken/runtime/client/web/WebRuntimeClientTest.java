@@ -90,6 +90,7 @@ public class WebRuntimeClientTest {
         .type(TaskType.GATLING_RUN)
         .containers(ImmutableList.of())
         .description("description")
+        .expectedCount(2)
         .owner(appOwner)
         .build();
 

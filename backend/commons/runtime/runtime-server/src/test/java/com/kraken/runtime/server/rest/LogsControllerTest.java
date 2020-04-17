@@ -37,16 +37,13 @@ public class LogsControllerTest extends RuntimeControllerTest {
 
   @Test
   public void shouldWatch() {
-    final var applicationId = "test";
-    final var owner = userOwner.withApplicationId(applicationId);
     final var logFlux = Flux.just(LogTest.LOG);
     final var eventsFlux = Flux.just(ServerSentEvent.builder(LogTest.LOG).build(), ServerSentEvent.builder(LogTest.LOG).build());
-    given(logsService.listen(owner)).willReturn(logFlux);
+    given(logsService.listen(userOwner)).willReturn(logFlux);
     given(sse.keepAlive(logFlux)).willReturn(eventsFlux);
 
     final var result = webTestClient.get()
         .uri(uriBuilder -> uriBuilder.path("/logs/watch").build())
-        .header("ApplicationId", applicationId)
         .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
