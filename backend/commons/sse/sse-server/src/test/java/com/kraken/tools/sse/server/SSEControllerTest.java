@@ -24,6 +24,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import reactor.core.publisher.Flux;
 
+import java.awt.image.ImagingOpException;
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,12 +46,13 @@ public class SSEControllerTest extends AuthControllerTest {
   StorageClient storageClient;
 
   @Before
-  public void setUp(){
+  public void setUp() throws IOException {
+    super.setUp();
     given(runtimeClientBuilder.mode(AuthenticationMode.SESSION)).willReturn(runtimeClientBuilder);
-    given(runtimeClientBuilder.applicationId(any())).willReturn(runtimeClientBuilder);
+    given(runtimeClientBuilder.applicationId(applicationId)).willReturn(runtimeClientBuilder);
     given(runtimeClientBuilder.build()).willReturn(runtimeClient);
     given(storageClientBuilder.mode(AuthenticationMode.SESSION)).willReturn(storageClientBuilder);
-    given(storageClientBuilder.applicationId(any())).willReturn(storageClientBuilder);
+    given(storageClientBuilder.applicationId(applicationId)).willReturn(storageClientBuilder);
     given(storageClientBuilder.build()).willReturn(storageClient);
   }
 
@@ -60,7 +63,6 @@ public class SSEControllerTest extends AuthControllerTest {
 
   @Test
   public void shouldWatch() {
-    final var applicationId = "app";
     given(sse.merge(anyMap())).willReturn(Flux.just(SSEWrapperTest.WRAPPER_STRING, SSEWrapperTest.WRAPPER_INT));
     given(sse.keepAlive(Mockito.<Flux<SSEWrapper>>any())).willReturn(Flux.just(ServerSentEvent.builder(SSEWrapperTest.WRAPPER_STRING).build()));
     given(runtimeClient.watchLogs()).willReturn(Flux.just(LogTest.LOG));
@@ -69,7 +71,6 @@ public class SSEControllerTest extends AuthControllerTest {
 
     final var result = webTestClient.get()
         .uri(uriBuilder -> uriBuilder.path("/watch").build())
-        .header("ApplicationId", applicationId)
         .header("Authorization", "Bearer user-token")
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
@@ -96,11 +97,9 @@ public class SSEControllerTest extends AuthControllerTest {
 
   @Test
   public void shouldFailToWatchForbidden() {
-    final var applicationId = "app";
     webTestClient.get()
         .uri(uriBuilder -> uriBuilder.path("/watch").build())
         .header("Authorization", "Bearer no-role-token")
-        .header("ApplicationId", applicationId)
         .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
         .exchange()
         .expectStatus().is4xxClientError();

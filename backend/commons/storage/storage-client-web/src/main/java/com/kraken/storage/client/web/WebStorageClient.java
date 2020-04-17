@@ -72,7 +72,7 @@ class WebStorageClient implements StorageClient {
   public Mono<Boolean> delete( final String path) {
     return retry(webClient.post()
         .uri("/files/delete")
-
+        .body(BodyInserters.fromValue(Collections.singletonList(path)))
         .retrieve()
         .bodyToMono(new ParameterizedTypeReference<List<Boolean>>() {
         })
