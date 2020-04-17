@@ -33,8 +33,18 @@ public abstract class AuthControllerTest {
   @MockBean
   protected TokenDecoder tokenDecoder;
 
-  protected UserOwner userOwner = UserOwner.builder().applicationId("app").userId(KrakenUserTest.KRAKEN_USER.getUserId()).roles(ImmutableList.of(USER)).build();
-  protected UserOwner adminOwner = UserOwner.builder().applicationId("app").userId(KrakenUserTest.KRAKEN_ADMIN.getUserId()).roles(ImmutableList.of(ADMIN)).build();
+
+  protected String applicationId = "app";
+  protected UserOwner userOwner = UserOwner.builder()
+      .applicationId(applicationId)
+      .userId(KrakenUserTest.KRAKEN_USER.getUserId())
+      .roles(KrakenUserTest.KRAKEN_USER.getRoles())
+      .build();
+  protected UserOwner adminOwner = UserOwner.builder()
+      .applicationId(applicationId)
+      .userId(KrakenUserTest.KRAKEN_ADMIN.getUserId())
+      .roles(KrakenUserTest.KRAKEN_ADMIN.getRoles())
+      .build();
 
   @Before
   public void setUp() throws IOException {
@@ -54,6 +64,10 @@ public abstract class AuthControllerTest {
     given(jwtDecoder.decode("no-role-token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create("no-role-token", ImmutableList.of(),
         ImmutableList.of(), Optional.empty())));
     given(tokenDecoder.decode("no-role-token")).willReturn(KrakenUserTest.KRAKEN_ADMIN);
+
+
+    // WebTestClient set default header for ApplicationId
+    webTestClient = webTestClient.mutate().defaultHeader("ApplicationId", applicationId).build();
   }
 
 

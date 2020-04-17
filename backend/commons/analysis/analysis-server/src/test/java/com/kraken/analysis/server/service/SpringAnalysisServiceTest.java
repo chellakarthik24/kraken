@@ -70,9 +70,10 @@ public class SpringAnalysisServiceTest {
     given(grafanaProperties.getDashboard()).willReturn("dashboard");
     given(analysisResultsProperties.getResultPath(anyString())).willAnswer(args -> Paths.get("resultsRoot", args.getArgument(0, String.class)));
     given(storageClientBuilder.mode(any())).willReturn(storageClientBuilder);
+    given(storageClientBuilder.mode(any(), any())).willReturn(storageClientBuilder);
     given(storageClientBuilder.applicationId(any())).willReturn(storageClientBuilder);
     given(storageClientBuilder.build()).willReturn(storageClient);
-    given(grafanaClientBuilder.mode(any())).willReturn(grafanaClientBuilder);
+    given(grafanaClientBuilder.mode(any(), any())).willReturn(grafanaClientBuilder);
     given(grafanaClientBuilder.applicationId(any())).willReturn(grafanaClientBuilder);
     given(grafanaClientBuilder.build()).willReturn(grafanaClient);
     given(toApplicationId.apply(any())).willReturn(Optional.of("app"));
