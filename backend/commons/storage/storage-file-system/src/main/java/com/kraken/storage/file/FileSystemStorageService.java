@@ -2,6 +2,7 @@ package com.kraken.storage.file;
 
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.storage.entity.StorageWatcherEvent;
+import io.methvin.watcher.DirectoryChangeEvent;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
@@ -44,7 +45,7 @@ final class FileSystemStorageService implements StorageService {
 
   @NonNull Path root;
   @NonNull PathToStorageNode toStorageNode;
-  @NonNull Flux<StorageWatcherEvent> watcherEventFlux;
+  @NonNull Flux<DirectoryChangeEvent> watcherEventFlux;
 
   public void init(final Path applicationPath) {
     final var rootFile = root.toFile();
@@ -67,9 +68,13 @@ final class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Flux<StorageWatcherEvent> watch(final String root) {
+  public Flux<StorageWatcherEvent> watch(final String path) {
     return Flux.from(watcherEventFlux)
-        .filter(storageWatcherEvent -> storageWatcherEvent.getNode().getPath().startsWith(stringToPath(root).toString()));
+        .filter(event -> event.path().startsWith(stringToPath(path).toString()))
+        .map(event -> StorageWatcherEvent.builder()
+            .node(toStorageNode.apply(event.path()))
+            .event(event.eventType().toString())
+            .build());
   }
 
   @Override

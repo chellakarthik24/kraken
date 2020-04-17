@@ -45,7 +45,6 @@ final class FileSystemOwnerToPath implements OwnerToPath {
   @Override
   public Path apply(@NonNull final Owner owner) {
     final var ownerPath = MAPPERS.get(owner.getType()).apply(owner);
-    requireNonNull(ownerPath);
     return Paths.get(properties.getData()).resolve(ownerPath);
   }
 }

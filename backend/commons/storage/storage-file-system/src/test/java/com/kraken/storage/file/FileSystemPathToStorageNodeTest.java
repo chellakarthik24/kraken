@@ -4,6 +4,7 @@ import com.kraken.Application;
 import com.kraken.storage.entity.StorageNode;
 import com.kraken.config.api.ApplicationProperties;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,15 @@ import static com.kraken.tests.utils.TestUtils.shouldPassNPE;
 @SpringBootTest(classes = Application.class)
 public class FileSystemPathToStorageNodeTest {
 
-  @Autowired
-  Function<Path, StorageNode> service;
+  FileSystemPathToStorageNode service;
 
   @Autowired
   ApplicationProperties krakenProperties;
+
+  @Before
+  public void setUp() {
+    service = new FileSystemPathToStorageNode(Path.of(krakenProperties.getData(), "public"));
+  }
 
   @Test
   public void shouldPassTestUtils() {
@@ -35,7 +40,7 @@ public class FileSystemPathToStorageNodeTest {
 
   @Test
   public void shouldConvertExistingPath() {
-    final var data = Paths.get(krakenProperties.getData()).resolve("README.md");
+    final var data = Path.of(krakenProperties.getData(), "public", "README.md");
     Assert.assertEquals(StorageNode.builder()
         .path("README.md")
         .type(FILE)

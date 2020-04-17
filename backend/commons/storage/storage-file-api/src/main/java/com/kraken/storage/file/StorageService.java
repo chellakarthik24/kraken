@@ -45,6 +45,6 @@ public interface StorageService {
 
   Mono<StorageNode> extractZip(String path);
 
-  Flux<StorageWatcherEvent> watch(String root);
+  Flux<StorageWatcherEvent> watch(String path);
 
 }

@@ -40,7 +40,7 @@ public class FileSystemStorageServiceWatcherIntegrationTest {
     final var watch = service.watch("");
     final var events = new ArrayList<StorageWatcherEvent>();
     final var subscription = watch.subscribe(events::add);
-    final var data = Paths.get(krakenProperties.getData());
+    final var data = Paths.get(krakenProperties.getData(), "public");
     final var currentPath = data.resolve("test/toto");
     final var file = currentPath.toFile();
     assertThat(file.mkdirs()).isTrue();
@@ -111,7 +111,7 @@ public class FileSystemStorageServiceWatcherIntegrationTest {
   @Test
   public void shouldWatchSubDir() throws IOException, InterruptedException {
     final var service = serviceBuilder.build(PublicOwner.INSTANCE);
-    final var data = Paths.get(krakenProperties.getData());
+    final var data = Paths.get(krakenProperties.getData(), "public");
     final var root = data.resolve("test2");
     final var otherPath = root.resolve("other");
     final var currentPath = root.resolve("toto");
