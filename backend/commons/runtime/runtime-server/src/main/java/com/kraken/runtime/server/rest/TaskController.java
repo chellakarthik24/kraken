@@ -83,7 +83,7 @@ public class TaskController {
   @GetMapping(value = "/watch")
   public Flux<ServerSentEvent<List<Task>>> watch(@RequestHeader("ApplicationId") @Pattern(regexp = "[a-z0-9]*") final String applicationId) {
     log.info("Watch tasks lists");
-    return sse.keepAlive(userProvider.getOwner(applicationId).flatMapMany(taskListService::watch));
+    return userProvider.getOwner(applicationId).flatMapMany(owner -> sse.keepAlive(taskListService.watch(owner)));
   }
 
   @GetMapping(value = "/list")

@@ -52,9 +52,9 @@ public class LogsControllerTest extends RuntimeControllerTest {
         .expectBody()
         .returnResult();
     final var body = new String(Optional.ofNullable(result.getResponseBody()).orElse(new byte[0]), Charsets.UTF_8);
-    Assertions.assertThat(body).isEqualTo("data:{\"applicationId\":\"applicationId\",\"id\":\"id\",\"type\":\"CONTAINER\",\"text\":\"text\",\"status\":\"RUNNING\"}\n" +
+    Assertions.assertThat(body).isEqualTo("data:{\"owner\":{\"userId\":\"userId\",\"applicationId\":\"applicationId\",\"roles\":[\"USER\"],\"type\":\"USER\"},\"id\":\"id\",\"type\":\"CONTAINER\",\"text\":\"text\",\"status\":\"RUNNING\"}\n" +
         "\n" +
-        "data:{\"applicationId\":\"applicationId\",\"id\":\"id\",\"type\":\"CONTAINER\",\"text\":\"text\",\"status\":\"RUNNING\"}\n" +
+        "data:{\"owner\":{\"userId\":\"userId\",\"applicationId\":\"applicationId\",\"roles\":[\"USER\"],\"type\":\"USER\"},\"id\":\"id\",\"type\":\"CONTAINER\",\"text\":\"text\",\"status\":\"RUNNING\"}\n" +
         "\n");
   }
 

@@ -154,7 +154,7 @@ public class TaskControllerTest extends RuntimeControllerTest {
   @Test
   public void shouldList() {
     final var tasksFlux = Flux.just(TaskTest.TASK);
-    given(taskListService.list(ApplicationOwner.builder().applicationId("app").build()))
+    given(taskListService.list(userOwner))
         .willReturn(tasksFlux);
 
     webTestClient.get()
@@ -171,7 +171,7 @@ public class TaskControllerTest extends RuntimeControllerTest {
     final List<Task> list = ImmutableList.of(TaskTest.TASK, TaskTest.TASK);
     final Flux<List<Task>> tasksFlux = Flux.just(list, list);
     final Flux<ServerSentEvent<List<Task>>> eventsFlux = Flux.just(ServerSentEvent.builder(list).build(), ServerSentEvent.builder(list).build());
-    given(taskListService.watch(ApplicationOwner.builder().applicationId("app").build())).willReturn(tasksFlux);
+    given(taskListService.watch(userOwner)).willReturn(tasksFlux);
     given(sse.keepAlive(tasksFlux)).willReturn(eventsFlux);
 
     final var result = webTestClient.get()
@@ -184,9 +184,9 @@ public class TaskControllerTest extends RuntimeControllerTest {
         .expectBody()
         .returnResult();
     final var body = new String(Optional.ofNullable(result.getResponseBody()).orElse(new byte[0]), Charsets.UTF_8);
-    assertThat(body).isEqualTo("data:[{\"id\":\"id\",\"startDate\":42,\"status\":\"STARTING\",\"type\":\"GATLING_RUN\",\"containers\":[],\"expectedCount\":2,\"description\":\"description\",\"applicationId\":\"app\"},{\"id\":\"id\",\"startDate\":42,\"status\":\"STARTING\",\"type\":\"GATLING_RUN\",\"containers\":[],\"expectedCount\":2,\"description\":\"description\",\"applicationId\":\"app\"}]\n" +
+    assertThat(body).isEqualTo("data:[{\"id\":\"id\",\"startDate\":42,\"status\":\"STARTING\",\"type\":\"GATLING_RUN\",\"containers\":[],\"expectedCount\":2,\"description\":\"description\",\"owner\":{\"userId\":\"userId\",\"applicationId\":\"applicationId\",\"roles\":[\"USER\"],\"type\":\"USER\"}},{\"id\":\"id\",\"startDate\":42,\"status\":\"STARTING\",\"type\":\"GATLING_RUN\",\"containers\":[],\"expectedCount\":2,\"description\":\"description\",\"owner\":{\"userId\":\"userId\",\"applicationId\":\"applicationId\",\"roles\":[\"USER\"],\"type\":\"USER\"}}]\n" +
         "\n" +
-        "data:[{\"id\":\"id\",\"startDate\":42,\"status\":\"STARTING\",\"type\":\"GATLING_RUN\",\"containers\":[],\"expectedCount\":2,\"description\":\"description\",\"applicationId\":\"app\"},{\"id\":\"id\",\"startDate\":42,\"status\":\"STARTING\",\"type\":\"GATLING_RUN\",\"containers\":[],\"expectedCount\":2,\"description\":\"description\",\"applicationId\":\"app\"}]\n" +
+        "data:[{\"id\":\"id\",\"startDate\":42,\"status\":\"STARTING\",\"type\":\"GATLING_RUN\",\"containers\":[],\"expectedCount\":2,\"description\":\"description\",\"owner\":{\"userId\":\"userId\",\"applicationId\":\"applicationId\",\"roles\":[\"USER\"],\"type\":\"USER\"}},{\"id\":\"id\",\"startDate\":42,\"status\":\"STARTING\",\"type\":\"GATLING_RUN\",\"containers\":[],\"expectedCount\":2,\"description\":\"description\",\"owner\":{\"userId\":\"userId\",\"applicationId\":\"applicationId\",\"roles\":[\"USER\"],\"type\":\"USER\"}}]\n" +
         "\n");
   }
 
@@ -221,7 +221,7 @@ public class TaskControllerTest extends RuntimeControllerTest {
         .returnResult();
 
     final var body = new String(Optional.ofNullable(result.getResponseBody()).orElse(new byte[0]), Charsets.UTF_8);
-    assertThat(body).isEqualTo("data:{\"type\":\"TaskExecutedEvent\",\"value\":{\"context\":{\"applicationId\":\"application\",\"taskId\":\"taskId\",\"taskType\":\"GATLING_RUN\",\"description\":\"description\",\"templates\":{\"hostId\":\"template\"}}}}\n" +
+    assertThat(body).isEqualTo("data:{\"type\":\"TaskExecutedEvent\",\"value\":{\"context\":{\"owner\":{\"userId\":\"userId\",\"applicationId\":\"applicationId\",\"roles\":[\"USER\"],\"type\":\"USER\"},\"taskId\":\"taskId\",\"taskType\":\"GATLING_RUN\",\"description\":\"description\",\"templates\":{\"hostId\":\"template\"}}}}\n" +
         "\n");
   }
 }
