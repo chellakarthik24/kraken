@@ -81,7 +81,7 @@ public class DockerContainerServiceIntegrationTest {
     System.out.println(logs);
     final var first = logs.get(0);
     assertThat(first.getId()).isEqualTo("taskIdBis-" + container.getId() + "-containerThreeId");
-    assertThat(first.getOwner()).isEqualTo(appId);
+    assertThat(first.getOwner()).isEqualTo(owner);
     assertThat(first.getText()).contains("Kraken echo!");
   }
 
@@ -89,7 +89,7 @@ public class DockerContainerServiceIntegrationTest {
   public void shouldSetStatus() {
     final var appId = "app";
     final var userId = "user";
-    final var owner = UserOwner.builder().applicationId(appId).userId(userId).build();
+    final var owner = UserOwner.builder().applicationId(appId).userId(userId).roles(ImmutableList.of(USER)).build();
     final var taskId = "taskId";
     final var containerName = "containerOneId";
 

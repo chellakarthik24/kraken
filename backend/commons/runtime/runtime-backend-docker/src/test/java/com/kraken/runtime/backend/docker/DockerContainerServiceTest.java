@@ -33,7 +33,7 @@ public class DockerContainerServiceTest {
   @Mock
   BiFunction<String, ContainerStatus, String> containerStatusToName;
   @Mock
-  DockerContainerFindService findService;
+  ContainerFindService findService;
 
   DockerContainerService service;
 
@@ -45,7 +45,6 @@ public class DockerContainerServiceTest {
   @Test
   public void shouldSetStatus() {
     final var containerId = "containerId";
-    final var hostname = "hostname";
     final var taskId = "taskId";
     final var status = ContainerStatus.RUNNING;
     final var containerName = "containerName";
@@ -55,16 +54,16 @@ public class DockerContainerServiceTest {
         .path(".")
         .command(Arrays.asList("docker",
             "rename",
-            hostname,
+            containerId,
             containerName))
         .environment(ImmutableMap.of())
         .build();
-    given(containerStatusToName.apply(containerId, status)).willReturn(containerName);
+    given(containerStatusToName.apply(containerName, status)).willReturn(containerName);
     given(findService.find(PublicOwner.INSTANCE, taskId, containerName)).willReturn(Mono.just(FlatContainerTest.CONTAINER));
     final var renamed = Flux.just("renamed");
     given(commandService.execute(renameCommand)).willReturn(renamed);
 
-    service.setStatus(PublicOwner.INSTANCE, taskId, hostname, containerId, status).block();
+    service.setStatus(PublicOwner.INSTANCE, taskId, containerId, containerName, status).block();
 
     verify(commandService).execute(renameCommand);
   }

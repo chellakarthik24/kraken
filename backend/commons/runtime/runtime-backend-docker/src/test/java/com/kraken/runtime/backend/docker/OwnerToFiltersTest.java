@@ -5,26 +5,23 @@ import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.functions.api.OwnerToUserId;
 import com.kraken.security.entity.owner.*;
 import com.kraken.tests.utils.TestUtils;
-import lombok.NonNull;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OwnerToFiltersTest {
 
-  @MockBean
+  @Mock
   OwnerToApplicationId toApplicationId;
-  @MockBean
+  @Mock
   OwnerToUserId toUserId;
 
   OwnerToFilters ownerToFilters;

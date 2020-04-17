@@ -10,6 +10,7 @@ dependencies {
     testImplementation project(path: ':commons:security:security-entity', configuration: 'testArtifacts')
 
     // Used in integration tests
+    testImplementation project(path: ':commons:security:security-entity-functions-spring')
     testImplementation project(path: ':commons:runtime:runtime-command-zt')
     testImplementation project(path: ':commons:runtime:runtime-logs-spring')
 }

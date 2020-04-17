@@ -64,7 +64,7 @@ public class DockerTaskServiceTest {
         logsService,
         stringToFlatContainer,
         ownerToFilters);
-
+    given(ownerToFilters.apply(any())).willReturn(ImmutableList.of("--filter", "ownerToFilter"));
     FileSystemUtils.deleteRecursively(Paths.get("testDir/taskId"));
     FileSystemUtils.deleteRecursively(Paths.get("testDir/id"));
   }
@@ -123,7 +123,7 @@ public class DockerTaskServiceTest {
     verify(commandService).execute(commandCaptor.capture());
 
     final var executed = commandCaptor.getValue();
-    assertThat(executed.getCommand()).isEqualTo(Arrays.asList("/bin/sh", "-c", String.format("docker rm -v -f $(docker ps -a -q -f label=%s=%s)", COM_KRAKEN_TASKID, context.getTaskId())));
+    assertThat(executed.getCommand()).isEqualTo(Arrays.asList("/bin/sh", "-c", String.format("docker rm -v -f $(docker ps -a -q --filter label=%s=%s --filter ownerToFilter)", COM_KRAKEN_TASKID, context.getTaskId())));
   }
 
   @Test
@@ -135,7 +135,7 @@ public class DockerTaskServiceTest {
     verify(commandService).execute(commandCaptor.capture());
 
     final var executed = commandCaptor.getValue();
-    assertThat(executed.getCommand()).isEqualTo(Arrays.asList("/bin/sh", "-c", String.format("docker rm -v -f $(docker ps -a -q -f label=%s=%s)", COM_KRAKEN_TASKID, context.getTaskId())));
+    assertThat(executed.getCommand()).isEqualTo(Arrays.asList("/bin/sh", "-c", String.format("docker rm -v -f $(docker ps -a -q --filter label=%s=%s --filter ownerToFilter)", COM_KRAKEN_TASKID, context.getTaskId())));
   }
 
   @Test

@@ -35,7 +35,7 @@ final class DockerContainerService implements ContainerService {
   @NonNull CommandService commandService;
   @NonNull LogsService logsService;
   @NonNull BiFunction<String, ContainerStatus, String> containerStatusToName;
-  @NonNull DockerContainerFindService findService;
+  @NonNull ContainerFindService findService;
 
   @Override
   public Mono<String> attachLogs(final Owner owner, final String taskId, final String containerId, final String containerName) {

@@ -56,7 +56,7 @@ public class DockerTaskServiceExecutionIntegrationTest {
   public void shouldExecuteAndCancelStatus() throws InterruptedException, IOException {
     final var taskId = "taskId";
     final var appId = "test";
-    final var userId = "userId";
+    final var userId = "user";
     final var owner = UserOwner.builder().applicationId(appId).userId(userId).roles(ImmutableList.of(USER)).build();
     final var taskType = TaskType.GATLING_RECORD;
     final var template = ResourceUtils.getResourceContent("docker-compose.yml");

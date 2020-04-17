@@ -38,6 +38,7 @@ public class RemoteDebugEntryWriterTest {
     given(clientBuilder.mode(AuthenticationMode.CONTAINER)).willReturn(clientBuilder);
     given(clientBuilder.applicationId("app")).willReturn(clientBuilder);
     given(clientBuilder.build()).willReturn(client);
+    writer = new RemoteDebugEntryWriter(containerProperties, clientBuilder);
   }
 
   @Test
