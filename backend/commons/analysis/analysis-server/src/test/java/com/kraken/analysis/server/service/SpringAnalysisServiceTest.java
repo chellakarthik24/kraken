@@ -137,7 +137,7 @@ public class SpringAnalysisServiceTest {
     given(storageClient.getJsonContent("resultsRoot/resultId/result.json", Result.class)).willReturn(Mono.just(result));
     given(storageClient.setJsonContent("resultsRoot/resultId/result.json", result.withStatus(ResultStatus.RUNNING).withEndDate(0L))).willReturn(Mono.just(resultNode));
     given(grafanaClient.getDashboard(resultId)).willReturn(Mono.just(dashboard));
-    given(grafanaClient.updatedDashboard(0L, dashboard)).willReturn(dashboard);
+    given(grafanaClient.updatedDashboard(0L, dashboard)).willReturn(Mono.just(dashboard));
     given(grafanaClient.setDashboard(dashboard)).willReturn(Mono.just("dashboard set"));
 
     final var response = service.setStatus(PublicOwner.INSTANCE, resultId, ResultStatus.RUNNING).block();
@@ -163,7 +163,7 @@ public class SpringAnalysisServiceTest {
     given(storageClient.getJsonContent("resultsRoot/resultId/result.json", Result.class)).willReturn(Mono.just(result));
     given(storageClient.setJsonContent(anyString(), any(Result.class))).willReturn(Mono.just(resultNode));
     given(grafanaClient.getDashboard(resultId)).willReturn(Mono.just(dashboard));
-    given(grafanaClient.updatedDashboard(any(Long.class), anyString())).willReturn(dashboard);
+    given(grafanaClient.updatedDashboard(any(Long.class), anyString())).willReturn(Mono.just(dashboard));
     given(grafanaClient.setDashboard(dashboard)).willReturn(Mono.just("dashboard set"));
 
     final var response = service.setStatus(PublicOwner.INSTANCE, resultId, ResultStatus.COMPLETED).block();
@@ -271,7 +271,7 @@ public class SpringAnalysisServiceTest {
     given(storageClient.setJsonContent(anyString(), any(Result.class))).willReturn(Mono.just(resultNode));
 
     given(storageClient.getContent(grafanaProperties.getDashboard())).willReturn(Mono.just(dashboard));
-    given(grafanaClient.initDashboard(anyString(), anyString(), any(Long.class), anyString())).willReturn(dashboard);
+    given(grafanaClient.initDashboard(anyString(), anyString(), any(Long.class), anyString())).willReturn(Mono.just(dashboard));
     given(grafanaClient.importDashboard(anyString())).willReturn(Mono.just("dashboard set"));
 
     final var response = service.create(PublicOwner.INSTANCE, result).block();

@@ -13,12 +13,12 @@ public interface GrafanaClient extends AuthenticatedClient {
 
   Mono<String> deleteDashboard(String testId);
 
-  String initDashboard(String testId,
+  Mono<String> initDashboard(String testId,
                        String title,
                        Long startDate,
                        String dashboard);
 
-  String updatedDashboard(Long endDate,
+  Mono<String> updatedDashboard(Long endDate,
                           String dashboard);
 
 }

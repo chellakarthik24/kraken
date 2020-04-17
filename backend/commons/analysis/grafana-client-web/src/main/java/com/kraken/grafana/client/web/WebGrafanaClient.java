@@ -28,7 +28,6 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-@Component
 final class WebGrafanaClient implements GrafanaClient {
 
   WebClient webClient;
@@ -37,6 +36,7 @@ final class WebGrafanaClient implements GrafanaClient {
 
   WebGrafanaClient(@NonNull final WebClient webClient,
                    @NonNull final ObjectMapper mapper) {
+//    TODO remove basic auth and credentials from config
 //    final var credentials = grafanaProperties.getUser() + ":" + grafanaProperties.getPassword();
 //    final var encoded = Base64.getEncoder().encodeToString(credentials.getBytes(UTF_8));
 //    this.webClient =  WebClient
@@ -56,25 +56,27 @@ final class WebGrafanaClient implements GrafanaClient {
         .uri(uriBuilder -> uriBuilder.path("/api/dashboards/uid/{testId}").build(testId))
         .retrieve()
         .bodyToMono(String.class)
-        .map(this::decapsulateDashboard);
+        .flatMap(this::decapsulateDashboard);
   }
 
   public Mono<String> setDashboard(final String dashboard) {
-    return webClient.post()
-        .uri(uriBuilder -> uriBuilder.path("/api/dashboards/db").build())
-        .body(BodyInserters.fromValue(encapsulateSetDashboard(dashboard)))
-        .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-        .retrieve()
-        .bodyToMono(String.class);
+    return encapsulateSetDashboard(dashboard)
+        .flatMap(encapsulated -> webClient.post()
+            .uri(uriBuilder -> uriBuilder.path("/api/dashboards/db").build())
+            .body(BodyInserters.fromValue(encapsulated))
+            .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+            .retrieve()
+            .bodyToMono(String.class));
   }
 
-  public  Mono<String> importDashboard(final String dashboard) {
-    return webClient.post()
-        .uri(uriBuilder -> uriBuilder.path("/api/dashboards/import").build())
-        .body(BodyInserters.fromValue(encapsulateImportDashboard(dashboard)))
-        .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-        .retrieve()
-        .bodyToMono(String.class);
+  public Mono<String> importDashboard(final String dashboard) {
+    return encapsulateImportDashboard(dashboard)
+        .flatMap(encapsulated -> webClient.post()
+            .uri(uriBuilder -> uriBuilder.path("/api/dashboards/import").build())
+            .body(BodyInserters.fromValue(encapsulated))
+            .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+            .retrieve()
+            .bodyToMono(String.class));
   }
 
   public Mono<String> deleteDashboard(final String testId) {
@@ -84,8 +86,8 @@ final class WebGrafanaClient implements GrafanaClient {
         .bodyToMono(String.class);
   }
 
-  private String encapsulateSetDashboard(final String dashboard) {
-    try {
+  private Mono<String> encapsulateSetDashboard(final String dashboard) {
+    return Mono.fromCallable(() -> {
       final JsonNode dashboardNode = mapper.readTree(dashboard);
       // Dashboard must be encapsulated in another object when updating value
       final ObjectNode setNode = mapper.createObjectNode();
@@ -93,27 +95,23 @@ final class WebGrafanaClient implements GrafanaClient {
       setNode.put("overwrite", false);
       setNode.put("message", this.format.format(new Date()));
       return mapper.writeValueAsString(setNode);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    });
   }
 
-  private String decapsulateDashboard(final String dashboardResult) {
-    try {
+  private Mono<String> decapsulateDashboard(final String dashboardResult) {
+    return Mono.fromCallable(() -> {
       final JsonNode dashboardResultNode = mapper.readTree(dashboardResult);
       // Dashboard must be decapsulated when received from grafana server
       return mapper.writeValueAsString(dashboardResultNode.get("dashboard"));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    });
   }
 
-  public String initDashboard(final String testId,
-                       final String title,
-                       final Long startDate,
-                       final String dashboard) {
-
-    try {
+  @Override
+  public Mono<String> initDashboard(final String testId,
+                                    final String title,
+                                    final Long startDate,
+                                    final String dashboard) {
+    return Mono.fromCallable(() -> {
       final ObjectNode dashboardNode = ((ObjectNode) mapper.readTree(dashboard));
       // Id must be nullified when importing a dashboard
       dashboardNode.set("id", NullNode.getInstance());
@@ -141,14 +139,13 @@ final class WebGrafanaClient implements GrafanaClient {
       optionsNode.put("value", testId);
 
       return mapper.writeValueAsString(dashboardNode);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    });
   }
 
-  public String updatedDashboard(final Long endDate,
-                          final String dashboard) {
-    try {
+  @Override
+  public Mono<String> updatedDashboard(final Long endDate,
+                                       final String dashboard) {
+    return Mono.fromCallable(() -> {
       final JsonNode node = mapper.readTree(dashboard);
       final ObjectNode objectNode = ((ObjectNode) node);
 
@@ -162,13 +159,11 @@ final class WebGrafanaClient implements GrafanaClient {
         timeNode.put("to", this.format.format(new Date(endDate)));
       }
       return mapper.writeValueAsString(node);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    });
   }
 
-  private String encapsulateImportDashboard(final String dashboard) {
-    try {
+  private Mono<String> encapsulateImportDashboard(final String dashboard) {
+    return Mono.fromCallable(() -> {
       final JsonNode dashboardNode = mapper.readTree(dashboard);
       // Dashboard must be encapsulated in another object when importing
       final ObjectNode importNode = mapper.createObjectNode();
@@ -176,11 +171,8 @@ final class WebGrafanaClient implements GrafanaClient {
       importNode.put("overwrite", true);
       importNode.set("inputs", mapper.createArrayNode());
       importNode.put("folderId", 0);
-
       return mapper.writeValueAsString(importNode);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    });
   }
 
 }

@@ -59,7 +59,7 @@ final class SpringAnalysisService implements AnalysisService {
     final var resultJsonPath = resultPath.resolve(RESULT_JSON).toString();
 
     final var createGrafanaReport = storageClient.getContent(grafana.getDashboard())
-        .map(dashboard -> grafanaClient.initDashboard(result.getId(), result.getDescription() + " - " + result.getId(), result.getStartDate(), dashboard))
+        .flatMap(dashboard -> grafanaClient.initDashboard(result.getId(), result.getDescription() + " - " + result.getId(), result.getStartDate(), dashboard))
         .flatMap(grafanaClient::importDashboard);
 
     final var createGrafanaReportOrNot = Mono.just(result).flatMap(res -> res.getType().isDebug() ? Mono.just("ok") : createGrafanaReport);
@@ -94,7 +94,7 @@ final class SpringAnalysisService implements AnalysisService {
             return Mono.just(result);
           }
           return grafanaClient.getDashboard(resultId)
-              .map(dashboard -> grafanaClient.updatedDashboard(endDate, dashboard))
+              .flatMap(dashboard -> grafanaClient.updatedDashboard(endDate, dashboard))
               .flatMap(grafanaClient::setDashboard)
               .map(s -> result);
         })

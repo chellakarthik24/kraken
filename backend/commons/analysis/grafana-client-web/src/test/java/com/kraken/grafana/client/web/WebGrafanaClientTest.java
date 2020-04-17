@@ -145,35 +145,35 @@ public class WebGrafanaClientTest {
 
   @Test
   public void shouldInitDashboard() throws IOException {
-    final var result = client.initDashboard("testId", "title", 42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json"));
+    final var result = client.initDashboard("testId", "title", 42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json")).block();
     assertThat(result).isEqualTo(ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-init.json"));
   }
 
   @Test(expected = RuntimeException.class)
   public void shouldInitDashboardFail() {
-    client.initDashboard("testId", "title", 42L, "ca va fail !!!");
+    client.initDashboard("testId", "title", 42L, "ca va fail !!!").block();
   }
 
   @Test(expected = RuntimeException.class)
   public void shouldUpdatedDashboardFail() {
-    client.updatedDashboard(42L, "ca va fail !!!");
+    client.updatedDashboard(42L, "ca va fail !!!").block();
   }
 
   @Test
   public void shouldUpdatedDashboardRunning() throws IOException {
-    final var result = client.updatedDashboard(42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json"));
+    final var result = client.updatedDashboard(42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json")).block();
     assertThat(result).isEqualTo(ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-running.json"));
   }
 
   @Test
   public void shouldUpdatedDashboardCompleted() throws IOException {
-    final var result = client.updatedDashboard(42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json"));
+    final var result = client.updatedDashboard(42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json")).block();
     assertThat(result).isEqualTo(ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-completed.json"));
   }
 
   @Test
   public void shouldUpdatedDashboardRefresh() throws IOException {
-    final var result = client.updatedDashboard(0L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json"));
+    final var result = client.updatedDashboard(0L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json")).block();
     assertThat(result).contains("\"refresh\":\"1s\"");
   }
 }
