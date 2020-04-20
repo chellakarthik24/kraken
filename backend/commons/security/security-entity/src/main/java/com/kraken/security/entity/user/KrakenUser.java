@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.Value;
 
 import java.time.Instant;
@@ -15,10 +16,10 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.ImmutableList.of;
-import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
 @Value
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KrakenUser {
 
@@ -32,17 +33,19 @@ public class KrakenUser {
 
   @JsonCreator
   KrakenUser(
-      @JsonProperty("exp") final Long expirationTime,
-      @JsonProperty("iat") final Long issuedAt,
-      @JsonProperty("sub") final String userId,
+      @NonNull @JsonProperty("exp") final Long expirationTime,
+      @NonNull @JsonProperty("iat") final Long issuedAt,
+      @NonNull @JsonProperty("sub") final String userId,
       @JsonProperty("preferred_username") final String username,
       @JsonProperty("realm_access") final Map<String, List<String>> realmAccess,
       @JsonProperty("user_groups") final List<String> groups,
       @JsonProperty("current_group") final String currentGroup
   ) {
     super();
+    this.expirationTime = Instant.ofEpochSecond(expirationTime);
+    this.issuedAt = Instant.ofEpochSecond(issuedAt);
+    this.userId = userId;
     this.username = nullToEmpty(username);
-    this.userId = requireNonNull(userId);
     this.roles = ofNullable(ofNullable(realmAccess)
         .orElse(ImmutableMap.of("roles", of())).get("roles"))
         .orElse(of())
@@ -50,27 +53,25 @@ public class KrakenUser {
         .map(KrakenRole::valueOf).collect(Collectors.toUnmodifiableList());
     this.groups = ofNullable(groups).orElse(of());
     this.currentGroup = nullToEmpty(currentGroup);
-    this.expirationTime = Instant.ofEpochSecond(requireNonNull(expirationTime));
-    this.issuedAt = Instant.ofEpochSecond(requireNonNull(issuedAt));
   }
 
   @Builder
   KrakenUser(
-      String username,
-      String userId,
-      List<KrakenRole> roles,
-      List<String> groups,
-      String currentGroup,
-      Instant expirationTime,
-      Instant issuedAt
+      @NonNull String username,
+      @NonNull String userId,
+      @NonNull List<KrakenRole> roles,
+      @NonNull List<String> groups,
+      @NonNull String currentGroup,
+      @NonNull Instant expirationTime,
+      @NonNull Instant issuedAt
   ) {
     super();
-    this.username = requireNonNull(username);
-    this.userId = requireNonNull(userId);
-    this.roles = requireNonNull(roles);
-    this.groups = requireNonNull(groups);
-    this.currentGroup = requireNonNull(currentGroup);
-    this.expirationTime = requireNonNull(expirationTime);
-    this.issuedAt = requireNonNull(issuedAt);
+    this.username = username;
+    this.userId = userId;
+    this.roles = roles;
+    this.groups = groups;
+    this.currentGroup = currentGroup;
+    this.expirationTime = expirationTime;
+    this.issuedAt = issuedAt;
   }
 }

@@ -1,6 +1,5 @@
 package com.kraken.security.entity.user;
 
-import com.kraken.security.entity.user.KrakenToken;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 
