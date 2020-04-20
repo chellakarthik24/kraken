@@ -22,6 +22,7 @@ services:
       com.kraken/description: "${KRAKEN_DESCRIPTION}"
       com.kraken/expectedCount: "${KRAKEN_EXPECTED_COUNT}"
       com.kraken/applicationId: "${KRAKEN_APPLICATION_ID}"
+      com.kraken/userId: "${KRAKEN_USER_ID}"
     environment:
       KRAKEN_CONTAINER_TASKID: "${KRAKEN_TASK_ID}"
       KRAKEN_CONTAINER_TASKTYPE: "${KRAKEN_TASK_TYPE}"
@@ -68,6 +69,7 @@ services:
       com.kraken/description: "${KRAKEN_DESCRIPTION}"
       com.kraken/expectedCount: "${KRAKEN_EXPECTED_COUNT}"
       com.kraken/applicationId: "${KRAKEN_APPLICATION_ID}"
+      com.kraken/userId: "${KRAKEN_USER_ID}"
     environment:
       KRAKEN_CONTAINER_TASKID: "${KRAKEN_TASK_ID}"
       KRAKEN_CONTAINER_TASKTYPE: "${KRAKEN_TASK_TYPE}"

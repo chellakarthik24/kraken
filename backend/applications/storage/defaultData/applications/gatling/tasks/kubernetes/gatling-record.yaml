@@ -9,6 +9,7 @@ metadata:
     com.kraken/hostId: "${KRAKEN_HOST_ID}"
     com.kraken/taskId: "${KRAKEN_TASK_ID}"
     com.kraken/applicationId: "${KRAKEN_APPLICATION_ID}"
+    com.kraken/userId: "${KRAKEN_USER_ID}"
   name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASK_ID}-${KRAKEN_HOST_ID}"
 spec:
   containers:
