@@ -35,10 +35,8 @@ public class DockerTaskServiceExecutionIntegrationTest {
 
   @Autowired
   DockerTaskService taskService;
-
   @Autowired
   LogsService logsService;
-
   @Autowired
   CommandService commandService;
 
