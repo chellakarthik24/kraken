@@ -22,7 +22,7 @@ public class DockerHostServiceTest {
 
   @Test
   public void shouldList() {
-    final var list = service.list().collectList().block();
+    final var list = service.list(PublicOwner.INSTANCE).collectList().block();
     assertThat(list).isNotNull();
     assertThat(list.size()).isEqualTo(1);
     assertThat(list.get(0)).isEqualTo(Host.builder()

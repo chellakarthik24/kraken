@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.kraken.runtime.backend.api.HostService;
 import com.kraken.runtime.entity.host.Host;
 import com.kraken.runtime.entity.host.HostCapacity;
+import com.kraken.security.entity.owner.Owner;
 import com.kraken.security.entity.owner.PublicOwner;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,14 +23,14 @@ final class DockerHostService implements HostService {
   private static final String EMPTY = "-";
 
   @Override
-  public Flux<Host> list() {
+  public Flux<Host> list(final Owner owner) {
     return Flux.just(Host.builder()
         .id("local")
         .name("local")
         .capacity(HostCapacity.builder().cpu(EMPTY).memory(EMPTY).build())
         .allocatable(HostCapacity.builder().cpu(EMPTY).memory(EMPTY).build())
         .addresses(ImmutableList.of())
-        .owner(PublicOwner.INSTANCE)
+        .owner(owner)
         .build());
   }
 

@@ -22,7 +22,7 @@ public class HostControllerTest  extends RuntimeControllerTest {
   @Test
   public void shouldList() {
     final var hostsFlux = Flux.just(HostTest.HOST);
-    given(hostService.list())
+    given(hostService.list(userOwner))
         .willReturn(hostsFlux);
 
     webTestClient.get()
