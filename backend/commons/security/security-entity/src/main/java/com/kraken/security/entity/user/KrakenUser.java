@@ -54,7 +54,7 @@ public class KrakenUser {
     this.currentGroup = nullToEmpty(currentGroup);
   }
 
-  @Builder
+  @Builder(toBuilder = true)
   KrakenUser(
       @NonNull String username,
       @NonNull String userId,

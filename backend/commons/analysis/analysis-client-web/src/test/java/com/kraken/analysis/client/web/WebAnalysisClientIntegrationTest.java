@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.ConfigFileApplicationContextInitial
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@Ignore("start keycloak and make serve-storage/runtime-docker/analysis before running")
+//@Ignore("start keycloak and make serve-storage/runtime-docker/analysis before running")
 @RunWith(SpringRunner.class)
 @ContextConfiguration(
     classes = {TestConfiguration.class},

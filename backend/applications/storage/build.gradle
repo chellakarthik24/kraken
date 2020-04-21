@@ -7,6 +7,7 @@ dependencies {
 
     // Security
     implementation project(':commons:dependencies:dependencies-security-server')
+    implementation project(':commons:security:security-entity')
 
     implementation project(':commons:tools:tools-configuration')
 }

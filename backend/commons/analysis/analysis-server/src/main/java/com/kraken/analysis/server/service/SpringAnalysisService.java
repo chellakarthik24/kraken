@@ -13,6 +13,7 @@ import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.functions.api.OwnerToUserId;
 import com.kraken.security.entity.owner.Owner;
+import com.kraken.security.entity.user.KrakenUser;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.client.api.StorageClientBuilder;
 import com.kraken.storage.entity.StorageNode;
