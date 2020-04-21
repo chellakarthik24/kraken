@@ -59,7 +59,8 @@ public class SpringExecutionContextServiceTest {
   public void before() {
     executionEnvironment = ExecutionEnvironmentTest.EXECUTION_ENVIRONMENT;
     taskConfiguration = TaskConfigurationTest.TASK_CONFIGURATION;
-    given(configurationService.getConfiguration(any())).willReturn(Mono.just(taskConfiguration));
+    given(configurationService.getConfiguration(any(), any())).willReturn(Mono.just(taskConfiguration));
+    given(configurationService.getTemplate(any(), any())).willReturn(Mono.just("template"));
     given(idGenerator.generate()).willReturn("taskId");
     given(publisher.test(any())).willReturn(true);
     given(publisher.apply(any())).willReturn(Mono.just(ImmutableList.of(
@@ -71,7 +72,6 @@ public class SpringExecutionContextServiceTest {
             .build()
     )));
     given(checker.test(any())).willReturn(true);
-    given(storageClient.getContent(anyString())).willReturn(Mono.just("template"));
     given(templateService.replaceAll(anyString(), any())).willReturn(Mono.just("replaced"));
     given(toMap.apply(anyString(), any())).willReturn(ImmutableMap.of("hello", "toMap"));
     this.service = new SpringExecutionContextService(
@@ -79,7 +79,6 @@ public class SpringExecutionContextServiceTest {
         idGenerator,
         ImmutableList.of(publisher),
         ImmutableList.of(checker),
-        storageClient,
         templateService,
         toMap
     );

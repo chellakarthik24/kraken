@@ -4,11 +4,6 @@ kraken:
   security:
     url: http://localhost:9080
     realm: kraken
-    web:
-      id: kraken-web
     api:
       id: kraken-api
-      secret: api-secret
-    container:
-      id: kraken-container
-      secret: container-secret
+      secret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4

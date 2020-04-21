@@ -46,13 +46,12 @@ final class SpringExecutionContextService implements ExecutionContextService {
   @NonNull IdGenerator idGenerator;
   @NonNull List<EnvironmentPublisher> publishers;
   @NonNull List<EnvironmentChecker> checkers;
-  @NonNull StorageClient storageClient;
   @NonNull TemplateService templateService;
   @NonNull MapExecutionEnvironmentEntries toMap;
 
   @Override
   public Mono<ExecutionContext> newExecuteContext(final Owner owner, final ExecutionEnvironment environment) {
-    return configurationService.getConfiguration(environment.getTaskType())
+    return configurationService.getConfiguration(owner, environment.getTaskType())
         .map(taskConfiguration -> this.newExecutionContextBuilder(taskConfiguration, owner, environment))
         .flatMap(this::withPublishers)
         .flatMap(this::withTemplate)
@@ -110,7 +109,7 @@ final class SpringExecutionContextService implements ExecutionContextService {
   }
 
   private Mono<Tuple2<String, ExecutionContextBuilder>> withTemplate(final ExecutionContextBuilder context) {
-    final var templateMono = storageClient.getContent(context.getFile());
+    final var templateMono = configurationService.getTemplate(context.getOwner(), context.getFile());
     return templateMono.map(template -> Tuples.of(template, context));
   }
 
