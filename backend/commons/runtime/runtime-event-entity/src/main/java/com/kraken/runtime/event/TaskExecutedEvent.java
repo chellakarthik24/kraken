@@ -10,7 +10,7 @@ import lombok.Value;
 import static java.util.Objects.requireNonNull;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class TaskExecutedEvent implements TaskEvent {
   @NonNull ExecutionContext context;
 

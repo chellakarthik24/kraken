@@ -18,7 +18,7 @@ final class SpringSecurityContainerProperties implements SecurityContainerProper
   String refreshToken;
   Long minValidity; // In seconds
 
-  @Builder
+  @Builder(toBuilder = true)
   SpringSecurityContainerProperties(final String accessToken,
                                     final String refreshToken,
                                     final Long minValidity) {

@@ -11,7 +11,7 @@ import lombok.Value;
 import static java.util.Objects.requireNonNull;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class Log implements Owned {
   Owner owner;
   String id;

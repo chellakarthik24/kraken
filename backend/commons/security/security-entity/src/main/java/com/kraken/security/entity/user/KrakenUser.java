@@ -19,7 +19,6 @@ import static com.google.common.collect.ImmutableList.of;
 import static java.util.Optional.ofNullable;
 
 @Value
-@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KrakenUser {
 

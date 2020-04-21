@@ -9,7 +9,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 @ConstructorBinding
 final class SpringSecurityClientCredentialsProperties implements SecurityClientCredentialsProperties {
 

@@ -10,7 +10,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 @ConstructorBinding
 @ConfigurationProperties("kraken.security")
 final class SpringSecurityClientProperties implements SecurityClientProperties {

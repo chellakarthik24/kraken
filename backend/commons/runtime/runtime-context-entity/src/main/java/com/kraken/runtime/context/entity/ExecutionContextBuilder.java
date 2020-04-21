@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class ExecutionContextBuilder  implements Owned {
   @NonNull Owner owner;

@@ -12,7 +12,7 @@ import lombok.Value;
 import java.util.Map;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class ExecutionContext implements Owned {
   Owner owner;
   String taskId;

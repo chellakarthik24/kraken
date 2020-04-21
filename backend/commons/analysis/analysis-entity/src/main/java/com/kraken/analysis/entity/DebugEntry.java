@@ -12,7 +12,7 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class DebugEntry {
 
   String id;

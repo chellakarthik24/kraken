@@ -10,7 +10,7 @@ import static java.util.Objects.requireNonNull;
 
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KrakenToken {
 

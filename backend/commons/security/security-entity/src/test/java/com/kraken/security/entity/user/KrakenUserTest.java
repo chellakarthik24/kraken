@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.time.Instant;
 
+import static com.google.common.collect.ImmutableList.of;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
@@ -19,28 +20,20 @@ public class KrakenUserTest {
       .expirationTime(Instant.EPOCH.plusMillis(1))
       .userId("userId")
       .username("username")
-      .roles(ImmutableList.of(KrakenRole.USER))
-      .groups(ImmutableList.of("/default-kraken"))
+      .roles(of(KrakenRole.USER))
+      .groups(of("/default-kraken"))
       .currentGroup("/default-kraken")
       .build();
 
-  public static final KrakenUser KRAKEN_ADMIN = KrakenUser.builder()
-      .issuedAt(Instant.EPOCH)
-      .expirationTime(Instant.EPOCH.plusMillis(1))
-      .userId("userId")
-      .username("username")
-      .roles(ImmutableList.of(KrakenRole.ADMIN))
-      .groups(ImmutableList.of("/default-kraken"))
-      .currentGroup("/default-kraken")
+  public static final KrakenUser KRAKEN_ADMIN = KRAKEN_USER
+      .toBuilder()
+      .roles(of(KrakenRole.ADMIN))
       .build();
 
-  public static final KrakenUser KRAKEN_API = KrakenUser.builder()
-      .issuedAt(Instant.EPOCH)
-      .expirationTime(Instant.EPOCH.plusMillis(1))
-      .userId("userId")
-      .username("username")
-      .roles(ImmutableList.of(KrakenRole.API))
-      .groups(ImmutableList.of())
+  public static final KrakenUser KRAKEN_API = KRAKEN_USER
+      .toBuilder()
+      .roles(of(KrakenRole.API))
+      .groups(of())
       .currentGroup("")
       .build();
 

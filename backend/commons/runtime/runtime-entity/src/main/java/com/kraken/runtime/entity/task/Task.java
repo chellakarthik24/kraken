@@ -11,7 +11,7 @@ import lombok.Value;
 import java.util.List;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class Task implements Owned {
   String id;
   Long startDate;

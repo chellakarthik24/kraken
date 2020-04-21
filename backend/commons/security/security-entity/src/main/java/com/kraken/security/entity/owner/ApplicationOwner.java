@@ -7,7 +7,7 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class ApplicationOwner implements Owner {
 
   String applicationId;

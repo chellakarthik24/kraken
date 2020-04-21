@@ -11,7 +11,7 @@ import lombok.With;
 import java.util.List;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class UserOwner implements Owner {
 
   String userId;
