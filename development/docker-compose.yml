@@ -15,17 +15,17 @@ services:
       - ./analysis/influxdb:/var/lib/influxdb
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 
-  kraken-analysis-telegraf-dev:
-    user: ${KRAKEN_HOST_UID}:${KRAKEN_HOST_GID}
-    image: telegraf:1.10.0
-    container_name: kraken-analysis-telegraf-dev
-    network_mode: host
-    env_file:
-      - 'telegraf/env.telegraf'
-    volumes:
-      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    depends_on:
-      - kraken-influxdb-dev
+#  kraken-analysis-telegraf-dev:
+#    user: ${KRAKEN_HOST_UID}:${KRAKEN_HOST_GID}
+#    image: telegraf:1.10.0
+#    container_name: kraken-analysis-telegraf-dev
+#    network_mode: host
+#    env_file:
+#      - 'telegraf/env.telegraf'
+#    volumes:
+#      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+#    depends_on:
+#      - kraken-influxdb-dev
 
   kraken-grafana-dev:
     user: ${KRAKEN_HOST_UID}:${KRAKEN_HOST_GID}
