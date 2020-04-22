@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.time.Instant;
 
-@Ignore("Start keycloak and grafana before running")
+//@Ignore("Start keycloak and grafana before running")
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {Application.class})
 @SpringBootTest

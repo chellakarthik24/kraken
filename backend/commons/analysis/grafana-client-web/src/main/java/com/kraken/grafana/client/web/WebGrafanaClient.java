@@ -76,7 +76,6 @@ final class WebGrafanaClient implements GrafanaClient {
             .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
             .retrieve()
             .bodyToMono(String.class));
-//    TODO set permissions
   }
 
   public Mono<String> deleteDashboard(final String testId) {
