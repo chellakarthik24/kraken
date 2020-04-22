@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+var xhr = new XMLHttpRequest();
+xhr.open("POST", 'http://localhost:8300/grafana/login', true);
+
+//Send the proper header information along with the request
+xhr.setRequestHeader("Content-Type", "application/json");
+
+xhr.onreadystatechange = function() { // Call a function when the state changes.
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        // Request finished. Do processing here.
+        window.open("http://localhost:8300/grafana/");
+    }
+}
+xhr.send('{"user":"admin","password":"kraken","email":""}');
+</script>
+</body>
+</html>

@@ -1,5 +1,10 @@
 version: '3.7'
 
+networks:
+  kraken:
+    name: "kraken-dev"
+
+
 services:
   kraken-influxdb-dev:
     image: influxdb:1.7.4
@@ -31,7 +36,8 @@ services:
     user: ${KRAKEN_HOST_UID}:${KRAKEN_HOST_GID}
     image: grafana/grafana:6.7.1
     container_name: kraken-grafana-dev
-    network_mode: host
+    networks:
+      - kraken
     ports:
       - "3000:3000"
     expose:
@@ -43,6 +49,19 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+
+  kraken-haproxy-dev:
+    image: haproxy:1.9.5-alpine
+    container_name: kraken-haproxy-dev
+    networks:
+      - kraken
+    ports:
+      - "8300:80"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    depends_on:
+      - kraken-grafana-dev
+    restart: unless-stopped
 
   kraken-postgres-dev:
     image: postgres:12.2
