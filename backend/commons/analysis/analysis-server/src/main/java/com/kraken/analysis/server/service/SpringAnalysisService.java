@@ -7,13 +7,11 @@ import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.config.grafana.api.AnalysisResultsProperties;
 import com.kraken.config.grafana.api.GrafanaProperties;
 import com.kraken.grafana.client.api.GrafanaClient;
-import com.kraken.grafana.client.api.GrafanaClientBuilder;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.functions.api.OwnerToUserId;
 import com.kraken.security.entity.owner.Owner;
-import com.kraken.security.entity.user.KrakenUser;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.client.api.StorageClientBuilder;
 import com.kraken.storage.entity.StorageNode;
@@ -43,7 +41,7 @@ final class SpringAnalysisService implements AnalysisService {
   @NonNull GrafanaProperties grafana;
 
   @NonNull InfluxDBClient influxdbClient;
-  @NonNull GrafanaClientBuilder grafanaClientBuilder;
+  @NonNull GrafanaClient grafanaClient;
   @NonNull StorageClientBuilder storageClientBuilder;
 
   @NonNull OwnerToApplicationId toApplicationId;
@@ -55,7 +53,6 @@ final class SpringAnalysisService implements AnalysisService {
   @Override
   public Mono<StorageNode> create(final Owner owner, final Result result) {
     final var storageClient = this.impersonateStorage(owner);
-    final var grafanaClient = this.impersonateGrafana(owner);
     final var resultPath = properties.getResultPath(result.getId());
     final var resultJsonPath = resultPath.resolve(RESULT_JSON).toString();
 
@@ -72,7 +69,6 @@ final class SpringAnalysisService implements AnalysisService {
   @Override
   public Mono<String> delete(final Owner owner, final String resultId) {
     final var storageClient = this.impersonateStorage(owner);
-    final var grafanaClient = this.impersonateGrafana(owner);
     final var resultPath = properties.getResultPath(resultId);
     final var resultJsonPath = resultPath.resolve(RESULT_JSON).toString();
     final var deleteFolder = storageClient.delete(resultPath.toString());
@@ -84,7 +80,6 @@ final class SpringAnalysisService implements AnalysisService {
   @Override
   public Mono<StorageNode> setStatus(final Owner owner, final String resultId, final ResultStatus status) {
     final var storageClient = this.impersonateStorage(owner);
-    final var grafanaClient = this.impersonateGrafana(owner);
     final var endDate = this.statusToEndDate.apply(status);
     final var resultPath = properties.getResultPath(resultId).resolve(RESULT_JSON).toString();
 
@@ -136,11 +131,6 @@ final class SpringAnalysisService implements AnalysisService {
   private StorageClient impersonateStorage(final Owner owner) {
     final var ids = ownerToIds(owner);
     return storageClientBuilder.mode(AuthenticationMode.IMPERSONATE, ids.getT2()).applicationId(ids.getT1()).build();
-  }
-
-  private GrafanaClient impersonateGrafana(final Owner owner) {
-    final var ids = ownerToIds(owner);
-    return grafanaClientBuilder.mode(AuthenticationMode.IMPERSONATE, ids.getT2()).applicationId(ids.getT1()).build();
   }
 
   private Tuple2<String, String> ownerToIds(final Owner owner) {

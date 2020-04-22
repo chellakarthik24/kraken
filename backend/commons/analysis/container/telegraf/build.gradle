@@ -11,7 +11,7 @@ dependencies {
     implementation project(':commons:storage:storage-client-api')
     implementation project(':commons:tools:tools-reactor-utils')
 
-    testImplementation project(path: ':commons:tools:tools-application', configuration: 'testArtifacts')
+    testImplementation project(path: ':commons:tools:tools-application')
     testImplementation project(path: ':commons:runtime:runtime-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:security:security-entity', configuration: 'testArtifacts')
     testImplementation project(path: ':commons:runtime:runtime-command-entity', configuration: 'testArtifacts')

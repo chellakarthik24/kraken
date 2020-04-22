@@ -2,8 +2,7 @@ dependencies {
     implementation project(':commons:analysis:grafana-client-api')
     implementation project(':commons:security:security-authentication-client-spring')
 
-    testImplementation project(path: ':commons:tools:tools-application', configuration: 'testArtifacts')
+    testImplementation project(path: ':commons:tools:tools-application')
     testImplementation project(path: ':commons:config:config-grafana-spring')
-    testImplementation project(path: ':commons:security:security-authentication-noop')
     testImplementation project(path: ':tests:tests-web-client')
 }

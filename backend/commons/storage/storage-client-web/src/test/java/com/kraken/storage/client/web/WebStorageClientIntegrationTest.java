@@ -1,17 +1,17 @@
 package com.kraken.storage.client.web;
 
+import com.kraken.Application;
 import com.kraken.analysis.entity.Result;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.storage.client.api.StorageClient;
 import com.kraken.storage.client.api.StorageClientBuilder;
 import com.kraken.tests.utils.ResourceUtils;
-import com.kraken.tests.utils.TestConfiguration;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,9 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Ignore("start keycloak and make serve-storage before running")
 @RunWith(SpringRunner.class)
-@ContextConfiguration(
-    classes = {TestConfiguration.class},
-    initializers = {ConfigFileApplicationContextInitializer.class})
+@ContextConfiguration(classes = {Application.class})
+@SpringBootTest
 public class WebStorageClientIntegrationTest {
 
   @Autowired

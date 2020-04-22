@@ -4,7 +4,6 @@ import com.kraken.analysis.entity.*;
 import com.kraken.config.grafana.api.AnalysisResultsProperties;
 import com.kraken.config.grafana.api.GrafanaProperties;
 import com.kraken.grafana.client.api.GrafanaClient;
-import com.kraken.grafana.client.api.GrafanaClientBuilder;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.functions.api.OwnerToUserId;
@@ -43,8 +42,6 @@ public class SpringAnalysisServiceTest {
   @Mock
   StorageClient storageClient;
   @Mock
-  GrafanaClientBuilder grafanaClientBuilder;
-  @Mock
   GrafanaClient grafanaClient;
   @Mock
   InfluxDBClient influxdbClient;
@@ -73,9 +70,6 @@ public class SpringAnalysisServiceTest {
     given(storageClientBuilder.mode(any(), any())).willReturn(storageClientBuilder);
     given(storageClientBuilder.applicationId(any())).willReturn(storageClientBuilder);
     given(storageClientBuilder.build()).willReturn(storageClient);
-    given(grafanaClientBuilder.mode(any(), any())).willReturn(grafanaClientBuilder);
-    given(grafanaClientBuilder.applicationId(any())).willReturn(grafanaClientBuilder);
-    given(grafanaClientBuilder.build()).willReturn(grafanaClient);
     given(toApplicationId.apply(any())).willReturn(Optional.of("app"));
     given(toUserId.apply(any())).willReturn(Optional.of("user-id"));
 
@@ -83,7 +77,7 @@ public class SpringAnalysisServiceTest {
         analysisResultsProperties,
         grafanaProperties,
         influxdbClient,
-        grafanaClientBuilder,
+        grafanaClient,
         storageClientBuilder,
         toApplicationId,
         toUserId,

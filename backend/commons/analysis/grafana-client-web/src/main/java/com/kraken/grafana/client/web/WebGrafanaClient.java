@@ -28,23 +28,22 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @FieldDefaults(level = PRIVATE, makeFinal = true)
+@Component
 final class WebGrafanaClient implements GrafanaClient {
 
   WebClient webClient;
   ObjectMapper mapper;
   SimpleDateFormat format;
 
-  WebGrafanaClient(@NonNull final WebClient webClient,
+  WebGrafanaClient(@NonNull final GrafanaProperties grafanaProperties,
                    @NonNull final ObjectMapper mapper) {
-//    TODO remove basic auth and credentials from config
-//    final var credentials = grafanaProperties.getUser() + ":" + grafanaProperties.getPassword();
-//    final var encoded = Base64.getEncoder().encodeToString(credentials.getBytes(UTF_8));
-//    this.webClient =  WebClient
-//        .builder()
-//        .baseUrl(grafanaProperties.getUrl())
-//        .defaultHeader("Authorization", "Basic " + encoded)
-//        .build();
-    this.webClient = webClient;
+    final var credentials = grafanaProperties.getUser() + ":" + grafanaProperties.getPassword();
+    final var encoded = Base64.getEncoder().encodeToString(credentials.getBytes(UTF_8));
+    this.webClient =  WebClient
+        .builder()
+        .baseUrl(grafanaProperties.getUrl())
+        .defaultHeader("Authorization", "Basic " + encoded)
+        .build();
     this.mapper = mapper;
     //  2019-03-22T10:01:00.000Z
     this.format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -77,6 +76,7 @@ final class WebGrafanaClient implements GrafanaClient {
             .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
             .retrieve()
             .bodyToMono(String.class));
+//    TODO set permissions
   }
 
   public Mono<String> deleteDashboard(final String testId) {
