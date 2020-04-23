@@ -1,45 +1,23 @@
 version: '3.7'
 
-networks:
-  kraken:
-    name: "kraken-dev"
-
-
 services:
-  kraken-influxdb-dev:
-    image: influxdb:1.7.4
-    container_name: kraken-influxdb-dev
-    network_mode: host
-    ports:
-      - "8086:8086"
-    expose:
-      - "8086"
-    env_file:
-      - 'influxdb/env.influxdb'
-    volumes:
-      - ./analysis/influxdb:/var/lib/influxdb
-      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
-
-#  kraken-analysis-telegraf-dev:
-#    user: ${KRAKEN_HOST_UID}:${KRAKEN_HOST_GID}
-#    image: telegraf:1.10.0
-#    container_name: kraken-analysis-telegraf-dev
+#  kraken-influxdb-dev:
+#    image: influxdb:1.7.4
+#    container_name: kraken-influxdb-dev
 #    network_mode: host
+#    expose:
+#      - "8086"
 #    env_file:
-#      - 'telegraf/env.telegraf'
+#      - 'influxdb/env.influxdb'
 #    volumes:
-#      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-#    depends_on:
-#      - kraken-influxdb-dev
+#      - ./analysis/influxdb:/var/lib/influxdb
+#      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 
   kraken-grafana-dev:
     user: ${KRAKEN_HOST_UID}:${KRAKEN_HOST_GID}
     image: grafana/grafana:6.7.1
     container_name: kraken-grafana-dev
-    networks:
-      - kraken
-    ports:
-      - "3000:3000"
+    network_mode: host
     expose:
       - "3000"
     env_file:
@@ -53,47 +31,46 @@ services:
   kraken-haproxy-dev:
     image: haproxy:1.9.5-alpine
     container_name: kraken-haproxy-dev
-    networks:
-      - kraken
-    ports:
-      - "8300:80"
+    network_mode: host
+    expose:
+      - "8300"
     volumes:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
     depends_on:
       - kraken-grafana-dev
     restart: unless-stopped
 
-  kraken-postgres-dev:
-    image: postgres:12.2
-    container_name: kraken-postgres-dev
-    volumes:
-      - ./postgres/data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-
-  kraken-keycloak-dev:
-    image: quay.io/keycloak/keycloak:9.0.2
-    container_name: kraken-keycloak-dev
-    environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: kraken-postgres-dev
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: kraken
-      KEYCLOAK_WELCOME_THEME: kraken
-    volumes:
-      - ./keycloak/imports:/opt/jboss/keycloak/imports
-      - ./keycloak/themes/kraken:/opt/jboss/keycloak/themes/kraken
-    ports:
-      - 9080:8080
-    expose:
-      - 9080
-    depends_on:
-      - kraken-postgres-dev
-    command:
-      - "-b 0.0.0.0 -Dkeycloak.profile=preview -Dkeycloak.import=/opt/jboss/keycloak/imports/kraken-realm.json"
+#  kraken-postgres-dev:
+#    image: postgres:12.2
+#    container_name: kraken-postgres-dev
+#    volumes:
+#      - ./postgres/data:/var/lib/postgresql/data
+#    environment:
+#      POSTGRES_DB: keycloak
+#      POSTGRES_USER: keycloak
+#      POSTGRES_PASSWORD: password
+#
+#  kraken-keycloak-dev:
+#    image: quay.io/keycloak/keycloak:9.0.2
+#    container_name: kraken-keycloak-dev
+#    environment:
+#      DB_VENDOR: POSTGRES
+#      DB_ADDR: kraken-postgres-dev
+#      DB_DATABASE: keycloak
+#      DB_USER: keycloak
+#      DB_SCHEMA: public
+#      DB_PASSWORD: password
+#      KEYCLOAK_USER: admin
+#      KEYCLOAK_PASSWORD: kraken
+#      KEYCLOAK_WELCOME_THEME: kraken
+#    volumes:
+#      - ./keycloak/imports:/opt/jboss/keycloak/imports
+#      - ./keycloak/themes/kraken:/opt/jboss/keycloak/themes/kraken
+#    ports:
+#      - 9080:8080
+#    expose:
+#      - 9080
+#    depends_on:
+#      - kraken-postgres-dev
+#    command:
+#      - "-b 0.0.0.0 -Dkeycloak.profile=preview -Dkeycloak.import=/opt/jboss/keycloak/imports/kraken-realm.json"
