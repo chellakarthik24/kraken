@@ -1,37 +1,36 @@
 package com.kraken.keycloak.event.listener;
 
 import org.keycloak.Config;
-import org.keycloak.OAuth2Constants;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.events.EventListenerProvider;
 import org.keycloak.events.EventListenerProviderFactory;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 
 import static java.lang.System.getenv;
+import static java.lang.System.setOut;
 import static java.util.Objects.requireNonNull;
 
 
 public class KrakenEventListenerProviderFactory implements EventListenerProviderFactory {
 
+    private String keycloakUrl;
+    private String[] urls;
+    private String clientId;
+    private String clientSecret;
+    private String realm;
 
     @Override
     public EventListenerProvider create(KeycloakSession keycloakSession) {
-        final String[] keycloakUrl = requireNonNull(getenv("KRAKEN_SECURITY_URL")).split(",");
-        final String[] urls = requireNonNull(getenv("KRAKEN_URLS")).split(",");
-        final String clientId = requireNonNull(getenv("KRAKEN_SECURITY_API_ID"));
-        final String clientSecret = requireNonNull(getenv("KRAKEN_SECURITY_API_SECRET"));
-        final String realm = requireNonNull(getenv("KRAKEN_SECURITY_REALM"));
 
-        final Keycloak keycloak = KeycloakBuilder.builder()
-                .serverUrl(keycloakUrl + "/u/auth")
-                .realm(realm)
-                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .build();
+//        final Keycloak keycloak = KeycloakBuilder.builder()
+//                .serverUrl(keycloakUrl + "/u/auth")
+//                .realm(realm)
+//                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+//                .clientId(clientId)
+//                .clientSecret(clientSecret)
+//                .build();
 
+//        System.out.println(keycloak.tokenManager().getAccessTokenString());
 //        final List<WebClient> webClients = new ArrayList<>();
 //        for (String url : urls) {
 //            webClients.add(WebClient.builder()
@@ -44,13 +43,19 @@ public class KrakenEventListenerProviderFactory implements EventListenerProvider
 //                    .build());
 //        }
 
-
+        System.out.println(urls);
+        System.out.println(keycloakUrl);
+        System.out.println(clientId);
         return new KrakenEventListenerProvider(/*webClients*/);
     }
 
     @Override
     public void init(Config.Scope scope) {
-
+        this.keycloakUrl = requireNonNull(getenv("KRAKEN_SECURITY_URL"));
+        this.urls = requireNonNull(getenv("KRAKEN_URLS")).split(",");
+        this.clientId = requireNonNull(getenv("KRAKEN_SECURITY_API_ID"));
+        this.clientSecret = requireNonNull(getenv("KRAKEN_SECURITY_API_SECRET"));
+        this.realm = requireNonNull(getenv("KRAKEN_SECURITY_REALM"));
     }
 
     @Override
