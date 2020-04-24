@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-@Ignore("Start keycloak before running")
+//@Ignore("Start keycloak before running")
 public class KeycloakSecurityClientIntegrationTest {
 
   @Autowired
