@@ -43,6 +43,7 @@ services:
   kraken-postgres-dev:
     image: postgres:12.2
     container_name: kraken-postgres-dev
+    network_mode: host
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
     environment:
@@ -53,25 +54,29 @@ services:
   kraken-keycloak-dev:
     image: quay.io/keycloak/keycloak:9.0.2
     container_name: kraken-keycloak-dev
+    network_mode: host
     environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: kraken-postgres-dev
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: kraken
-      KEYCLOAK_WELCOME_THEME: kraken
+      DB_VENDOR: "POSTGRES"
+      DB_ADDR: "localhost"
+      DB_DATABASE: "keycloak"
+      DB_USER: "keycloak"
+      DB_SCHEMA: "public"
+      DB_PASSWORD: "password"
+      KEYCLOAK_USER: "admin"
+      KEYCLOAK_PASSWORD: "kraken"
+      KEYCLOAK_WELCOME_THEME: "kraken"
+      KRAKEN_SECURITY_URL: "http://localhost:9080"
+      KRAKEN_URLS: "http://localhost:8081/keycloak"
+      KRAKEN_SECURITY_API_ID: "kraken-api"
+      KRAKEN_SECURITY_API_SECRET: "c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4"
+      KRAKEN_SECURITY_REALM: "kraken"
     volumes:
       - ./keycloak/imports:/opt/jboss/keycloak/imports
       - ./keycloak/themes/kraken:/opt/jboss/keycloak/themes/kraken
       - ./keycloak/deployments:/opt/jboss/keycloak/standalone/deployments
-    ports:
-      - 9080:8080
     expose:
       - 9080
     depends_on:
       - kraken-postgres-dev
     command:
-      - "-b 0.0.0.0 -Dkeycloak.profile=preview -Dkeycloak.import=/opt/jboss/keycloak/imports/kraken-realm.json"
+      - "-b 0.0.0.0 -Djboss.bind.address.private=127.0.0.1 -Djboss.bind.address=0.0.0.0 -Djboss.socket.binding.port-offset=1000 -Dkeycloak.profile=preview -Dkeycloak.import=/opt/jboss/keycloak/imports/kraken-realm.json"

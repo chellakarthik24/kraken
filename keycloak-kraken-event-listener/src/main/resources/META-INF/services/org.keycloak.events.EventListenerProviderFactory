@@ -1,1 +1,1 @@
-com.kraken.keycloak.event.listener.SampleEventListenerProviderFactory
+com.kraken.keycloak.event.listener.KrakenEventListenerProviderFactory
