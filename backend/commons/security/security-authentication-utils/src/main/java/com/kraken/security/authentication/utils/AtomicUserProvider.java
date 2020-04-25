@@ -5,6 +5,7 @@ import com.kraken.security.decoder.api.TokenDecoder;
 import com.kraken.security.entity.user.KrakenToken;
 import com.kraken.security.entity.user.KrakenUser;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import reactor.core.publisher.Mono;
 
@@ -15,17 +16,17 @@ import java.util.concurrent.atomic.AtomicReference;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.empty;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 public abstract class AtomicUserProvider implements UserProvider {
 
   TokenDecoder decoder;
   AtomicReference<Optional<KrakenToken>> token;
   Long minValidity;
 
-  public AtomicUserProvider(final TokenDecoder decoder,
-                            final Long minValidity) {
-    this.decoder = requireNonNull(decoder);
-    this.minValidity = requireNonNull(minValidity);
+  public AtomicUserProvider(@NonNull final TokenDecoder decoder,
+                            @NonNull final Long minValidity) {
+    this.decoder = decoder;
+    this.minValidity = minValidity;
     this.token = new AtomicReference<>(empty());
   }
 

@@ -38,7 +38,7 @@ public class ServiceAccountUserProviderTest {
   }
 
   @Test
-  public void shouldCreateToken() throws IOException {
+  public void shouldCreateToken() {
     given(client.clientLogin(credentialsProperties)).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
     final var token = userProvider.newToken().block();
     assertThat(token).isNotNull();
@@ -46,8 +46,8 @@ public class ServiceAccountUserProviderTest {
   }
 
   @Test
-  public void shouldRefreshToken() throws IOException {
-    given(client.refreshToken(credentialsProperties, "refreshToken")).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
+  public void shouldRefreshToken() {
+    given(client.clientLogin(credentialsProperties)).willReturn(Mono.just(KrakenTokenTest.KRAKEN_TOKEN));
     final var tokenRefresh = userProvider.refreshToken(KrakenTokenTest.KRAKEN_TOKEN).block();
     assertThat(tokenRefresh).isNotNull();
     assertThat(tokenRefresh).isEqualTo(KrakenTokenTest.KRAKEN_TOKEN);

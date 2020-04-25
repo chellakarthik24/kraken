@@ -34,7 +34,7 @@ class ServiceAccountUserProvider extends AtomicUserProvider {
 
   @Override
   protected Mono<KrakenToken> refreshToken(KrakenToken token) {
-    return client.refreshToken(clientProperties.getApi(), token.getRefreshToken());
+    return this.newToken();
   }
 
 }
