@@ -36,9 +36,6 @@ public class ContainerUserProviderFactoryTest {
 
   @Before
   public void setUp() throws IOException{
-    given(containerProperties.getAccessToken()).willReturn("accessToken");
-    given(containerProperties.getRefreshToken()).willReturn("refreshToken");
-    given(decoder.decode(any())).willReturn(KrakenUserTest.KRAKEN_USER);
     factory = new ContainerUserProviderFactory(clientProperties, containerProperties, decoder, client);
   }
 

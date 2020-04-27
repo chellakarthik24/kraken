@@ -22,7 +22,7 @@ public class KrakenToken {
 
   @JsonCreator
   KrakenToken(
-      @NonNull  @JsonProperty("access_token") final String accessToken,
+      @NonNull @JsonProperty("access_token") final String accessToken,
       @NonNull @JsonProperty("refresh_token") final String refreshToken,
       @NonNull @JsonProperty("expires_in") final Long expiresIn,
       @NonNull @JsonProperty("refresh_expires_in") final Long refreshExpiresIn

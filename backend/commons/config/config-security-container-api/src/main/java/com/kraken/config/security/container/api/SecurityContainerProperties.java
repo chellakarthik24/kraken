@@ -14,4 +14,6 @@ public interface SecurityContainerProperties extends KrakenProperties {
   Long getExpiresIn();
 
   Long getMinValidity();
+
+  Long getRefreshMinValidity();
 }

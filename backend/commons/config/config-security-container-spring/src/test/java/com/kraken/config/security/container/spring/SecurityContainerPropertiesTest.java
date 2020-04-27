@@ -12,6 +12,7 @@ public class SecurityContainerPropertiesTest {
       .accessToken("accessToken")
       .refreshToken("refreshToken")
       .minValidity(60L)
+      .refreshMinValidity(300L)
       .expiresIn(300L)
       .refreshExpiresIn(1800L)
       .build();

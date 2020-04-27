@@ -5,9 +5,7 @@ import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.config.security.container.api.SecurityContainerProperties;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.user.KrakenRole;
 import com.kraken.security.entity.user.KrakenTokenTest;
-import com.kraken.security.entity.user.KrakenUser;
 import com.kraken.security.entity.user.KrakenUserTest;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Before;
@@ -23,13 +21,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Function;
 
-import static com.google.common.collect.ImmutableList.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.verify;
-import static reactor.test.StepVerifier.create;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContainerUserProviderTest {
@@ -49,11 +44,12 @@ public class ContainerUserProviderTest {
   ContainerUserProvider userProvider;
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() {
     given(containerProperties.getAccessToken()).willReturn("accessToken");
     given(containerProperties.getRefreshToken()).willReturn("refreshToken");
+    given(containerProperties.getRefreshExpiresIn()).willReturn(1800L);
+    given(containerProperties.getRefreshMinValidity()).willReturn(300L);
     given(clientProperties.getContainer()).willReturn(credentialsProperties);
-    given(decoder.decode(any())).willReturn(KrakenUserTest.KRAKEN_USER);
     userProvider = new ContainerUserProvider(clientProperties, containerProperties, decoder, client);
   }
 
@@ -74,27 +70,19 @@ public class ContainerUserProviderTest {
   }
 
   @Test
-  public void shouldPeriodicRefresh() throws IOException {
-    final var now = Instant.now();
+  public void shouldPeriodicRefresh() {
     given(refresh.apply(any())).willAnswer(invocation -> Mono.just(invocation.getArgument(0).toString()));
-    given(decoder.decode(any())).willReturn(KrakenUser.builder()
-        .issuedAt(now)
-        .expirationTime(now.plusSeconds(300))
-        .userId("userId")
-        .username("username")
-        .roles(of(KrakenRole.USER))
-        .groups(of("/default-kraken"))
-        .currentGroup("/default-kraken")
-        .build());
 
     StepVerifier
-        .withVirtualTime(() -> userProvider.periodicRefresh(refresh), 3)
+        .withVirtualTime(() -> userProvider.periodicRefresh(refresh).take(3))
         .expectSubscription()
         .expectNext("0")
-        .thenAwait(Duration.ofSeconds(600))
-        .expectNext("1", "2")
+        .expectNoEvent(Duration.ofSeconds(1500))
+        .expectNext("1")
+        .expectNoEvent(Duration.ofSeconds(1500))
+        .expectNext("2")
         .expectComplete()
-        .verify(Duration.ofSeconds(600));
+        .verify(Duration.ofSeconds(3000));
 
     verify(refresh).apply(0L);
     verify(refresh).apply(1L);

@@ -17,7 +17,8 @@ final class SpringSecurityContainerProperties implements SecurityContainerProper
 
   String accessToken;
   String refreshToken;
-  Long minValidity; // In seconds
+  Long minValidity; // seconds
+  Long refreshMinValidity; // seconds
   Long expiresIn; // seconds
   Long refreshExpiresIn; // seconds
 
@@ -25,11 +26,13 @@ final class SpringSecurityContainerProperties implements SecurityContainerProper
   SpringSecurityContainerProperties(@NonNull final String accessToken,
                                     @NonNull final String refreshToken,
                                     final Long minValidity,
+                                    final Long refreshMinValidity,
                                     @NonNull final Long expiresIn,
                                     @NonNull final Long refreshExpiresIn) {
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
     this.minValidity = ofNullable(minValidity).orElse(60L);
+    this.refreshMinValidity = ofNullable(refreshMinValidity).orElse(300L);
     this.expiresIn = expiresIn;
     this.refreshExpiresIn = refreshExpiresIn;
   }
