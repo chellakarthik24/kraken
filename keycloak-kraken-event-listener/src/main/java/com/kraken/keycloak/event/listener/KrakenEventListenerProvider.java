@@ -22,14 +22,20 @@ public class KrakenEventListenerProvider implements EventListenerProvider {
   public void onEvent(final Event event) {
     System.out.println("Event Occurred:" + toString(event));
     // TODO filter register user event (update ?)
-    switch (event.getType()) {
-      case LOGIN:
-        this.executor.submit(() -> {
-          System.out.println(this.client.getAccessToken());
-        });
-        break;
-    }
+//    switch (event.getType()) {
+//      case LOGIN:
+//        this.executor.submit(() -> {
+//          System.out.println(this.client.getAccessToken());
+//        });
+//        break;
+//    }
   }
+
+//  [stdout] (default task-8) Event Occurred:type=REGISTER, realmId=kraken, clientId=account, userId=405b81ee-98c8-4e18-b6b8-963402341eeb, ipAddress=127.0.0.1, auth_method=openid-connect, auth_type=code, register_method=form, redirect_uri=http://localhost:9080/auth/realms/kraken/account/login-redirect, code_id=36656fcb-c171-4261-91a8-b3097b6342b4, email=kojiro.sazaki@gmail.com, username=kojiro.sazaki@gmail.com
+//  kraken-keycloak-dev    | 09:33:23,742 INFO  [stdout] (default task-8) Event Occurred:type=LOGIN, realmId=kraken, clientId=account, userId=405b81ee-98c8-4e18-b6b8-963402341eeb, ipAddress=127.0.0.1, auth_method=openid-connect, auth_type=code, redirect_uri=http://localhost:9080/auth/realms/kraken/account/login-redirect, consent=no_consent_required, code_id=36656fcb-c171-4261-91a8-b3097b6342b4, username=kojiro.sazaki@gmail.com
+// [stdout] (default task-8) Event Occurred:type=UPDATE_PROFILE, realmId=kraken, clientId=account, userId=405b81ee-98c8-4e18-b6b8-963402341eeb, ipAddress=127.0.0.1
+// [stdout] (default task-8) Event Occurred:type=UPDATE_EMAIL, realmId=kraken, clientId=account, userId=405b81ee-98c8-4e18-b6b8-963402341eeb, ipAddress=127.0.0.1, updated_email=gerald.rapiere@gmail.com, previous_email=kojiro.sazaki@gmail.com
+// kraken-keycloak-dev    | 09:36:57,561 INFO  [stdout] (default task-8) Admin Event Occurred:operationType=DELETE, realmId=master, clientId=672ba65e-3f97-4e81-a7ee-bca5deb990f6, userId=affa9342-80d7-4609-be07-cb2446fa4c93, ipAddress=127.0.0.1, resourcePath=users/405b81ee-98c8-4e18-b6b8-963402341eeb
 
   @Override
   public void onEvent(final AdminEvent adminEvent, boolean b) {
@@ -39,7 +45,7 @@ public class KrakenEventListenerProvider implements EventListenerProvider {
 
   @Override
   public void close() {
-
+    this.executor.shutdown();
   }
 
   private String toString(final Event event) {

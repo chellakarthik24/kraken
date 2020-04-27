@@ -47,7 +47,7 @@ public class KrakenEventListenerProviderFactory implements EventListenerProvider
 
   @Override
   public void close() {
-
+    this.client.close();
   }
 
   @Override
