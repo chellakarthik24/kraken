@@ -1,11 +1,11 @@
 package com.kraken.keycloak.event.listener;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class KeycloakClientTest {
+@Disabled("Start Keycloak before running")
+class KeycloakClientIntegrationTest {
 
   private KeycloakClient client;
 
