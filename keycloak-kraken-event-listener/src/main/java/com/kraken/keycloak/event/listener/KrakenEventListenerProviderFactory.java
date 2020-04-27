@@ -40,7 +40,6 @@ public class KrakenEventListenerProviderFactory implements EventListenerProvider
 
   @Override
   public void close() {
-    this.keycloakClient.close();
   }
 
   @Override

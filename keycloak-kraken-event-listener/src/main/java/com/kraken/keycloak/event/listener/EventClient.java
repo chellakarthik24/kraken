@@ -10,43 +10,48 @@ import org.keycloak.events.admin.ResourceType;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
 class EventClient {
 
-  private final ResteasyClient client;
-  private final ResteasyWebTarget eventTarget;
-  private final ResteasyWebTarget adminTarget;
+  private final String url;
 
   public EventClient(final String url) {
-    this.client = new ResteasyClientBuilder().build();
-    this.eventTarget = client.target(String.format("%s/event", requireNonNull(url)));
-    this.adminTarget = client.target(String.format("%s/admin", requireNonNull(url)));
+    this.url = requireNonNull(url);
   }
 
   public void sendEvent(final String accessToken, final Event event) {
+    System.out.println("Send event");
+    final ResteasyClient client = new ResteasyClientBuilder().build();
+    final ResteasyWebTarget eventTarget = client.target(String.format("%s/event/%s", url, event.getType().name()));
     final Response response = eventTarget.request(MediaType.APPLICATION_FORM_URLENCODED)
         .header("Authorization", this.authHeader(accessToken))
         .post(eventToEntity(event));
+    final String str = response.readEntity(String.class);
+    System.out.println(str);
+    System.out.println(response.getStatus());
     response.close();
+    client.close();
   }
 
   public void sendAdminEvent(final String accessToken, final AdminEvent event) {
+    final ResteasyClient client = new ResteasyClientBuilder().build();
+    final ResteasyWebTarget adminTarget = client.target(String.format("%s/admin/%s", url, event.getOperationType().name()));
     final Response response = adminTarget.request(MediaType.APPLICATION_FORM_URLENCODED)
-        .header("Authorization", this.authHeader(accessToken))
+        .header(HttpHeaders.AUTHORIZATION, this.authHeader(accessToken))
         .post(adminEventToEntity(event));
+    final String str = response.readEntity(String.class);
+    System.out.println(str);
+    System.out.println(response.getStatus());
     response.close();
+    client.close();
   }
-
-  //  [stdout] (default task-8) Event Occurred:type=REGISTER, realmId=kraken, clientId=account, userId=405b81ee-98c8-4e18-b6b8-963402341eeb, ipAddress=127.0.0.1, auth_method=openid-connect, auth_type=code, register_method=form, redirect_uri=http://localhost:9080/auth/realms/kraken/account/login-redirect, code_id=36656fcb-c171-4261-91a8-b3097b6342b4, email=kojiro.sazaki@gmail.com, username=kojiro.sazaki@gmail.com
-//  kraken-keycloak-dev    | 09:33:23,742 INFO  [stdout] (default task-8) Event Occurred:type=LOGIN, realmId=kraken, clientId=account, userId=405b81ee-98c8-4e18-b6b8-963402341eeb, ipAddress=127.0.0.1, auth_method=openid-connect, auth_type=code, redirect_uri=http://localhost:9080/auth/realms/kraken/account/login-redirect, consent=no_consent_required, code_id=36656fcb-c171-4261-91a8-b3097b6342b4, username=kojiro.sazaki@gmail.com
-// [stdout] (default task-8) Event Occurred:type=UPDATE_PROFILE, realmId=kraken, clientId=account, userId=405b81ee-98c8-4e18-b6b8-963402341eeb, ipAddress=127.0.0.1
-// [stdout] (default task-8) Event Occurred:type=UPDATE_EMAIL, realmId=kraken, clientId=account, userId=405b81ee-98c8-4e18-b6b8-963402341eeb, ipAddress=127.0.0.1, updated_email=gerald.rapiere@gmail.com, previous_email=kojiro.sazaki@gmail.com
-// kraken-keycloak-dev    | 09:36:57,561 INFO  [stdout] (default task-8) Admin Event Occurred:operationType=DELETE, realmId=master, clientId=672ba65e-3f97-4e81-a7ee-bca5deb990f6, userId=affa9342-80d7-4609-be07-cb2446fa4c93, ipAddress=127.0.0.1, resourcePath=users/405b81ee-98c8-4e18-b6b8-963402341eeb
-
 
   public boolean filterEvent(final Event event) {
     switch (event.getType()) {
@@ -59,6 +64,9 @@ class EventClient {
   }
 
   public boolean filterAdminEvent(final AdminEvent event) {
+    // TODO handle Role update events
+//    kraken-keycloak-dev    | 14:23:05,945 INFO  [stdout] (default task-6) Admin Event Occurred:operationType=CREATE, realmId=master, clientId=8131bbcc-3da0-46c9-8e1f-dacee98dc1b0, userId=d5439e90-f4a7-4242-8dd0-f12e214538e8, ipAddress=127.0.0.1, resourcePath=users/a83b98f2-2c52-40f3-a3a3-2276caeacd3b/role-mappings/realm
+//    kraken-keycloak-dev    | 14:23:53,935 INFO  [stdout] (default task-8) Admin Event Occurred:operationType=DELETE, realmId=master, clientId=8131bbcc-3da0-46c9-8e1f-dacee98dc1b0, userId=d5439e90-f4a7-4242-8dd0-f12e214538e8, ipAddress=127.0.0.1, resourcePath=users/a83b98f2-2c52-40f3-a3a3-2276caeacd3b/role-mappings/realm
     return OperationType.DELETE.equals(event.getOperationType()) && ResourceType.USER.equals(event.getResourceType());
   }
 
@@ -67,9 +75,8 @@ class EventClient {
   }
 
   private Entity<Form> eventToEntity(final Event event) {
-    final Form form = new Form();
-    form.param("type", event.getType().name());
-    form.param("user_id", event.getUserId());
+    final Form form = new Form()
+        .param("user_id", event.getUserId());
     switch (event.getType()) {
       case REGISTER:
         form.param("email", event.getDetails().get("email"));
@@ -78,12 +85,12 @@ class EventClient {
         form.param("updated_email", event.getDetails().get("updated_email"));
         form.param("previous_email", event.getDetails().get("previous_email"));
     }
+    System.out.println(form.asMap().keySet().stream().collect(Collectors.joining()));
     return Entity.form(form);
   }
 
   private Entity<Form> adminEventToEntity(final AdminEvent event) {
     final Form form = new Form();
-    form.param("type", event.getOperationType().name());
     form.param("user_id", event.getAuthDetails().getUserId());
     return Entity.form(form);
   }

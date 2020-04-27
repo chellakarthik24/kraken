@@ -3,6 +3,7 @@ package com.kraken.keycloak.event.listener;
 import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.events.Event;
@@ -15,6 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class KrakenEventListenerProviderTest {
 

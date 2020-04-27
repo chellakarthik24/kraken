@@ -130,6 +130,7 @@ include ':commons:security:security-entity'
 include ':commons:security:security-entity-functions-api'
 include ':commons:security:security-entity-functions-spring'
 include ':commons:security:security-context-spring'
+include 'commons:security:security-user-events-listener'
 
 include ':commons:dependencies:dependencies-security-server'
 include ':commons:dependencies:dependencies-security-container'
@@ -165,4 +166,6 @@ findProject(':applications:sse')?.name = 'app-sse'
 
 include 'applications:ee:runtime-kubernetes'
 findProject(':applications:ee:runtime-kubernetes')?.name = 'app-runtime-kubernetes'
+include 'commons:storage:storage-user-events-listener'
+findProject(':commons:storage:storage-user-events-listener')?.name = 'storage-user-events-listener'
 

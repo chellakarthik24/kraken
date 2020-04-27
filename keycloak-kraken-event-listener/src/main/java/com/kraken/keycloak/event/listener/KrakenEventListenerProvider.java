@@ -6,6 +6,7 @@ import org.keycloak.events.admin.AdminEvent;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,11 +27,14 @@ public class KrakenEventListenerProvider implements EventListenerProvider {
 
   @Override
   public void onEvent(final Event event) {
-//    System.out.println("Event Occurred:" + toString(event));
+    System.out.println("Event Occurred:" + toString(event));
     for (final EventClient eventClient : eventClients) {
       if (eventClient.filterEvent(event)) {
+        System.out.println("Filter OK");
         this.executor.submit(() -> {
+          System.out.println("Execute");
           eventClient.sendEvent(this.keycloakClient.getAccessToken(), event);
+          return null;
         });
       }
     }
@@ -38,11 +42,12 @@ public class KrakenEventListenerProvider implements EventListenerProvider {
 
   @Override
   public void onEvent(final AdminEvent event, boolean bool) {
-//    System.out.println("Admin Event Occurred:" + toString(event));
+    System.out.println("Admin Event Occurred:" + toString(event));
     for (final EventClient eventClient : eventClients) {
       if (eventClient.filterAdminEvent(event)) {
         this.executor.submit(() -> {
           eventClient.sendAdminEvent(this.keycloakClient.getAccessToken(), event);
+          return null;
         });
       }
     }

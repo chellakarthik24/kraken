@@ -66,7 +66,7 @@ services:
       KEYCLOAK_PASSWORD: "kraken"
       KEYCLOAK_WELCOME_THEME: "kraken"
       KRAKEN_SECURITY_URL: "http://localhost:9080"
-      KRAKEN_URLS: "http://localhost:8081/keycloak"
+      KRAKEN_URLS: "http://localhost:8080/user-events"
       KRAKEN_SECURITY_API_ID: "kraken-api"
       KRAKEN_SECURITY_API_SECRET: "c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4"
       KRAKEN_SECURITY_REALM: "kraken"
