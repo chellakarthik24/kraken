@@ -2,6 +2,7 @@ package com.kraken.config.security.container.spring;
 
 import com.kraken.config.security.container.api.SecurityContainerProperties;
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
@@ -17,14 +18,20 @@ final class SpringSecurityContainerProperties implements SecurityContainerProper
   String accessToken;
   String refreshToken;
   Long minValidity; // In seconds
+  Long expiresIn; // seconds
+  Long refreshExpiresIn; // seconds
 
   @Builder(toBuilder = true)
-  SpringSecurityContainerProperties(final String accessToken,
-                                    final String refreshToken,
-                                    final Long minValidity) {
-    this.accessToken = requireNonNull(accessToken);
-    this.refreshToken = requireNonNull(refreshToken);
+  SpringSecurityContainerProperties(@NonNull final String accessToken,
+                                    @NonNull final String refreshToken,
+                                    final Long minValidity,
+                                    @NonNull final Long expiresIn,
+                                    @NonNull final Long refreshExpiresIn) {
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
     this.minValidity = ofNullable(minValidity).orElse(60L);
+    this.expiresIn = expiresIn;
+    this.refreshExpiresIn = refreshExpiresIn;
   }
 
 }

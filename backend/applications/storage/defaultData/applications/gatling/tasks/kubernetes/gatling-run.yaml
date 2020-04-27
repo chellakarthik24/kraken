@@ -64,6 +64,10 @@ spec:
           value: "${KRAKEN_SECURITY_ACCESS_TOKEN}"
         - name: KRAKEN_SECURITY_REFRESHTOKEN
           value: "${KRAKEN_SECURITY_REFRESH_TOKEN}"
+        - name: KRAKEN_SECURITY_EXPIRESIN
+          value: "${KRAKEN_SECURITY_EXPIRES_IN}"
+        - name: KRAKEN_SECURITY_REFRESHEXPIRESIN
+          value: "${KRAKEN_SECURITY_REFRESH_EXPIRES_IN}"
     -
       image: "octoperf/kraken-telegraf:${KRAKEN_VERSION}"
       name: "${KRAKEN_APPLICATION_ID}-${KRAKEN_TASK_ID}-${KRAKEN_HOST_ID}-${KRAKEN_GATLING_SIDEKICK_NAME}"
@@ -117,6 +121,10 @@ spec:
           value: "${KRAKEN_SECURITY_ACCESS_TOKEN}"
         - name: KRAKEN_SECURITY_REFRESHTOKEN
           value: "${KRAKEN_SECURITY_REFRESH_TOKEN}"
+        - name: KRAKEN_SECURITY_EXPIRESIN
+          value: "${KRAKEN_SECURITY_EXPIRES_IN}"
+        - name: KRAKEN_SECURITY_REFRESHEXPIRESIN
+          value: "${KRAKEN_SECURITY_REFRESH_EXPIRES_IN}"
   hostAliases:
     - hostnames:
         - kraken-gatling-telegraf

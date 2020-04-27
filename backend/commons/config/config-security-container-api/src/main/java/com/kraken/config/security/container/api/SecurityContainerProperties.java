@@ -9,5 +9,9 @@ public interface SecurityContainerProperties extends KrakenProperties {
 
   String getRefreshToken();
 
+  Long getRefreshExpiresIn();
+
+  Long getExpiresIn();
+
   Long getMinValidity();
 }

@@ -23,5 +23,7 @@ public class SecurityContainerPropertiesSpringTest {
     assertThat(properties.getAccessToken()).isEqualTo("accessToken");
     assertThat(properties.getRefreshToken()).isEqualTo("refreshToken");
     assertThat(properties.getMinValidity()).isEqualTo(60L);
+    assertThat(properties.getExpiresIn()).isEqualTo(300L);
+    assertThat(properties.getRefreshExpiresIn()).isEqualTo(1800L);
   }
 }

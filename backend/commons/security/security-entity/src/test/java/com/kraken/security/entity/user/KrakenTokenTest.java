@@ -8,6 +8,8 @@ public class KrakenTokenTest {
   public static final KrakenToken KRAKEN_TOKEN = KrakenToken.builder()
       .accessToken("accessToken")
       .refreshToken("refreshToken")
+      .expiresIn(300L)
+      .refreshExpiresIn(1800L)
       .build();
 
   @Test

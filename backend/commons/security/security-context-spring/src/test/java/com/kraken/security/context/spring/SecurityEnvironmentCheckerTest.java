@@ -42,6 +42,8 @@ public class SecurityEnvironmentCheckerTest {
         .put(KRAKEN_SECURITY_REALM.name(), "value")
         .put(KRAKEN_SECURITY_ACCESS_TOKEN.name(), "value")
         .put(KRAKEN_SECURITY_REFRESH_TOKEN.name(), "value")
+        .put(KRAKEN_SECURITY_EXPIRES_IN.name(), "value")
+        .put(KRAKEN_SECURITY_REFRESH_EXPIRES_IN.name(), "value")
         .build();
     checker.accept(env);
   }

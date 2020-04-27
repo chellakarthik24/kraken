@@ -25,7 +25,9 @@ final class SecurityEnvironmentChecker implements EnvironmentChecker {
         KRAKEN_SECURITY_WEB_ID,
         KRAKEN_SECURITY_REALM,
         KRAKEN_SECURITY_ACCESS_TOKEN,
-        KRAKEN_SECURITY_REFRESH_TOKEN);
+        KRAKEN_SECURITY_REFRESH_TOKEN,
+        KRAKEN_SECURITY_EXPIRES_IN,
+        KRAKEN_SECURITY_REFRESH_EXPIRES_IN);
   }
 
   @Override
