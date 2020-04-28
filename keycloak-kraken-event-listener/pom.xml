@@ -75,6 +75,13 @@
             <version>3.3.3</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp/mockwebserver -->
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 @Disabled("Start Keycloak before running")
 class KeycloakClientIntegrationTest {
 
@@ -18,7 +20,7 @@ class KeycloakClientIntegrationTest {
   }
 
   @Test
-  void shouldReturnAccessToken() {
+  void shouldReturnAccessToken() throws IOException {
     System.out.println(client.getAccessToken());
   }
 }

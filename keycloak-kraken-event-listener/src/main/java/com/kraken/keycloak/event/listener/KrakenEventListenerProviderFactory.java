@@ -1,5 +1,6 @@
 package com.kraken.keycloak.event.listener;
 
+import com.google.common.collect.ImmutableList;
 import org.keycloak.Config;
 import org.keycloak.events.EventListenerProvider;
 import org.keycloak.events.EventListenerProviderFactory;
@@ -31,7 +32,13 @@ public class KrakenEventListenerProviderFactory implements EventListenerProvider
         getenv("KRAKEN_SECURITY_API_ID"),
         getenv("KRAKEN_SECURITY_API_SECRET"));
     final String[] urls = requireNonNull(getenv("KRAKEN_URLS")).split(",");
-    this.eventClients = Arrays.stream(urls).map(EventClient::new).collect(Collectors.toList());
+    final List<EventHandler> eventHandlers = ImmutableList.of(
+        new RegisterEventHandler(),
+        new UpdateEmailEventHandler());
+    final List<AdminEventHandler> adminEventHandlers = ImmutableList.of(
+        new UpdateRoleAdminEventHandler(),
+        new DeleteUserAdminEventHandler());
+    this.eventClients = Arrays.stream(urls).map(url -> new EventClient(url, eventHandlers, adminEventHandlers)).collect(Collectors.toList());
   }
 
   @Override

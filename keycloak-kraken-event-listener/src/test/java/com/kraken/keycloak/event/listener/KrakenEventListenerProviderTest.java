@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -31,7 +33,7 @@ class KrakenEventListenerProviderTest {
 
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws IOException {
     given(keycloakClient.getAccessToken()).willReturn("accessToken");
     provider = new KrakenEventListenerProvider(keycloakClient, ImmutableList.of(eventClient1, eventClient2));
   }

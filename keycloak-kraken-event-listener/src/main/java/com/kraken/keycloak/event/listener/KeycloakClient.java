@@ -63,7 +63,7 @@ class KeycloakClient {
       this.accessToken.set(accessToken);
 
       // Expires In
-      final Long expiresIn = node.get("expires_in").asLong();
+      final long expiresIn = node.get("expires_in").asLong();
       System.out.println(expiresIn);
       this.expired.set(now.plusSeconds(expiresIn).minusSeconds(60L));
     }

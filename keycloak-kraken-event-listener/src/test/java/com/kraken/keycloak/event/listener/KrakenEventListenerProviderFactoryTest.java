@@ -19,6 +19,7 @@ class KrakenEventListenerProviderFactoryTest {
   @Test
   void shouldCreateProvider() {
     factory.init(null);
+    factory.postInit(null);
     final EventListenerProvider provider = factory.create(null);
     assertNotNull(provider);
     factory.close();
