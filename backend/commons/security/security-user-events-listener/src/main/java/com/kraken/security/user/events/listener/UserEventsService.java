@@ -9,5 +9,7 @@ public interface UserEventsService {
 
   Mono<String> onDeleteUser(String userId);
 
-  Mono<String> onUpdateRole(String userId);
+  Mono<String> onCreateRole(String userId, String role);
+
+  Mono<String> onDeleteRole(String userId, String role);
 }
