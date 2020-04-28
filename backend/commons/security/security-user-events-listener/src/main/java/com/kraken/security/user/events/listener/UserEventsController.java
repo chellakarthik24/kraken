@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PRIVATE;
 class UserEventsController {
   @NonNull UserEventsService service;
 
-  @PostMapping(value = "/event/REGISTER", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  @PostMapping(value = "/event/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   public Mono<String> register(@RequestParam("user_id") final String userId,
                                @RequestParam("email") final String email,
                                @RequestParam("username") final String username) {
@@ -31,7 +31,7 @@ class UserEventsController {
     return service.onRegisterUser(userId, email, username);
   }
 
-  @PostMapping(value = "/event/UPDATE_EMAIL")
+  @PostMapping(value = "/event/update_email")
   public Mono<String> updateEmail(final ServerWebExchange payload) {
     //  https://github.com/spring-projects/spring-framework/issues/20738
     return payload.getFormData().flatMap(data ->  {
@@ -43,12 +43,17 @@ class UserEventsController {
     });
   }
 
-  @PostMapping(value = "/admin/DELETE", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public Mono<String> delete(@RequestParam("user_id") final String userId) {
+  @PostMapping(value = "/admin/delete_user", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public Mono<String> deleteUser(@RequestParam("user_id") final String userId) {
     log.info(String.format("Delete user %s", userId));
     return service.onDeleteUser(userId);
   }
 
+  @PostMapping(value = "/admin/update_role", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public Mono<String> updateRole(@RequestParam("user_id") final String userId) {
+    log.info(String.format("Update role %s", userId));
+    return service.onUpdateRole(userId);
+  }
   // TODO updateRole
   // TODO ServerWebExchange de partout
   // TODO toLowercase sur les paths

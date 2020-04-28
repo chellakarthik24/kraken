@@ -104,6 +104,10 @@ public class KrakenEventListenerProvider implements EventListenerProvider {
     sb.append(adminEvent.getAuthDetails().getIpAddress());
     sb.append(", resourcePath=");
     sb.append(adminEvent.getResourcePath());
+    sb.append(", representation=");
+    sb.append(adminEvent.getRepresentation());
+    sb.append(", resourceType=");
+    sb.append(adminEvent.getResourceTypeAsString());
     if (adminEvent.getError() != null) {
       sb.append(", error=");
       sb.append(adminEvent.getError());
