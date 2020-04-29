@@ -3,7 +3,7 @@ package com.kraken.storage.file;
 import com.kraken.security.entity.owner.ApplicationOwner;
 import com.kraken.security.entity.owner.Owner;
 import com.kraken.security.entity.owner.UserOwner;
-import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.token.KrakenRole;
 import io.methvin.watcher.DirectoryChangeEvent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -2,7 +2,7 @@ package com.kraken.security.authentication.session;
 
 
 import com.kraken.security.authentication.api.UserProvider;
-import com.kraken.security.entity.user.KrakenUser;
+import com.kraken.security.entity.token.KrakenTokenUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -23,11 +23,11 @@ class SessionUserProvider implements UserProvider {
   @NonNull Mono<SecurityContext> securityContextMono;
 
   @Override
-  public Mono<KrakenUser> getAuthenticatedUser() {
+  public Mono<KrakenTokenUser> getAuthenticatedUser() {
     return securityContextMono
         .map(SecurityContext::getAuthentication)
         .map(Authentication::getDetails)
-        .map(KrakenUser.class::cast);
+        .map(KrakenTokenUser.class::cast);
   }
 
   @Override

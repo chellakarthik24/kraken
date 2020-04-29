@@ -26,7 +26,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.kraken.security.entity.user.KrakenRole.USER;
+import static com.kraken.security.entity.token.KrakenRole.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)

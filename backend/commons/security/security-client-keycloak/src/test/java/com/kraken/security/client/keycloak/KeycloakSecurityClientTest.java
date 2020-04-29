@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
 import com.kraken.config.security.client.api.SecurityClientProperties;
-import com.kraken.security.entity.user.KrakenToken;
+import com.kraken.security.entity.token.KrakenToken;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;

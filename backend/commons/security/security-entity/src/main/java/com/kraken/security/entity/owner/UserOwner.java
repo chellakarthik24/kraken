@@ -2,7 +2,7 @@ package com.kraken.security.entity.owner;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.token.KrakenRole;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;

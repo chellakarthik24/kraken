@@ -6,8 +6,7 @@ import com.kraken.config.security.container.api.SecurityContainerProperties;
 import com.kraken.security.authentication.utils.AtomicUserProvider;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.user.KrakenToken;
-import com.kraken.security.entity.user.KrakenUser;
+import com.kraken.security.entity.token.KrakenToken;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
@@ -16,8 +15,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.util.Random;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;

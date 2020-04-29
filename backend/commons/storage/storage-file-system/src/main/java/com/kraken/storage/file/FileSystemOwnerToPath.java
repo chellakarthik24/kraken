@@ -7,7 +7,7 @@ import com.kraken.security.entity.owner.ApplicationOwner;
 import com.kraken.security.entity.owner.Owner;
 import com.kraken.security.entity.owner.OwnerType;
 import com.kraken.security.entity.owner.UserOwner;
-import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.token.KrakenRole;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;

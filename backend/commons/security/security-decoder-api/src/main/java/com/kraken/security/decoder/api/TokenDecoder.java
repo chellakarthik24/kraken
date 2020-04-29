@@ -1,10 +1,10 @@
 package com.kraken.security.decoder.api;
 
-import com.kraken.security.entity.user.KrakenUser;
+import com.kraken.security.entity.token.KrakenTokenUser;
 
 import java.io.IOException;
 
 @FunctionalInterface
 public interface TokenDecoder {
-  KrakenUser decode(String token) throws IOException;
+  KrakenTokenUser decode(String token) throws IOException;
 }

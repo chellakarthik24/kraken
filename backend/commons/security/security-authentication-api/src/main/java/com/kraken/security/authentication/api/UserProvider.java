@@ -2,7 +2,7 @@ package com.kraken.security.authentication.api;
 
 import com.kraken.security.entity.owner.Owner;
 import com.kraken.security.entity.owner.UserOwner;
-import com.kraken.security.entity.user.KrakenUser;
+import com.kraken.security.entity.token.KrakenTokenUser;
 import reactor.core.publisher.Mono;
 
 public interface UserProvider {
@@ -14,7 +14,7 @@ public interface UserProvider {
         .roles(user.getRoles()).build());
   }
 
-  Mono<KrakenUser> getAuthenticatedUser();
+  Mono<KrakenTokenUser> getAuthenticatedUser();
 
   Mono<String> getTokenValue();
 

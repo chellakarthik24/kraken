@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
 import com.kraken.security.decoder.api.TokenDecoder;
 import com.kraken.security.entity.owner.UserOwner;
-import com.kraken.security.entity.user.KrakenUserTest;
+import com.kraken.security.entity.token.KrakenTokenUserTest;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.kraken.security.entity.user.KrakenRole.ADMIN;
-import static com.kraken.security.entity.user.KrakenRole.USER;
+import static com.kraken.security.entity.token.KrakenRole.ADMIN;
+import static com.kraken.security.entity.token.KrakenRole.USER;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
@@ -37,13 +37,13 @@ public abstract class AuthControllerTest {
   protected String applicationId = "app";
   protected UserOwner userOwner = UserOwner.builder()
       .applicationId(applicationId)
-      .userId(KrakenUserTest.KRAKEN_USER.getUserId())
-      .roles(KrakenUserTest.KRAKEN_USER.getRoles())
+      .userId(KrakenTokenUserTest.KRAKEN_USER.getUserId())
+      .roles(KrakenTokenUserTest.KRAKEN_USER.getRoles())
       .build();
   protected UserOwner adminOwner = UserOwner.builder()
       .applicationId(applicationId)
-      .userId(KrakenUserTest.KRAKEN_ADMIN.getUserId())
-      .roles(KrakenUserTest.KRAKEN_ADMIN.getRoles())
+      .userId(KrakenTokenUserTest.KRAKEN_ADMIN.getUserId())
+      .roles(KrakenTokenUserTest.KRAKEN_ADMIN.getRoles())
       .build();
 
   @Before
@@ -51,19 +51,19 @@ public abstract class AuthControllerTest {
     // User
     given(jwtDecoder.decode("user-token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create("user-token", ImmutableList.of(USER.name()),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"))));
-    given(tokenDecoder.decode("user-token")).willReturn(KrakenUserTest.KRAKEN_USER);
+    given(tokenDecoder.decode("user-token")).willReturn(KrakenTokenUserTest.KRAKEN_USER);
     // Admin
     given(jwtDecoder.decode("admin-token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create("admin-token", ImmutableList.of(ADMIN.name()),
         ImmutableList.of("/default-kraken"), Optional.of("/default-kraken"))));
-    given(tokenDecoder.decode("admin-token")).willReturn(KrakenUserTest.KRAKEN_ADMIN);
+    given(tokenDecoder.decode("admin-token")).willReturn(KrakenTokenUserTest.KRAKEN_ADMIN);
     // Admin
     given(jwtDecoder.decode("api-token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create("api-token", ImmutableList.of("API"),
         ImmutableList.of(), Optional.empty())));
-    given(tokenDecoder.decode("api-token")).willReturn(KrakenUserTest.KRAKEN_API);
+    given(tokenDecoder.decode("api-token")).willReturn(KrakenTokenUserTest.KRAKEN_API);
     // No role
     given(jwtDecoder.decode("no-role-token")).willReturn(Mono.just(JwtTestFactory.JWT_FACTORY.create("no-role-token", ImmutableList.of(),
         ImmutableList.of(), Optional.empty())));
-    given(tokenDecoder.decode("no-role-token")).willReturn(KrakenUserTest.KRAKEN_ADMIN);
+    given(tokenDecoder.decode("no-role-token")).willReturn(KrakenTokenUserTest.KRAKEN_ADMIN);
 
 
     // WebTestClient set default header for ApplicationId

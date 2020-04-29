@@ -4,7 +4,7 @@ import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.security.authentication.utils.AtomicUserProvider;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.user.KrakenToken;
+import com.kraken.security.entity.token.KrakenToken;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;

@@ -1,12 +1,12 @@
 package com.kraken.security.authentication.noop;
 
 import com.kraken.security.authentication.api.UserProvider;
-import com.kraken.security.entity.user.KrakenUser;
+import com.kraken.security.entity.token.KrakenTokenUser;
 import reactor.core.publisher.Mono;
 
 class NoopUserProvider implements UserProvider {
   @Override
-  public Mono<KrakenUser> getAuthenticatedUser() {
+  public Mono<KrakenTokenUser> getAuthenticatedUser() {
     return Mono.error(new IllegalAccessException("Noop authentication does not provide a user."));
   }
 

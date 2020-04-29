@@ -5,8 +5,7 @@ import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.config.security.container.api.SecurityContainerProperties;
 import com.kraken.security.client.api.SecurityClient;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.user.KrakenTokenTest;
-import com.kraken.security.entity.user.KrakenUserTest;
+import com.kraken.security.entity.token.KrakenTokenTest;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.io.IOException;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;

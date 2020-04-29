@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Function;
 
-import static com.kraken.security.entity.user.KrakenRole.USER;
+import static com.kraken.security.entity.token.KrakenRole.USER;
 
 @Component
 @Slf4j

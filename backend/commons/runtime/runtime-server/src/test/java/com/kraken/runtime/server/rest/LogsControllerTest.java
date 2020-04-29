@@ -2,24 +2,10 @@ package com.kraken.runtime.server.rest;
 
 import com.google.common.base.Charsets;
 import com.kraken.runtime.entity.log.LogTest;
-import com.kraken.runtime.logs.LogsService;
-import com.kraken.security.entity.owner.ApplicationOwner;
-import com.kraken.security.entity.owner.UserOwner;
-import com.kraken.security.entity.user.KrakenUserTest;
-import com.kraken.tests.security.AuthControllerTest;
-import com.kraken.tools.sse.SSEService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
 import java.util.Optional;

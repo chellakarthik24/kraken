@@ -1,6 +1,6 @@
 package com.kraken.tools.sse.server;
 
-import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.token.KrakenRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;

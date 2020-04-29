@@ -1,4 +1,4 @@
-package com.kraken.security.entity.user;
+package com.kraken.security.entity.token;
 
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;

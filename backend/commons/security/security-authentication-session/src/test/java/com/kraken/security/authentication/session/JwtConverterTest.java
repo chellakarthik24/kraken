@@ -2,8 +2,8 @@ package com.kraken.security.authentication.session;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.user.KrakenRole;
-import com.kraken.security.entity.user.KrakenUserTest;
+import com.kraken.security.entity.token.KrakenRole;
+import com.kraken.security.entity.token.KrakenTokenUserTest;
 import com.kraken.tests.security.JwtTestFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class JwtConverterTest {
   @Before
   public void setUp() throws IOException {
     converter = new JwtConverter(decoder);
-    given(decoder.decode("token")).willReturn(KrakenUserTest.KRAKEN_USER);
+    given(decoder.decode("token")).willReturn(KrakenTokenUserTest.KRAKEN_USER);
   }
 
   @Test
@@ -42,7 +42,7 @@ public class JwtConverterTest {
     final var token = result.block();
     assertThat(token).isNotNull();
     assertThat(token.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toUnmodifiableList())).isEqualTo(ImmutableList.of("USER"));
-    assertThat(token.getDetails()).isEqualTo(KrakenUserTest.KRAKEN_USER);
+    assertThat(token.getDetails()).isEqualTo(KrakenTokenUserTest.KRAKEN_USER);
   }
 
   @Test(expected = RuntimeException.class)

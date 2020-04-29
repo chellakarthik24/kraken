@@ -2,12 +2,10 @@ package com.kraken.storage.file;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.Application;
-import com.kraken.security.entity.owner.Owner;
 import com.kraken.security.entity.owner.PublicOwner;
 import com.kraken.security.entity.owner.UserOwner;
-import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.token.KrakenRole;
 import com.kraken.storage.entity.StorageNode;
-import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

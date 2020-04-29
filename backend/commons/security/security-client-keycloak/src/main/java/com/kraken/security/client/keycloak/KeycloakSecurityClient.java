@@ -3,7 +3,7 @@ package com.kraken.security.client.keycloak;
 import com.kraken.config.security.client.api.SecurityClientCredentialsProperties;
 import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.security.client.api.SecurityClient;
-import com.kraken.security.entity.user.KrakenToken;
+import com.kraken.security.entity.token.KrakenToken;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

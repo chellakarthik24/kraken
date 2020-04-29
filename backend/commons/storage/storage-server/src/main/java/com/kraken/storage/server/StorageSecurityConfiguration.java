@@ -10,8 +10,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
-import static com.kraken.security.entity.user.KrakenRole.API;
-import static com.kraken.security.entity.user.KrakenRole.USER;
+import static com.kraken.security.entity.token.KrakenRole.API;
+import static com.kraken.security.entity.token.KrakenRole.USER;
 
 @EnableWebFluxSecurity
 public class StorageSecurityConfiguration {

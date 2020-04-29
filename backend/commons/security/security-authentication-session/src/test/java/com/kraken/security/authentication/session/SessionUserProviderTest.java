@@ -1,7 +1,7 @@
 package com.kraken.security.authentication.session;
 
 
-import com.kraken.security.entity.user.KrakenUserTest;
+import com.kraken.security.entity.token.KrakenTokenUserTest;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,10 +36,10 @@ public class SessionUserProviderTest {
 
   @Test
   public void shouldGetAuthenticatedUser() {
-    given(authentication.getDetails()).willReturn(KrakenUserTest.KRAKEN_USER);
+    given(authentication.getDetails()).willReturn(KrakenTokenUserTest.KRAKEN_USER);
     final var user = provider.getAuthenticatedUser().block();
     assertThat(user).isNotNull();
-    assertThat(user).isEqualTo(KrakenUserTest.KRAKEN_USER);
+    assertThat(user).isEqualTo(KrakenTokenUserTest.KRAKEN_USER);
   }
 
   @Test

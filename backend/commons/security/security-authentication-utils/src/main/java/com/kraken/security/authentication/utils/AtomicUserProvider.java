@@ -2,8 +2,8 @@ package com.kraken.security.authentication.utils;
 
 import com.kraken.security.authentication.api.UserProvider;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.user.KrakenToken;
-import com.kraken.security.entity.user.KrakenUser;
+import com.kraken.security.entity.token.KrakenToken;
+import com.kraken.security.entity.token.KrakenTokenUser;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +31,7 @@ public abstract class AtomicUserProvider implements UserProvider {
   }
 
   @Override
-  public Mono<KrakenUser> getAuthenticatedUser() {
+  public Mono<KrakenTokenUser> getAuthenticatedUser() {
     return this.getTokenValue().flatMap(token -> Mono.fromCallable(() -> decoder.decode(token)));
   }
 

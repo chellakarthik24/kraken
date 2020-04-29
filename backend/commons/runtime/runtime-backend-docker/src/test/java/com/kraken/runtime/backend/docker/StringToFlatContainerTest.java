@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static com.kraken.security.entity.user.KrakenRole.USER;
+import static com.kraken.security.entity.token.KrakenRole.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StringToFlatContainerTest {

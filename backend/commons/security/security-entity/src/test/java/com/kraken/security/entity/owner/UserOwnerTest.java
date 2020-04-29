@@ -1,7 +1,7 @@
 package com.kraken.security.entity.owner;
 
 import com.google.common.collect.ImmutableList;
-import com.kraken.security.entity.user.KrakenRole;
+import com.kraken.security.entity.token.KrakenRole;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 

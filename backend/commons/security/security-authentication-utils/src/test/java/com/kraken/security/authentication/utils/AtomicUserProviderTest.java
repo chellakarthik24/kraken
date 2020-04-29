@@ -2,11 +2,11 @@ package com.kraken.security.authentication.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.kraken.security.decoder.api.TokenDecoder;
-import com.kraken.security.entity.user.KrakenTokenTest;
-import com.kraken.security.entity.user.KrakenUserTest;
-import com.kraken.security.entity.user.KrakenRole;
-import com.kraken.security.entity.user.KrakenToken;
-import com.kraken.security.entity.user.KrakenUser;
+import com.kraken.security.entity.token.KrakenTokenTest;
+import com.kraken.security.entity.token.KrakenTokenUserTest;
+import com.kraken.security.entity.token.KrakenRole;
+import com.kraken.security.entity.token.KrakenToken;
+import com.kraken.security.entity.token.KrakenTokenUser;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +57,7 @@ public class AtomicUserProviderTest {
   @Test
   public void shouldGetTokenValue() throws IOException {
     // First login
-    given(decoder.decode("accessToken")).willReturn(KrakenUserTest.KRAKEN_USER);
+    given(decoder.decode("accessToken")).willReturn(KrakenTokenUserTest.KRAKEN_USER);
     userProvider.newToken = KrakenTokenTest.KRAKEN_TOKEN;
     final var token = userProvider.getTokenValue().block();
     assertThat(token).isNotNull();
@@ -70,7 +70,7 @@ public class AtomicUserProviderTest {
     assertThat(tokenRefresh).isEqualTo("accessToken");
 
     // Then same
-    final var decoded = KrakenUser.builder()
+    final var decoded = KrakenTokenUser.builder()
         .issuedAt(Instant.now().plusSeconds(30))
         .expirationTime(Instant.now().plusSeconds(1800))
         .userId("userId")

@@ -1,41 +1,43 @@
 package com.kraken.security.entity.user;
 
 import com.google.common.collect.ImmutableList;
-import com.kraken.security.entity.user.KrakenRole;
-import com.kraken.security.entity.user.KrakenUser;
+import com.google.common.collect.ImmutableMap;
 import com.kraken.tests.utils.TestUtils;
+import lombok.With;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import java.time.Instant;
-
-import static com.google.common.collect.ImmutableList.of;
-import static java.time.temporal.ChronoUnit.SECONDS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
+import java.util.List;
+import java.util.Map;
 
 public class KrakenUserTest {
 
   public static final KrakenUser KRAKEN_USER = KrakenUser.builder()
-      .issuedAt(Instant.EPOCH)
-      .expirationTime(Instant.EPOCH.plusMillis(1))
-      .userId("userId")
+      .access(ImmutableMap.of())
+      .attributes(ImmutableMap.of())
+      .clientConsents(ImmutableList.of(KrakenUserConsentTest.KRAKEN_USER_CONSENT))
+      .clientRoles(ImmutableMap.of())
+      .createdTimestamp(0L)
+      .credentials(ImmutableList.of(KrakenCredentialTest.KRAKEN_CREDENTIAL))
+      .disableableCredentialTypes(ImmutableList.of("disableableCredentialType"))
+      .email("email")
+      .emailVerified(true)
+      .enabled(true)
+      .federatedIdentities(ImmutableList.of(KrakenFederatedIdentityTest.KRAKEN_FEDERATED_IDENTITY))
+      .federationLink("federationLink")
+      .firstName("firstName")
+      .groups(ImmutableList.of("group"))
+      .id("id")
+      .lastName("lastName")
+      .notBefore(0)
+      .origin("origin")
+      .realmRoles(ImmutableList.of("realmRole"))
+      .requiredActions(ImmutableList.of("requiredAction"))
+      .self("self")
+      .serviceAccountClientId("serviceAccountClientId")
       .username("username")
-      .roles(of(KrakenRole.USER))
-      .groups(of("/default-kraken"))
-      .currentGroup("/default-kraken")
       .build();
 
-  public static final KrakenUser KRAKEN_ADMIN = KRAKEN_USER
-      .toBuilder()
-      .roles(of(KrakenRole.ADMIN))
-      .build();
-
-  public static final KrakenUser KRAKEN_API = KRAKEN_USER
-      .toBuilder()
-      .roles(of(KrakenRole.API))
-      .groups(of())
-      .currentGroup("")
-      .build();
 
   @Test
   public void shouldPassEquals() {
@@ -43,23 +45,13 @@ public class KrakenUserTest {
   }
 
   @Test
-  public void shouldDecodeInstants() {
-    final var now = Instant.now();
-    final var time = now.toEpochMilli() / 1000; // in seconds
-    final var user = new KrakenUser(time,
-        time,
-        "userId",
-        "username",
-        null,
-        null,
-        null);
-    assertThat(user.getExpirationTime()).isCloseTo(now, within(1, SECONDS));
-    assertThat(user.getIssuedAt()).isCloseTo(now, within(1, SECONDS));
-  }
-
-  @Test
   public void shouldPassToString() {
     TestUtils.shouldPassToString(KRAKEN_USER);
   }
 
+  @Test
+  public void shouldWither() {
+    final var attributes = ImmutableMap.of("foo", ImmutableList.of("bar"));
+    Assertions.assertThat(KRAKEN_USER.withAttributes(attributes).getAttributes()).isSameAs(attributes);
+  }
 }
