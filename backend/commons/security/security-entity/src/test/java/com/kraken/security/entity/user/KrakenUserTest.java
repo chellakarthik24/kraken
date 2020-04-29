@@ -23,6 +23,7 @@ public class KrakenUserTest {
       .email("email")
       .emailVerified(true)
       .enabled(true)
+      .totp(false)
       .federatedIdentities(ImmutableList.of(KrakenFederatedIdentityTest.KRAKEN_FEDERATED_IDENTITY))
       .federationLink("federationLink")
       .firstName("firstName")

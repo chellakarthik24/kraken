@@ -6,4 +6,6 @@ import reactor.core.publisher.Mono;
 
 public interface SecurityAdminClient extends AuthenticatedClient {
   Mono<KrakenUser> getUser(String userId);
+
+  Mono<Void> setUser(KrakenUser user);
 }

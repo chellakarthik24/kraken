@@ -1,14 +1,14 @@
 package com.kraken.security.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
 
-import static com.google.common.base.Strings.nullToEmpty;
-
 @Value
 @Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class KrakenFederatedIdentity {
   String identityProvider;
   String userId;
@@ -21,8 +21,8 @@ public class KrakenFederatedIdentity {
       @JsonProperty("userName") final String userName
   ) {
     super();
-    this.identityProvider = nullToEmpty(identityProvider);
-    this.userId = nullToEmpty(userId);
-    this.userName = nullToEmpty(userName);
+    this.identityProvider = identityProvider;
+    this.userId = userId;
+    this.userName = userName;
   }
 }

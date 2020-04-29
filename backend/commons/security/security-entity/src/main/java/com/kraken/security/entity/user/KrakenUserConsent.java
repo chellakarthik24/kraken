@@ -1,6 +1,7 @@
 package com.kraken.security.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import lombok.Builder;
@@ -13,12 +14,12 @@ import static java.util.Optional.ofNullable;
 
 @Value
 @Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class KrakenUserConsent {
   String clientId;
   Long createdDate;
   List<String> grantedClientScopes;
   Long lastUpdatedDate;
-
 
   @JsonCreator
   KrakenUserConsent(
@@ -28,10 +29,10 @@ public class KrakenUserConsent {
       @JsonProperty("lastUpdatedDate") final Long lastUpdatedDate
   ) {
     super();
-    this.clientId = nullToEmpty(clientId);
-    this.createdDate = ofNullable(createdDate).orElse(0L);
-    this.grantedClientScopes = ofNullable(grantedClientScopes).orElse(ImmutableList.of());
-    this.lastUpdatedDate = ofNullable(lastUpdatedDate).orElse(0L);
+    this.clientId = clientId;
+    this.createdDate = createdDate;
+    this.grantedClientScopes = grantedClientScopes;
+    this.lastUpdatedDate = lastUpdatedDate;
   }
 
 }

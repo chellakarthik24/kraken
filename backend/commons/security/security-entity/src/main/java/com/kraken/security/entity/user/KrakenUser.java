@@ -1,22 +1,20 @@
 package com.kraken.security.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import lombok.Builder;
-import lombok.NonNull;
 import lombok.Value;
 import lombok.With;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Strings.nullToEmpty;
-import static java.util.Optional.ofNullable;
-
 @Value
 @Builder(toBuilder = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class KrakenUser {
   Map<String, String> access;
   @With
@@ -29,6 +27,7 @@ public class KrakenUser {
   String email;
   Boolean emailVerified;
   Boolean enabled;
+  Boolean totp;
   List<KrakenFederatedIdentity> federatedIdentities;
   String federationLink;
   String firstName;
@@ -43,7 +42,6 @@ public class KrakenUser {
   String serviceAccountClientId;
   String username;
 
-
   @JsonCreator
   KrakenUser(
       @JsonProperty("access") final Map<String, String> access,
@@ -53,14 +51,15 @@ public class KrakenUser {
       @JsonProperty("createdTimestamp") final Long createdTimestamp,
       @JsonProperty("credentials") final List<KrakenCredential> credentials,
       @JsonProperty("disableableCredentialTypes") final List<String> disableableCredentialTypes,
-      @NonNull @JsonProperty("email") final String email,
+      @JsonProperty("email") final String email,
       @JsonProperty("emailVerified") final Boolean emailVerified,
       @JsonProperty("enabled") final Boolean enabled,
+      @JsonProperty("totp") final Boolean totp,
       @JsonProperty("federatedIdentities") final List<KrakenFederatedIdentity> federatedIdentities,
       @JsonProperty("federationLink") final String federationLink,
       @JsonProperty("firstName") final String firstName,
       @JsonProperty("groups") final List<String> groups,
-      @NonNull @JsonProperty("id") final String id,
+      @JsonProperty("id") final String id,
       @JsonProperty("lastName") final String lastName,
       @JsonProperty("notBefore") final Integer notBefore,
       @JsonProperty("origin") final String origin,
@@ -68,31 +67,32 @@ public class KrakenUser {
       @JsonProperty("requiredActions") final List<String> requiredActions,
       @JsonProperty("self") final String self,
       @JsonProperty("serviceAccountClientId") final String serviceAccountClientId,
-      @NonNull @JsonProperty("username") final String username
+      @JsonProperty("username") final String username
   ) {
     super();
-    this.access = ofNullable(access).orElse(ImmutableMap.of());
-    this.attributes = ofNullable(attributes).orElse(ImmutableMap.of());
-    this.clientConsents = ofNullable(clientConsents).orElse(ImmutableList.of());
-    this.clientRoles = ofNullable(clientRoles).orElse(ImmutableMap.of());
-    this.createdTimestamp = ofNullable(createdTimestamp).orElse(0L);
-    this.credentials = ofNullable(credentials).orElse(ImmutableList.of());
-    this.disableableCredentialTypes = ofNullable(disableableCredentialTypes).orElse(ImmutableList.of());
+    this.access = access;
+    this.attributes = attributes;
+    this.clientConsents = clientConsents;
+    this.clientRoles = clientRoles;
+    this.createdTimestamp = createdTimestamp;
+    this.credentials = credentials;
+    this.disableableCredentialTypes = disableableCredentialTypes;
     this.email = email;
-    this.emailVerified = ofNullable(emailVerified).orElse(false);
-    this.enabled = ofNullable(enabled).orElse(false);
-    this.federatedIdentities = ofNullable(federatedIdentities).orElse(ImmutableList.of());
-    this.federationLink = nullToEmpty(federationLink);
-    this.firstName = nullToEmpty(firstName);
-    this.groups = ofNullable(groups).orElse(ImmutableList.of());
+    this.emailVerified = emailVerified;
+    this.enabled = enabled;
+    this.totp = totp;
+    this.federatedIdentities = federatedIdentities;
+    this.federationLink = federationLink;
+    this.firstName = firstName;
+    this.groups = groups;
     this.id = id;
-    this.lastName = nullToEmpty(lastName);
-    this.notBefore = ofNullable(notBefore).orElse(0);
-    this.origin = nullToEmpty(origin);
-    this.realmRoles = ofNullable(realmRoles).orElse(ImmutableList.of());
-    this.requiredActions = ofNullable(requiredActions).orElse(ImmutableList.of());
-    this.self = nullToEmpty(self);
-    this.serviceAccountClientId = nullToEmpty(serviceAccountClientId);
+    this.lastName = lastName;
+    this.notBefore = notBefore;
+    this.origin = origin;
+    this.realmRoles = realmRoles;
+    this.requiredActions = requiredActions;
+    this.self = self;
+    this.serviceAccountClientId = serviceAccountClientId;
     this.username = username;
   }
 }

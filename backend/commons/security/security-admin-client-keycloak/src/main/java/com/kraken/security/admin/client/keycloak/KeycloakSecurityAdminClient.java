@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -28,6 +29,20 @@ final class KeycloakSecurityAdminClient implements SecurityAdminClient {
         .uri(uriBuilder -> uriBuilder.path(getUserUrl(userId)).build())
         .retrieve()
         .bodyToMono(KrakenUser.class), log);
+  }
+
+  @Override
+  public Mono<Void> setUser(final KrakenUser user) {
+    return retry(webClient
+        .put()
+        .uri(uriBuilder -> uriBuilder.path(getUserUrl(user.getId())).build())
+        .body(BodyInserters.fromValue(user))
+        .retrieve()
+        .bodyToMono(String.class), log)
+        .map(s -> {
+          System.out.println(s);
+          return null;
+        });
   }
 
   private String getUserUrl(final String userId) {
