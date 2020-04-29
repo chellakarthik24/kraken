@@ -3,18 +3,17 @@ package com.kraken.security.admin.client.keycloak;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.kraken.Application;
-import com.kraken.config.security.client.api.SecurityClientProperties;
 import com.kraken.security.admin.client.api.SecurityAdminClient;
 import com.kraken.security.admin.client.api.SecurityAdminClientBuilder;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-//@Ignore("Start keycloak before running")
+@Ignore("Start keycloak before running")
 public class KeycloakSecurityAdminClientIntegrationTest {
 
   @Autowired

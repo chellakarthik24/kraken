@@ -38,11 +38,7 @@ final class KeycloakSecurityAdminClient implements SecurityAdminClient {
         .uri(uriBuilder -> uriBuilder.path(getUserUrl(user.getId())).build())
         .body(BodyInserters.fromValue(user))
         .retrieve()
-        .bodyToMono(String.class), log)
-        .map(s -> {
-          System.out.println(s);
-          return null;
-        });
+        .bodyToMono(Void.class), log);
   }
 
   private String getUserUrl(final String userId) {
