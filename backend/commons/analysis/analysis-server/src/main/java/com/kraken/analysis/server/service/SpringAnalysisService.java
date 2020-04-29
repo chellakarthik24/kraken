@@ -123,6 +123,55 @@ final class SpringAnalysisService implements AnalysisService {
         .flatMap(debugEntry -> storageClient.setJsonContent(outputFolder.resolve(debugEntry.getId() + ".debug").toString(), debugEntry).map(storageNode -> debugEntry));
   }
 
+  @Override
+  public Mono<String> grafanaLogin(Owner owner) {
+    // TODO get the user from SecurityAdminClient
+    // TODO fetch its grafana credentials (email/username and password)
+    // TODO connect to grafana
+    // TODO forward the setCookie header to the client
+    // TODO return the grafana login URL
+    return null;
+  }
+
+  @Override
+  public Mono<String> onRegisterUser(String userId, String email, String username) {
+    // TODO create a 'databaseUserPassword'
+    // TODO create a user in influxDB login ?
+    // TODO create a 'dashboardUserPassword'
+    // TODO create a user in grafana
+    // TODO add a datasource in grafana
+    // TODO Update user with the passwords, dashboardUserId, dashboardDatasourceId
+    // Or analysisUserPassword/login/id etc ?
+    return null;
+  }
+
+  @Override
+  public Mono<String> onUpdateEmail(String userId, String updatedEmail, String previousEmail) {
+    // TODO update database login ?
+    // TODO update grafana email
+    return null;
+  }
+
+  @Override
+  public Mono<String> onDeleteUser(String userId) {
+    // TODO get the user from SecurityAdminClient
+    // TODO Delete user and datasource in grafana
+    // TODO Delete user in influxdb
+    return null;
+  }
+
+  @Override
+  public Mono<String> onCreateRole(String userId, String role) {
+    // TODO set role in grafana
+    return null;
+  }
+
+  @Override
+  public Mono<String> onDeleteRole(String userId, String role) {
+    // TODO set role in grafana
+    return null;
+  }
+
   private StorageClient sessionStorage(final Owner owner) {
     final var ids = ownerToIds(owner);
     return storageClientBuilder.mode(AuthenticationMode.SESSION).applicationId(ids.getT1()).build();

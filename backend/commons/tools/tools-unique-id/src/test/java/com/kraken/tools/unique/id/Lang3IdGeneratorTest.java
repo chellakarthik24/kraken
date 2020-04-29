@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {Lang3IdGenerator.class})
-public class IdGeneratorTest {
+public class Lang3IdGeneratorTest {
 
   @Autowired
   IdGenerator idGenerator;
@@ -27,4 +27,5 @@ public class IdGeneratorTest {
     assertThat(id.length()).isEqualTo(10);
     assertThat(id).matches("[a-z0-9]*");
   }
+
 }

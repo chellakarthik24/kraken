@@ -20,6 +20,12 @@ Create a new database ?
 curl -XPOST 'http://localhost:8086/query' --data-urlencode 'q=CREATE DATABASE mydb'
 ```
 
+```
+curl --user admin:kraken http://localhost:8086/query --data-urlencode "q=SHOW USERS"
+curl --user admin:kraken http://localhost:8086/query --data-urlencode "q=CREATE USER kojiro.sazaki WITH PASSWORD 'pwd'"
+
+```
+
 Open client
 
 ```

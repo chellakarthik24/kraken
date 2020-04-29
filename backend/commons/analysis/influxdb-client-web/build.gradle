@@ -1,5 +1,6 @@
 dependencies {
     implementation project(':commons:analysis:influxdb-client-api')
+    implementation project(':commons:tools:tools-unique-id')
 
     testImplementation project(path: ':commons:tools:tools-application')
     testImplementation project(path: ':tests:tests-web-client')

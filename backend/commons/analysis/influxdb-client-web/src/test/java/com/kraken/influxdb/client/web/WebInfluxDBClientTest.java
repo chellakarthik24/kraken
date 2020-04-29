@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.kraken.config.influxdb.api.InfluxDBProperties;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.influxdb.client.web.WebInfluxDBClient;
+import com.kraken.tools.unique.id.IdGenerator;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -31,6 +33,9 @@ public class WebInfluxDBClientTest {
   @Mock
   InfluxDBProperties properties;
 
+  @Mock
+  IdGenerator idGenerator;
+
   @Before
   public void before() {
     server = new MockWebServer();
@@ -38,7 +43,7 @@ public class WebInfluxDBClientTest {
     when(properties.getDatabase()).thenReturn("influxdbDatabase");
     when(properties.getUser()).thenReturn("root");
     when(properties.getPassword()).thenReturn("admin");
-    client = new WebInfluxDBClient(properties);
+    client = new WebInfluxDBClient(properties, idGenerator);
   }
 
   @After
