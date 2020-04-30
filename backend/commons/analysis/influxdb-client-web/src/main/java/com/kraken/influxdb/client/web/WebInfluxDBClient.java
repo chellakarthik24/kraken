@@ -44,15 +44,15 @@ final class WebInfluxDBClient implements InfluxDBClient {
 
   @Override
   public Mono<String> deleteSeries(final String database, final String testId) {
-    return client.post()
+    return retry(client.post()
         .uri(uri -> uri.path("/query").queryParam("db", database).build())
         .body(fromFormData("q", format("DROP SERIES FROM /.*/ WHERE test = '%s'", testId)))
         .retrieve()
-        .bodyToMono(String.class);
+        .bodyToMono(String.class), log);
   }
 
   @Override
-  public Mono<InfluxDBUser> createUserDB() {
+  public Mono<InfluxDBUser> createUser() {
     final var id = idGenerator.generate();
     final var user = InfluxDBUser.builder()
         .username("user_" + id)
@@ -60,40 +60,40 @@ final class WebInfluxDBClient implements InfluxDBClient {
         .password("pwd_" + idGenerator.generate())
         .build();
 
-    final var createUser = client.post()
+    final var createUser = retry(client.post()
         .uri(uri -> uri.path("/query").build())
         .body(fromFormData("q", format("CREATE USER %s WITH PASSWORD '%s'", user.getUsername(), user.getPassword())))
         .retrieve()
-        .bodyToMono(String.class);
+        .bodyToMono(String.class), log);
 
-    final var createDB = client.post()
+    final var createDB = retry(client.post()
         .uri(uri -> uri.path("/query").build())
         .body(fromFormData("q", format("CREATE DATABASE %s", user.getDatabase())))
         .retrieve()
-        .bodyToMono(String.class);
+        .bodyToMono(String.class), log);
 
-    final var grantPrivileges = client.post()
+    final var grantPrivileges = retry(client.post()
         .uri(uri -> uri.path("/query").build())
-        .body(fromFormData("q", format("GRANT ALL ON %s TO %s", user.getDatabase(), user.getPassword())))
+        .body(fromFormData("q", format("GRANT ALL ON %s TO %s", user.getDatabase(), user.getUsername())))
         .retrieve()
-        .bodyToMono(String.class);
+        .bodyToMono(String.class), log);
 
     return createUser.then(createDB).then(grantPrivileges).map(s -> user);
   }
 
   @Override
-  public Mono<Void> deleteUserDB(InfluxDBUser user) {
-    final var dropDB = client.post()
+  public Mono<Void> deleteUser(InfluxDBUser user) {
+    final var dropDB = retry(client.post()
         .uri(uri -> uri.path("/query").build())
         .body(fromFormData("q", format("DROP DATABASE %s", user.getDatabase())))
         .retrieve()
-        .bodyToMono(String.class);
+        .bodyToMono(String.class), log);
 
-    final var dropUser = client.post()
+    final var dropUser = retry(client.post()
         .uri(uri -> uri.path("/query").build())
         .body(fromFormData("q", format("DROP USER %s", user.getUsername())))
         .retrieve()
-        .bodyToMono(Void.class);
+        .bodyToMono(Void.class), log);
 
     return dropDB.then(dropUser);
   }

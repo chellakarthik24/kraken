@@ -23,6 +23,7 @@ import static java.util.Optional.ofNullable;
 public class KrakenTokenUser {
 
   String username;
+  String email;
   String userId;
   List<KrakenRole> roles;
   List<String> groups;
@@ -36,6 +37,7 @@ public class KrakenTokenUser {
       @NonNull @JsonProperty("iat") final Long issuedAt,
       @NonNull @JsonProperty("sub") final String userId,
       @JsonProperty("preferred_username") final String username,
+      @JsonProperty("email") final String email,
       @JsonProperty("realm_access") final Map<String, List<String>> realmAccess,
       @JsonProperty("user_groups") final List<String> groups,
       @JsonProperty("current_group") final String currentGroup
@@ -45,6 +47,7 @@ public class KrakenTokenUser {
     this.issuedAt = Instant.ofEpochSecond(issuedAt);
     this.userId = userId;
     this.username = nullToEmpty(username);
+    this.email = nullToEmpty(email);
     this.roles = ofNullable(ofNullable(realmAccess)
         .orElse(ImmutableMap.of("roles", of())).get("roles"))
         .orElse(of())
@@ -57,6 +60,7 @@ public class KrakenTokenUser {
   @Builder(toBuilder = true)
   KrakenTokenUser(
       @NonNull String username,
+      @NonNull String email,
       @NonNull String userId,
       @NonNull List<KrakenRole> roles,
       @NonNull List<String> groups,
@@ -66,6 +70,7 @@ public class KrakenTokenUser {
   ) {
     super();
     this.username = username;
+    this.email = email;
     this.userId = userId;
     this.roles = roles;
     this.groups = groups;

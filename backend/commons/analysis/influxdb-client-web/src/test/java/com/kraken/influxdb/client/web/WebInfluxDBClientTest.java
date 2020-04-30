@@ -4,7 +4,6 @@ import com.google.common.base.Charsets;
 import com.kraken.config.influxdb.api.InfluxDBProperties;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.influxdb.client.api.InfluxDBUser;
-import com.kraken.influxdb.client.web.WebInfluxDBClient;
 import com.kraken.tools.unique.id.IdGenerator;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -16,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -80,7 +78,7 @@ public class WebInfluxDBClientTest {
     server.enqueue(new MockResponse().setResponseCode(200));
     server.enqueue(new MockResponse().setResponseCode(200));
 
-    final var user = client.createUserDB().block();
+    final var user = client.createUser().block();
 //   TODO Why is it null? We can see in the requests sent that the user is created and it works in integration tests!
 //    assertThat(user).isEqualTo(InfluxDBUser.builder()
 //        .username("user_id")
@@ -98,7 +96,7 @@ public class WebInfluxDBClientTest {
 
     final RecordedRequest grantRequest = server.takeRequest();
     assertThat(grantRequest.getPath()).isEqualTo("/query");
-    assertThat(grantRequest.getBody().readString(Charsets.UTF_8)).isEqualTo("q=GRANT+ALL+ON+db_id+TO+pwd_id");
+    assertThat(grantRequest.getBody().readString(Charsets.UTF_8)).isEqualTo("q=GRANT+ALL+ON+db_id+TO+user_id");
   }
 
   @Test
@@ -112,7 +110,7 @@ public class WebInfluxDBClientTest {
         .password("pwd_id")
         .database("db_id")
         .build();
-    client.deleteUserDB(user).block();
+    client.deleteUser(user).block();
 
     final RecordedRequest createUserRequest = server.takeRequest();
     assertThat(createUserRequest.getPath()).isEqualTo("/query");

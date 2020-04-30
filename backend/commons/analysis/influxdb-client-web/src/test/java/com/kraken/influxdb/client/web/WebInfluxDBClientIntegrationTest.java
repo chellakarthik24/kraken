@@ -41,7 +41,7 @@ public class WebInfluxDBClientIntegrationTest {
   @Test
   public void shouldCreateUserDB() {
     System.out.println("======================>");
-    System.out.println(client.createUserDB().block());
+    System.out.println(client.createUser().block());
     System.out.println("<======================");
   }
 
@@ -52,6 +52,6 @@ public class WebInfluxDBClientIntegrationTest {
         .password("pwd_ngdq5n8tfh")
         .database("db_wqylkbfitw")
         .build();
-    client.deleteUserDB(user).block();
+    client.deleteUser(user).block();
   }
 }

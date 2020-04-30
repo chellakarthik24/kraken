@@ -5,7 +5,9 @@ import com.google.common.base.Charsets;
 import com.kraken.Application;
 import com.kraken.config.grafana.api.GrafanaProperties;
 import com.kraken.grafana.client.api.GrafanaClient;
+import com.kraken.grafana.client.api.GrafanaUserTest;
 import com.kraken.tests.utils.ResourceUtils;
+import com.kraken.tools.unique.id.IdGenerator;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -36,83 +38,21 @@ public class WebGrafanaClientTest {
   @MockBean
   GrafanaProperties properties;
 
+  @MockBean
+  IdGenerator idGenerator;
+
   @Before
   public void before() {
     mapper = new ObjectMapper();
     server = new MockWebServer();
     final String url = server.url("/").toString();
     when(properties.getUrl()).thenReturn(url);
-    client = new WebGrafanaClient(properties, mapper);
+    client = new WebGrafanaClient(properties, mapper, idGenerator);
   }
 
   @After
   public void tearDown() throws IOException {
     server.shutdown();
-  }
-
-  @Test
-  public void shouldGetDashboard() throws InterruptedException {
-    final var id = "id";
-    final var dashboard = "{\"refresh\":\"1s\"}";
-
-    server.enqueue(
-        new MockResponse()
-            .setResponseCode(200)
-            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody("{\"dashboard\":{\"refresh\":\"1s\"}}")
-    );
-
-    final var response = client.getDashboard(id).block();
-    assertThat(response).isEqualTo(dashboard);
-
-    final RecordedRequest commandRequest = server.takeRequest();
-    assertThat(commandRequest.getPath()).isEqualTo("/api/dashboards/uid/id");
-  }
-
-  @Test
-  public void shouldUpdateDashboard() throws InterruptedException, IOException {
-    final var dashboard = "{\"refresh\":false}";
-    final var setDashboardResponse = "response";
-
-    server.enqueue(
-        new MockResponse()
-            .setResponseCode(200)
-            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody(setDashboardResponse)
-    );
-
-    final var response = client.setDashboard(dashboard).block();
-    assertThat(response).isEqualTo(setDashboardResponse);
-
-    final RecordedRequest commandRequest = server.takeRequest();
-    assertThat(commandRequest.getPath()).isEqualTo("/api/dashboards/db");
-    final var node = mapper.readTree(commandRequest.getBody().readString(Charsets.UTF_8));
-    assertThat(mapper.writeValueAsString(node.get("dashboard"))).isEqualTo(dashboard);
-    assertThat(node.get("overwrite").asBoolean()).isFalse();
-    assertThat(node.get("message").asText()).isNotNull();
-  }
-
-  @Test
-  public void shouldImportDashboard() throws InterruptedException, IOException {
-    final var dashboard = "{\"refresh\":false}";
-    final var setDashboardResponse = "response";
-
-    server.enqueue(
-        new MockResponse()
-            .setResponseCode(200)
-            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody(setDashboardResponse)
-    );
-
-    final var response = client.importDashboard(dashboard).block();
-    assertThat(response).isEqualTo(setDashboardResponse);
-
-    final RecordedRequest commandRequest = server.takeRequest();
-    assertThat(commandRequest.getPath()).isEqualTo("/api/dashboards/import");
-    final var node = mapper.readTree(commandRequest.getBody().readString(Charsets.UTF_8));
-    assertThat(mapper.writeValueAsString(node.get("dashboard"))).isEqualTo(dashboard);
-    assertThat(node.get("overwrite").asBoolean()).isTrue();
-    assertThat(node.get("folderId").asInt()).isEqualTo(0);
   }
 
 
@@ -136,36 +76,71 @@ public class WebGrafanaClientTest {
   }
 
   @Test
-  public void shouldInitDashboard() throws IOException {
-    final var result = client.initDashboard("testId", "title", 42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json")).block();
-    assertThat(result).isEqualTo(ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-init.json"));
+  public void shouldImportDashboard() throws InterruptedException, IOException {
+    final var dashboard = ResourceUtils.getResourceContent("grafana-gatling-dashboard.json");
+    final var initialized = ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-init.json");
+    final var setDashboardResponse = "response";
+
+    server.enqueue(
+        new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .setBody(setDashboardResponse)
+    );
+
+    final var response = client.importDashboard(GrafanaUserTest.GRAFANA_USER, "testId", "title", 42L, dashboard).block();
+    assertThat(response).isEqualTo(setDashboardResponse);
+
+    final RecordedRequest commandRequest = server.takeRequest();
+    assertThat(commandRequest.getPath()).isEqualTo("/api/dashboards/import");
+    final var node = mapper.readTree(commandRequest.getBody().readString(Charsets.UTF_8));
+    assertThat(mapper.writeValueAsString(node.get("dashboard"))).isEqualTo(initialized);
+    assertThat(node.get("overwrite").asBoolean()).isTrue();
+    assertThat(node.get("folderId").asInt()).isEqualTo(0);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void shouldInitDashboardFail() {
-    client.initDashboard("testId", "title", 42L, "ca va fail !!!").block();
-  }
 
-  @Test(expected = RuntimeException.class)
-  public void shouldUpdatedDashboardFail() {
-    client.updatedDashboard(42L, "ca va fail !!!").block();
+  @Test
+  public void shouldUpdatedDashboardRunning() throws IOException, InterruptedException {
+    this.shouldUpdate(ResourceUtils.getResourceContent("grafana-gatling-dashboard.json"),
+        ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-running.json"),
+        42L);
+
   }
 
   @Test
-  public void shouldUpdatedDashboardRunning() throws IOException {
-    final var result = client.updatedDashboard(42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json")).block();
-    assertThat(result).isEqualTo(ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-running.json"));
+  public void shouldUpdatedDashboardRefresh() throws IOException, InterruptedException  {
+    this.shouldUpdate(ResourceUtils.getResourceContent("grafana-gatling-dashboard.json"),
+        ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-refresh.json"),
+        0L);
   }
 
-  @Test
-  public void shouldUpdatedDashboardCompleted() throws IOException {
-    final var result = client.updatedDashboard(42L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json")).block();
-    assertThat(result).isEqualTo(ResourceUtils.getResourceContent("grafana-gatling-dashboard-result-completed.json"));
-  }
+  private void shouldUpdate(final String dashboard, final String updated, final Long endDate) throws IOException, InterruptedException {
+    final var id = "id";
+    server.enqueue(
+        new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .setBody("{\"dashboard\":" + dashboard + "}")
+    );
+    server.enqueue(
+        new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .setBody("response")
+    );
 
-  @Test
-  public void shouldUpdatedDashboardRefresh() throws IOException {
-    final var result = client.updatedDashboard(0L, ResourceUtils.getResourceContent("grafana-gatling-dashboard.json")).block();
-    assertThat(result).contains("\"refresh\":\"1s\"");
+    final var response = client.updateDashboard(id, endDate).block();
+    assertThat(response).isEqualTo(response);
+
+    final RecordedRequest getRequest = server.takeRequest();
+    assertThat(getRequest.getPath()).isEqualTo("/api/dashboards/uid/" + id);
+
+    final RecordedRequest setRequest = server.takeRequest();
+    assertThat(setRequest.getPath()).isEqualTo("/api/dashboards/db");
+    final var node = mapper.readTree(setRequest.getBody().readString(Charsets.UTF_8));
+    assertThat(mapper.writeValueAsString(node.get("dashboard"))).isEqualTo(updated);
+    assertThat(node.get("overwrite").asBoolean()).isFalse();
+    assertThat(node.get("message").asText()).isNotNull();
   }
 }

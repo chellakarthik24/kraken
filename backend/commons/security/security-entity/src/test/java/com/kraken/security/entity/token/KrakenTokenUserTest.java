@@ -1,7 +1,5 @@
 package com.kraken.security.entity.token;
 
-import com.kraken.security.entity.token.KrakenRole;
-import com.kraken.security.entity.token.KrakenTokenUser;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 
@@ -18,6 +16,7 @@ public class KrakenTokenUserTest {
       .issuedAt(Instant.EPOCH)
       .expirationTime(Instant.EPOCH.plusMillis(1))
       .userId("userId")
+      .email("email")
       .username("username")
       .roles(of(KrakenRole.USER))
       .groups(of("/default-kraken"))
@@ -49,6 +48,7 @@ public class KrakenTokenUserTest {
         time,
         "userId",
         "username",
+        "email",
         null,
         null,
         null);

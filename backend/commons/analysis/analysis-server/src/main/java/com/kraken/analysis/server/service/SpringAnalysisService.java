@@ -49,6 +49,7 @@ final class SpringAnalysisService implements AnalysisService {
   @NonNull OwnerToApplicationId toApplicationId;
   @NonNull OwnerToUserId toUserId;
 
+  // TODO create interfaces
   @NonNull Function<List<HttpHeader>, String> headersToExtension;
   @NonNull Function<ResultStatus, Long> statusToEndDate;
 
@@ -59,8 +60,7 @@ final class SpringAnalysisService implements AnalysisService {
     final var resultJsonPath = resultPath.resolve(RESULT_JSON).toString();
 
     final var createGrafanaReport = storageClient.getContent(grafana.getDashboard())
-        .flatMap(dashboard -> grafanaClient.initDashboard(result.getId(), result.getDescription() + " - " + result.getId(), result.getStartDate(), dashboard))
-        .flatMap(grafanaClient::importDashboard);
+        .flatMap(dashboard -> grafanaClient.importDashboard(result.getId(), result.getDescription() + " - " + result.getId(), result.getStartDate(), dashboard));
 
     final var createGrafanaReportOrNot = Mono.just(result).flatMap(res -> res.getType().isDebug() ? Mono.just("ok") : createGrafanaReport);
 
@@ -93,9 +93,7 @@ final class SpringAnalysisService implements AnalysisService {
           if (result.getType().isDebug()) {
             return Mono.just(result);
           }
-          return grafanaClient.getDashboard(resultId)
-              .flatMap(dashboard -> grafanaClient.updatedDashboard(endDate, dashboard))
-              .flatMap(grafanaClient::setDashboard)
+          return grafanaClient.updateDashboard(resultId, endDate)
               .map(s -> result);
         })
         .map(result -> result.withEndDate(endDate).withStatus(status))

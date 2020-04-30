@@ -27,6 +27,7 @@ curl --user admin:kraken http://localhost:8086/query --data-urlencode "q=CREATE 
 ```
 
 Open client
+InfluxDBUser(username=user_i05tk8x65h, password=pwd_wjstgq9xpc, database=db_i05tk8x65h)
 
 ```
 docker exec -it kraken-influxdb-dev /bin/bash
@@ -77,7 +78,7 @@ docker stop grafana
 
 User
 ```
-curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'username=kraken-user&password=kraken&grant_type=password' -d 'client_id=kraken-web' "http://localhost:9080/auth/realms/kraken/protocol/openid-connect/token" | jq -r '.access_token' > token
+curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'username=contact@octoperf.com&password=kraken&grant_type=password' -d 'client_id=kraken-web' "http://localhost:9080/auth/realms/kraken/protocol/openid-connect/token" | jq -r '.access_token' > token
 ```
 
 Admin
