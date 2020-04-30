@@ -13,6 +13,7 @@ import com.kraken.tools.unique.id.IdGenerator;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -85,95 +86,11 @@ final class WebGrafanaUserClient implements GrafanaUserClient {
 
     final Function<Tuple2<Integer, String>, Mono<Void>> putDatasource = (final Tuple2<Integer, String> datasource) -> retry(webClient.put()
         .uri(uriBuilder -> uriBuilder.path("/api/datasources/{id}").build(datasource.getT1()))
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .body(BodyInserters.fromValue(datasource.getT2()))
         .retrieve()
         .bodyToMono(Void.class), log);
 
-    // CREATE /grafana/api/datasources
-//    POST {"name":"InfluxDB-1","type":"influxdb","access":"proxy","isDefault":false}
-// Response {"datasource":{"id":7,"orgId":4,"name":"InfluxDB-1","type":"influxdb","typeLogoUrl":"","access":"proxy","url":"","password":"","user":"","database":"","basicAuth":false,"basicAuthUser":"","basicAuthPassword":"","withCredentials":false,"isDefault":false,"jsonData":{},"secureJsonFields":{},"version":1,"readOnly":false},"id":7,"message":"Datasource added","name":"InfluxDB-1"}
-//    {
-//	"datasource": {
-//		"id": 7,
-//		"orgId": 4,
-//		"name": "InfluxDB-1",
-//		"type": "influxdb",
-//		"typeLogoUrl": "",
-//		"access": "proxy",
-//		"url": "",
-//		"password": "",
-//		"user": "",
-//		"database": "",
-//		"basicAuth": false,
-//		"basicAuthUser": "",
-//		"basicAuthPassword": "",
-//		"withCredentials": false,
-//		"isDefault": false,
-//		"jsonData": {},
-//		"secureJsonFields": {},
-//		"version": 1,
-//		"readOnly": false
-//	},
-//	"id": 7,
-//	"message": "Datasource added",
-//	"name": "InfluxDB-1"
-//}
-// TODO Extract the datascourceJson => update => send
-
-    // UPDATE dans la foulée
-//    {
-//      "id": 6,
-//        "orgId": 4,
-//        "name": "InfluxDB",
-//        "type": "influxdb",
-//        "typeLogoUrl": "",
-//        "access": "proxy",
-//        "url": "",
-//        "password": "",
-//        "user": "user_i05tk8x65h",
-//        "database": "db_i05tk8x65h",
-//        "basicAuth": false,
-//        "basicAuthUser": "",
-//        "basicAuthPassword": "",
-//        "withCredentials": false,
-//        "isDefault": false,
-//        "jsonData": {
-//      "httpMode": "POST"
-//    },
-//      "secureJsonFields": {},
-//      "version": 1,
-//        "readOnly": false,
-//        "secureJsonData": {
-//      "password": "pwd_wjstgq9xpc"
-//    }
-//    }
-
-//    final var createDatasource = retry(webClient.put()
-//        .uri(uriBuilder -> uriBuilder.path("/api/datasources/{id}").build(datasourceId))
-//        .body(BodyInserters.fromValue(CreateGrafanaDatasourceRequest.builder()
-//            .id(datasourceId)
-//            .orgId(grafanaUser.getId())
-//            .name(grafanaUser.getUsername())
-//            .type("influxdb").access("proxy")
-//            .url("http://localhost:8086")
-//            .password("")
-//            .typeLogoUrl("")
-//            .basicAuth(false)
-//            .basicAuthUser("")
-//            .basicAuthPassword("")
-//            .user(dbUser.getUsername())
-//            .database(dbUser.getDatabase())
-//            .withCredentials(false)
-//            .isDefault(true)
-//            .jsonData(ImmutableMap.of("httpMode", "POST"))
-//            .readOnly(true)
-//            .secureJsonData(ImmutableMap.of("password", dbUser.getPassword(),
-//                "basicAuthPassword", dbUser.getPassword()))
-//            .build()))
-//        .retrieve()
-//        .bodyToMono(String.class), log);
-//
-//    return createDatasource.then();
     return createDatasource
         .flatMap(updateDatasource)
         .flatMap(putDatasource);
@@ -187,6 +104,8 @@ final class WebGrafanaUserClient implements GrafanaUserClient {
                                       final String dashboard) {
     return this.initDashboard(testId, title, startDate, dashboard)
         .flatMap(this::importDashboard);
+    // TODO utiliser le bon datasource dans le dashboard
+    // TODO mettre a jour les requêtes pour le testId
     // TODO Dashboard permission! => Add user en paramètre
 
 //    POST /api/dashboards/id/1/permissions

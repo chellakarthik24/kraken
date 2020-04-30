@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,6 +21,8 @@ import java.util.List;
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class WebGrafanaUserClientBuilder implements GrafanaUserClientBuilder {
+
+  private static final String GRAFANA_SESSION = "grafana_session";
 
   GrafanaUser user;
   final ObjectMapper mapper;
@@ -44,18 +47,18 @@ class WebGrafanaUserClientBuilder implements GrafanaUserClientBuilder {
   @Override
   public Mono<GrafanaUserClient> build() {
     return getSessionCookie()
-        .map(cookies -> new WebGrafanaUserClient(user,
+        .map(sessionCookie -> new WebGrafanaUserClient(user,
             WebClient
                 .builder()
                 .baseUrl(grafanaProperties.getUrl())
-                .defaultHeader(HttpHeaders.COOKIE, cookies.toArray(new String[]{}))
+                .defaultCookie(GRAFANA_SESSION, sessionCookie.getValue())
                 .build(),
             dbProperties,
             mapper));
   }
 
   @Override
-  public Mono<List<String>> getSessionCookie() {
+  public Mono<ResponseCookie> getSessionCookie() {
     final var loginClient = WebClient
         .builder()
         .baseUrl(grafanaProperties.getUrl())
@@ -68,6 +71,6 @@ class WebGrafanaUserClientBuilder implements GrafanaUserClientBuilder {
             .user(user.getUsername())
             .build()))
         .exchange()
-        .map(response -> response.headers().header(HttpHeaders.COOKIE));
+        .map(response -> response.cookies().getFirst(GRAFANA_SESSION));
   }
 }

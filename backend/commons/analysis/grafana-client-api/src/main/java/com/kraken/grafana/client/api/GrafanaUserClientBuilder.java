@@ -1,8 +1,7 @@
 package com.kraken.grafana.client.api;
 
+import org.springframework.http.ResponseCookie;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 public interface GrafanaUserClientBuilder {
 
@@ -10,5 +9,5 @@ public interface GrafanaUserClientBuilder {
 
   Mono<GrafanaUserClient> build();
 
-  Mono<List<String>> getSessionCookie();
+  Mono<ResponseCookie> getSessionCookie();
 }
