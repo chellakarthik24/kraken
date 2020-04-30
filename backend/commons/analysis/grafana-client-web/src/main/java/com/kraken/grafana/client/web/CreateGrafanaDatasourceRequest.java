@@ -8,7 +8,7 @@ import lombok.Value;
 
 @Value
 @Builder(toBuilder = true)
-public class CreateGrafanaDatasourceRequest {
+class CreateGrafanaDatasourceRequest {
 
   String name;
   String type;

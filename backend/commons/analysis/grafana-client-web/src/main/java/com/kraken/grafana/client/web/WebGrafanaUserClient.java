@@ -22,6 +22,7 @@ import reactor.util.function.Tuples;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.function.Function;
 
@@ -38,16 +39,12 @@ final class WebGrafanaUserClient implements GrafanaUserClient {
   InfluxDBProperties dbProperties;
 
   WebGrafanaUserClient(@NonNull final GrafanaUser user,
-                       @NonNull final GrafanaProperties grafanaProperties,
+                       @NonNull final WebClient webClient,
                        @NonNull final InfluxDBProperties dbProperties,
                        @NonNull final ObjectMapper mapper) {
     this.user = user;
     this.dbProperties = dbProperties;
-    this.webClient = WebClient
-        .builder()
-        .baseUrl(grafanaProperties.getUrl())
-        .defaultHeader("Authorization", "Basic " + basicAuthorizationHeader(user.getUsername(), user.getPassword()))
-        .build();
+    this.webClient = webClient;
     this.mapper = mapper;
     //  2019-03-22T10:01:00.000Z
     this.format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -68,6 +65,7 @@ final class WebGrafanaUserClient implements GrafanaUserClient {
         .bodyToMono(String.class), log);
 
     final Function<String, Mono<Tuple2<Integer, String>>> updateDatasource = (final String response) -> Mono.fromCallable(() -> {
+      System.out.println(response);
       final JsonNode responseNode = mapper.readTree(response);
       final ObjectNode datasourceNode = (ObjectNode) responseNode.get("datasource");
       datasourceNode.put("url", dbProperties.getUrl());
@@ -80,7 +78,9 @@ final class WebGrafanaUserClient implements GrafanaUserClient {
       final ObjectNode secureJsonDataNode = mapper.createObjectNode();
       secureJsonDataNode.put("password", dbUser.getPassword());
       datasourceNode.set("secureJsonData", secureJsonDataNode);
-      return Tuples.of(datasourceNode.get("id").asInt(), mapper.writeValueAsString(datasourceNode));
+      final var updated = mapper.writeValueAsString(datasourceNode);
+      System.out.println(updated);
+      return Tuples.of(datasourceNode.get("id").asInt(), updated);
     });
 
     final Function<Tuple2<Integer, String>, Mono<Void>> putDatasource = (final Tuple2<Integer, String> datasource) -> retry(webClient.put()

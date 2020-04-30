@@ -49,6 +49,11 @@ final class WebGrafanaAdminClient implements GrafanaAdminClient {
         .retrieve()
         .bodyToMono(CreateGrafanaUserResponse.class), log);
 
+    // TODO
+//      Create Organization
+    //  Create tokens
+    // https://grafana.com/docs/grafana/latest/tutorials/api_org_token_howto/
+
     return createUser.map(response -> GrafanaUser.builder()
         .id(response.getId().toString())
         .username(tokenUser.getUsername())
@@ -72,12 +77,6 @@ final class WebGrafanaAdminClient implements GrafanaAdminClient {
         .bodyToMono(Void.class), log);
 
     return deleteUser.then(deleteDatasource);
-  }
-
-  @Override
-  public Mono<String> login(GrafanaUser user) {
-    // TODO how to forward the setCookie header ?
-    return null;
   }
 
 }

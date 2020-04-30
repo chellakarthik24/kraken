@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 
@@ -40,7 +41,7 @@ public class WebGrafanaClientIntegrationTest {
 
   InfluxDBUser dbUser;
   GrafanaUser grafanaUser;
-  GrafanaUserClient grafanaUserClient;
+  Mono<GrafanaUserClient> grafanaUserClient;
 
   @Before
   public void setUp() {
@@ -86,7 +87,7 @@ public class WebGrafanaClientIntegrationTest {
 
   @Test
   public void shouldCreateDatasource() {
-    grafanaUserClient.createDatasource(dbUser).block();
+    grafanaUserClient.flatMap(client -> client.createDatasource(dbUser)).block();
   }
 
 

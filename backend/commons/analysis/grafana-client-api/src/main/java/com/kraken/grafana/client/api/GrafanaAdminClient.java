@@ -10,6 +10,4 @@ public interface GrafanaAdminClient extends Client {
 
   Mono<Void> deleteUser(GrafanaUser user);
 
-  Mono<String> login(GrafanaUser user);
-
 }
