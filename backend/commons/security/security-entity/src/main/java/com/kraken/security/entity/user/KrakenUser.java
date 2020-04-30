@@ -1,15 +1,16 @@
 package com.kraken.security.entity.user;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import com.google.common.base.Preconditions;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 @Value
 @Builder(toBuilder = true)
@@ -94,5 +95,21 @@ public class KrakenUser {
     this.self = self;
     this.serviceAccountClientId = serviceAccountClientId;
     this.username = username;
+  }
+
+  @JsonIgnore
+  public String getAttribute(final String attributeName) {
+    return this.getAttributes(attributeName).get(0);
+  }
+
+  @JsonIgnore
+  public List<String> getAttributes(final String attributeName) {
+    checkArgument(this.hasAttribute(attributeName));
+    return this.attributes.get(attributeName);
+  }
+
+  @JsonIgnore
+  public Boolean hasAttribute(final String attributeName) {
+    return this.attributes != null && this.attributes.containsKey(attributeName) && this.attributes.get(attributeName).size() > 0;
   }
 }

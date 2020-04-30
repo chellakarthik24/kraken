@@ -11,7 +11,6 @@ public class InfluxDBPropertiesTest {
       .url("influxdbUrl")
       .user("influxdbUser")
       .password("influxdbPassword")
-      .database("influxdbDatabase")
       .build();
 
   @Test

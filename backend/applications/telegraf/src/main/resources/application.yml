@@ -6,7 +6,6 @@ kraken:
   influxdb:
     user: admin
     password: kraken
-    database: gatling
 
 logging:
   level:

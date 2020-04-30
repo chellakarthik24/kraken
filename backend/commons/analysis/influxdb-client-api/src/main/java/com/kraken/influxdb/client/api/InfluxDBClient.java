@@ -4,7 +4,7 @@ import reactor.core.publisher.Mono;
 
 public interface InfluxDBClient {
 
-  Mono<String> deleteSeries(String testId);
+  Mono<String> deleteSeries(String database, String testId);
 
   Mono<InfluxDBUser> createUserDB();
 

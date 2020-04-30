@@ -55,4 +55,22 @@ public class KrakenUserTest {
     final var attributes = ImmutableMap.of("foo", ImmutableList.of("bar"));
     Assertions.assertThat(KRAKEN_USER.withAttributes(attributes).getAttributes()).isSameAs(attributes);
   }
+
+  @Test
+  public void shouldReturnHasAttributes() {
+    Assertions.assertThat(KRAKEN_USER.withAttributes(null).hasAttribute("foo")).isFalse();
+    Assertions.assertThat(KRAKEN_USER.withAttributes(ImmutableMap.of()).hasAttribute("foo")).isFalse();
+    Assertions.assertThat(KRAKEN_USER.withAttributes(ImmutableMap.of("foo", ImmutableList.of())).hasAttribute("foo")).isFalse();
+    Assertions.assertThat(KRAKEN_USER.withAttributes(ImmutableMap.of("foo", ImmutableList.of("bar"))).hasAttribute("foo")).isTrue();
+  }
+
+  @Test
+  public void shouldReturnAttributes() {
+    Assertions.assertThat(KRAKEN_USER.withAttributes(ImmutableMap.of("foo", ImmutableList.of("bar"))).getAttributes("foo")).isEqualTo(ImmutableList.of("bar"));
+  }
+
+  @Test
+  public void shouldReturnAttribute() {
+    Assertions.assertThat(KRAKEN_USER.withAttributes(ImmutableMap.of("foo", ImmutableList.of("bar"))).getAttribute("foo")).isEqualTo("bar");
+  }
 }

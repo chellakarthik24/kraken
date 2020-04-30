@@ -26,7 +26,6 @@ final class WebInfluxDBClient implements InfluxDBClient {
 
   IdGenerator idGenerator;
   WebClient client;
-  // TODO virer la database des properties
   InfluxDBProperties properties;
 
   WebInfluxDBClient(@NonNull final InfluxDBProperties properties,
@@ -44,10 +43,9 @@ final class WebInfluxDBClient implements InfluxDBClient {
   }
 
   @Override
-  public Mono<String> deleteSeries(final String testId) {
-    // TODO a reprendre avec le userId
+  public Mono<String> deleteSeries(final String database, final String testId) {
     return client.post()
-        .uri(uri -> uri.path("/query").queryParam("db", properties.getDatabase()).build())
+        .uri(uri -> uri.path("/query").queryParam("db", database).build())
         .body(fromFormData("q", format("DROP SERIES FROM /.*/ WHERE test = '%s'", testId)))
         .retrieve()
         .bodyToMono(String.class);
@@ -95,8 +93,8 @@ final class WebInfluxDBClient implements InfluxDBClient {
         .uri(uri -> uri.path("/query").build())
         .body(fromFormData("q", format("DROP USER %s", user.getUsername())))
         .retrieve()
-        .bodyToMono(String.class);
+        .bodyToMono(Void.class);
 
-    return dropDB.then(dropUser).then();
+    return dropDB.then(dropUser);
   }
 }

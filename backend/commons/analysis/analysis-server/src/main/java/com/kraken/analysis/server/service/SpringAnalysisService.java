@@ -8,6 +8,7 @@ import com.kraken.config.grafana.api.AnalysisResultsProperties;
 import com.kraken.config.grafana.api.GrafanaProperties;
 import com.kraken.grafana.client.api.GrafanaClient;
 import com.kraken.influxdb.client.api.InfluxDBClient;
+import com.kraken.security.admin.client.api.SecurityAdminClient;
 import com.kraken.security.authentication.api.AuthenticationMode;
 import com.kraken.security.entity.functions.api.OwnerToApplicationId;
 import com.kraken.security.entity.functions.api.OwnerToUserId;
@@ -43,6 +44,7 @@ final class SpringAnalysisService implements AnalysisService {
   @NonNull InfluxDBClient influxdbClient;
   @NonNull GrafanaClient grafanaClient;
   @NonNull StorageClientBuilder storageClientBuilder;
+  @NonNull SecurityAdminClient adminClient;
 
   @NonNull OwnerToApplicationId toApplicationId;
   @NonNull OwnerToUserId toUserId;
@@ -68,12 +70,14 @@ final class SpringAnalysisService implements AnalysisService {
 
   @Override
   public Mono<String> delete(final Owner owner, final String resultId) {
+    final var userId = this.toUserId.apply(owner);
     final var storageClient = this.impersonateStorage(owner);
     final var resultPath = properties.getResultPath(resultId);
     final var resultJsonPath = resultPath.resolve(RESULT_JSON).toString();
     final var deleteFolder = storageClient.delete(resultPath.toString());
     final var getResult = storageClient.getJsonContent(resultJsonPath, Result.class);
-    final var deleteReport = getResult.flatMap(result -> result.getType().isDebug() ? Mono.just("ok") : Mono.zip(grafanaClient.deleteDashboard(resultId), influxdbClient.deleteSeries(resultId)));
+    final var getDatabase = "";// TODO adminClient.getUser(userId).map(user -> user.getAttribute())
+    final var deleteReport = getResult.flatMap(result -> result.getType().isDebug() ? Mono.just("ok") : Mono.zip(grafanaClient.deleteDashboard(resultId), influxdbClient.deleteSeries(getDatabase, resultId)));
     return Mono.zip(deleteFolder, deleteReport).map(objects -> resultId);
   }
 

@@ -5,7 +5,6 @@ kraken:
   influxdb:
     user: admin
     password: kraken
-    database: gatling
   security:
     realm: kraken
     web:

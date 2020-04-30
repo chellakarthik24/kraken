@@ -26,7 +26,6 @@ public class WebInfluxDBClientSpringTest {
   @Before
   public void setUp() {
     when(properties.getUrl()).thenReturn("http://localhost:8086");
-    when(properties.getDatabase()).thenReturn("influxdbDatabase");
     when(properties.getUser()).thenReturn("root");
     when(properties.getPassword()).thenReturn("admin");
   }

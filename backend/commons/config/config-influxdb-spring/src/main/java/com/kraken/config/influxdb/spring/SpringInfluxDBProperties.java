@@ -15,5 +15,4 @@ final class SpringInfluxDBProperties implements InfluxDBProperties {
   @NonNull String url;
   @NonNull String user;
   @NonNull String password;
-  @NonNull String database;
 }
