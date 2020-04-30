@@ -104,24 +104,6 @@ final class WebGrafanaUserClient implements GrafanaUserClient {
                                       final String dashboard) {
     return this.initDashboard(testId, title, startDate, dashboard)
         .flatMap(this::importDashboard);
-    // TODO utiliser le bon datasource dans le dashboard
-    // TODO mettre a jour les requêtes pour le testId
-    // TODO Dashboard permission! => Add user en paramètre
-
-//    POST /api/dashboards/id/1/permissions
-//    Accept: application/json
-//    Content-Type: application/json
-//    Authorization: Bearer eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk
-//
-//    {
-//      "items": [
-//      {
-//        "userId": 11,
-//          "permission": 4
-//      }
-//  ]
-//    }
-
   }
 
   @Override
@@ -165,8 +147,6 @@ final class WebGrafanaUserClient implements GrafanaUserClient {
             .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
             .retrieve()
             .bodyToMono(String.class), log));
-    // TODO Use datasource id for the current user
-//    TODO Return dashboard id!
   }
 
   private Mono<String> encapsulateSetDashboard(final String dashboard) {
@@ -219,6 +199,9 @@ final class WebGrafanaUserClient implements GrafanaUserClient {
       final ObjectNode optionsNode = ((ObjectNode) testVariableNode.get("options").get(0));
       optionsNode.put("text", testId);
       optionsNode.put("value", testId);
+
+      // TODO update datasource with datasourceName
+      // TODO update testId requests with the databaseName
 
       return mapper.writeValueAsString(dashboardNode);
     });
