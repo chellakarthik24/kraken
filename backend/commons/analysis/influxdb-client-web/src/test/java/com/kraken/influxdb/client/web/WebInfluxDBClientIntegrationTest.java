@@ -3,6 +3,7 @@ package com.kraken.influxdb.client.web;
 import com.kraken.Application;
 import com.kraken.config.influxdb.api.InfluxDBProperties;
 import com.kraken.influxdb.client.api.InfluxDBClient;
+import com.kraken.influxdb.client.api.InfluxDBUser;
 import com.kraken.tools.unique.id.IdGenerator;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
@@ -42,9 +43,19 @@ public class WebInfluxDBClientIntegrationTest {
   }
 
   @Test
-  public void shouldCreateUser() throws InterruptedException {
+  public void shouldCreateUserDB() {
     System.out.println("======================>");
     System.out.println(client.createUserDB().block());
     System.out.println("<======================");
+  }
+
+  @Test
+  public void shouldDropUserDB() {
+    final var user = InfluxDBUser.builder()
+        .username("user_dj2wifpbfo")
+        .password("")
+        .database("db_dux2ksox8z")
+        .build();
+    client.deleteUserDB(user).block();
   }
 }

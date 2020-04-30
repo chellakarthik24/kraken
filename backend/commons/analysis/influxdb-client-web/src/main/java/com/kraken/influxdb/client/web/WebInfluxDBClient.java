@@ -55,9 +55,10 @@ final class WebInfluxDBClient implements InfluxDBClient {
 
   @Override
   public Mono<InfluxDBUser> createUserDB() {
+    final var id = idGenerator.generate();
     final var user = InfluxDBUser.builder()
-        .username("user_" + idGenerator.generate())
-        .database("db_" + idGenerator.generate())
+        .username("user_" + id)
+        .database("db_" + id)
         .password("pwd_" + idGenerator.generate())
         .build();
 
@@ -84,7 +85,18 @@ final class WebInfluxDBClient implements InfluxDBClient {
 
   @Override
   public Mono<Void> deleteUserDB(InfluxDBUser user) {
-    // TODO Delete la db et delete le user !
-    return null;
+    final var dropDB = client.post()
+        .uri(uri -> uri.path("/query").build())
+        .body(fromFormData("q", format("DROP DATABASE %s", user.getDatabase())))
+        .retrieve()
+        .bodyToMono(String.class);
+
+    final var dropUser = client.post()
+        .uri(uri -> uri.path("/query").build())
+        .body(fromFormData("q", format("DROP USER %s", user.getUsername())))
+        .retrieve()
+        .bodyToMono(String.class);
+
+    return dropDB.then(dropUser).then();
   }
 }
