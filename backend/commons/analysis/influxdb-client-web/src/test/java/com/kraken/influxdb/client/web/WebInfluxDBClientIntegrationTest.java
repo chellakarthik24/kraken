@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.mockito.Mockito.when;
 
 
-@Ignore("Start a dev InfluxDB")
+//@Ignore("Start a dev InfluxDB")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public class WebInfluxDBClientIntegrationTest {

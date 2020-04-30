@@ -6,7 +6,6 @@ import com.kraken.analysis.entity.Result;
 import com.kraken.analysis.entity.ResultStatus;
 import com.kraken.config.grafana.api.AnalysisResultsProperties;
 import com.kraken.config.grafana.api.GrafanaProperties;
-import com.kraken.grafana.client.api.GrafanaClient;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.security.admin.client.api.SecurityAdminClient;
 import com.kraken.security.authentication.api.AuthenticationMode;

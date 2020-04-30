@@ -15,7 +15,7 @@ final class WebGrafanaUserConverter implements GrafanaUserConverter {
         .username(krakenUser.getAttribute(GrafanaUser.USERNAME_ATTRIBUTE))
         .password(krakenUser.getAttribute(GrafanaUser.PASSWORD_ATTRIBUTE))
         .email(krakenUser.getAttribute(GrafanaUser.EMAIL_ATTRIBUTE))
-        .datasourceId(krakenUser.getAttribute(GrafanaUser.DATASOURCE_ID_ATTRIBUTE))
+        .datasourceName(krakenUser.getAttribute(GrafanaUser.DATASOURCE_NAME_ATTRIBUTE))
         .build();
   }
 }

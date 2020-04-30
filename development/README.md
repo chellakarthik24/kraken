@@ -27,7 +27,6 @@ curl --user admin:kraken http://localhost:8086/query --data-urlencode "q=CREATE 
 ```
 
 Open client
-InfluxDBUser(username=user_i05tk8x65h, password=pwd_wjstgq9xpc, database=db_i05tk8x65h)
 
 ```
 docker exec -it kraken-influxdb-dev /bin/bash

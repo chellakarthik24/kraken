@@ -26,7 +26,7 @@ final class WebGrafanaUserAppender implements GrafanaUserAppender {
         .put(GrafanaUser.USERNAME_ATTRIBUTE, ImmutableList.of(user.getUsername()))
         .put(GrafanaUser.PASSWORD_ATTRIBUTE, ImmutableList.of(user.getPassword()))
         .put(GrafanaUser.EMAIL_ATTRIBUTE, ImmutableList.of(user.getEmail()))
-        .put(GrafanaUser.DATASOURCE_ID_ATTRIBUTE, ImmutableList.of(user.getDatasourceId()));
+        .put(GrafanaUser.DATASOURCE_NAME_ATTRIBUTE, ImmutableList.of(user.getDatasourceName()));
     return krakenUser.withAttributes(builder.build());
   }
 }

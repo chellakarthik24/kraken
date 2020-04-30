@@ -34,7 +34,7 @@ public class WebInfluxDBUserAppenderTest {
             USERNAME_ATTRIBUTE, ImmutableList.of(GRAFANA_USER.getUsername()),
             PASSWORD_ATTRIBUTE, ImmutableList.of(GRAFANA_USER.getPassword()),
             EMAIL_ATTRIBUTE, ImmutableList.of(GRAFANA_USER.getEmail()),
-            DATASOURCE_ID_ATTRIBUTE, ImmutableList.of(GRAFANA_USER.getDatasourceId())
+            DATASOURCE_NAME_ATTRIBUTE, ImmutableList.of(GRAFANA_USER.getDatasourceName())
         )
     );
 

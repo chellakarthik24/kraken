@@ -3,8 +3,6 @@ package com.kraken.grafana.client.api;
 import com.kraken.tests.utils.TestUtils;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class GrafanaUserTest {
 
   public static final GrafanaUser GRAFANA_USER = GrafanaUser.builder()
@@ -12,7 +10,7 @@ public class GrafanaUserTest {
       .username("username")
       .password("password")
       .email("email")
-      .datasourceId("datasourceId")
+      .datasourceName("datasourceName")
       .build();
 
 
@@ -27,9 +25,8 @@ public class GrafanaUserTest {
   }
 
   @Test
-  public void shouldWither() {
-    assertThat(GRAFANA_USER.withId("other").getId()).isEqualTo("other");
-    assertThat(GRAFANA_USER.withDatasourceId("other").getDatasourceId()).isEqualTo("other");
+  public void shouldTestNPE() {
+    TestUtils.shouldPassNPE(GrafanaUser.class);
   }
 
 }

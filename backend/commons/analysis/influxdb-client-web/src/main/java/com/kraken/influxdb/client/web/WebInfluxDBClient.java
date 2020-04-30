@@ -1,6 +1,5 @@
 package com.kraken.influxdb.client.web;
 
-import com.google.common.base.Charsets;
 import com.kraken.config.influxdb.api.InfluxDBProperties;
 import com.kraken.influxdb.client.api.InfluxDBClient;
 import com.kraken.influxdb.client.api.InfluxDBUser;
@@ -8,11 +7,10 @@ import com.kraken.tools.unique.id.IdGenerator;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.util.Base64;
 
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -26,20 +24,16 @@ final class WebInfluxDBClient implements InfluxDBClient {
 
   IdGenerator idGenerator;
   WebClient client;
-  InfluxDBProperties properties;
 
   WebInfluxDBClient(@NonNull final InfluxDBProperties properties,
                     @NonNull final IdGenerator idGenerator) {
     super();
     this.idGenerator = idGenerator;
-    final var credentials = properties.getUser() + ":" + properties.getPassword();
-    final var encoded = Base64.getEncoder().encodeToString(credentials.getBytes(Charsets.UTF_8));
     this.client = WebClient
         .builder()
         .baseUrl(properties.getUrl())
-        .defaultHeader("Authorization", "Basic " + encoded)
+        .defaultHeader(HttpHeaders.AUTHORIZATION, basicAuthorizationHeader(properties.getUser(), properties.getPassword()))
         .build();
-    this.properties = requireNonNull(properties);
   }
 
   @Override
